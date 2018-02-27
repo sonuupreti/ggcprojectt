@@ -230,3 +230,16 @@ To configure CI for your project, run the ci-cd sub-generator (`jhipster ci-cd`)
 [Protractor]: https://angular.github.io/protractor/
 [Leaflet]: http://leafletjs.com/
 [DefinitelyTyped]: http://definitelytyped.org/
+
+
+Running locally
+-------------------------------------------------------------------------
+Open command line in directory E:\workspaces\workspace_keycloak\keycloak-3.4.3.Final\bin
+and execute following command.
+
+standalone.bat -Djboss.socket.binding.port-offset=1000
+
+If you have cleaned the project or browser is displaying blank page at http://localhost:8080
+The please check if there is a www folder in build directory, this www folder contains all ui related files, if you clean the project, build directory gets deleted. All other content will be populated by gradle build or bootrun but not www, atleast in dev profile. In that case execute following command to generate build/www directory. Post to that you can run the application using bootrun or Run as Spring boot application and home page will be rendered correctly.
+
+yarn run webpack:build

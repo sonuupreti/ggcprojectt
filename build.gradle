@@ -3,6 +3,7 @@ import org.gradle.internal.os.OperatingSystem
 buildscript {
     repositories {
         mavenLocal()
+        mavenCentral()
         jcenter()
         maven { url "http://repo.spring.io/plugins-release" }
         maven { url "https://plugins.gradle.org/m2/" }
@@ -37,7 +38,7 @@ apply plugin: 'war'
 apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'idea'
+apply plugin: 'eclipse'
 
 dependencyManagement {
   imports {
@@ -229,6 +230,10 @@ dependencies {
     optional ("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
+    
+    // dependencies for Lombok
+    compileOnly 'org.projectlombok:lombok:1.16.20'
+	apt "org.projectlombok:lombok:1.16.20"
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 
