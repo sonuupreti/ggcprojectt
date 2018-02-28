@@ -14,7 +14,6 @@
 # ===================================================================
 
 logging:
-    file: E:\workspace_gspann\itrack\logs\itrack.log
     level:
         ROOT: DEBUG
         com.gspann.itrack: DEBUG
@@ -34,7 +33,7 @@ spring:
     datasource:
         type: com.zaxxer.hikari.HikariDataSource
         url: jdbc:postgresql://localhost:5432/itrack
-        username: admin
+        username: postgres
         password: admin
     jpa:
         database-platform: io.github.jhipster.domain.util.FixedPostgreSQL82Dialect
