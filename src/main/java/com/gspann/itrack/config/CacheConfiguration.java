@@ -15,6 +15,9 @@ import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
 
+import com.gspann.itrack.db.DatabaseConfiguration;
+import com.gspann.itrack.web.WebConfigurer;
+
 @Configuration
 @EnableCaching
 @AutoConfigureAfter(value = { MetricsConfiguration.class })

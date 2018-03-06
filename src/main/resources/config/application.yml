@@ -128,7 +128,28 @@ jhipster:
         license-url:
     ribbon:
         display-on-active-profiles: dev
-
+        
+logbook:
+    exclude:
+        - /app/**
+        - /content/**
+        - /i18n/**
+        - /swagger-ui/**
+        - /test/**
+    #filter.enabled: true
+    #format.style: http
+    obfuscate:
+        headers:
+            - Authorization
+            - X-Secret
+        parameters:
+            - access_token
+            - password
+    write:
+        category: TRACEROUTE_LOG
+        level: info
+        chunk-size: 1000
+        
 # ===================================================================
 # Application specific properties
 # Add your own application properties here, see the ApplicationProperties class

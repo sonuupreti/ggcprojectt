@@ -11,9 +11,10 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
 
-import static com.gspann.itrack.config.OAuth2Configuration.SAVED_LOGIN_ORIGIN_URI;
+import static com.gspann.itrack.security.OAuth2Configuration.SAVED_LOGIN_ORIGIN_URI;
+
+import java.io.IOException;
 
 /**
  * AuthenticationSuccessHandler that looks for a saved login origin and redirects to it if it exists.

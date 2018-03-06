@@ -1,5 +1,6 @@
-package com.gspann.itrack;
+package com.gspann.itrack.web;
 
+import com.gspann.itrack.ItrackApp;
 import com.gspann.itrack.config.DefaultProfileUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;

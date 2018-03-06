@@ -1,6 +1,4 @@
-package com.gspann.itrack.config;
-
-import com.gspann.itrack.security.OAuth2AuthenticationSuccessHandler;
+package com.gspann.itrack.security;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.gspann.itrack.aop.logging;
+package com.gspann.itrack.logging;
 
 import io.github.jhipster.config.JHipsterConstants;
 import lombok.extern.slf4j.Slf4j;
@@ -19,7 +19,7 @@ import java.util.Arrays;
  * By default, it only runs with the "dev" profile.
  */
 @Aspect
-@Slf4j
+@Slf4j(topic = "TRACEROUTE_LOG")
 public class LoggingAspect {
 
     private final Environment env;

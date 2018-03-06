@@ -1,4 +1,4 @@
-package com.gspann.itrack.config;
+package com.gspann.itrack.logging;
 
 import java.net.InetSocketAddress;
 import java.util.Iterator;

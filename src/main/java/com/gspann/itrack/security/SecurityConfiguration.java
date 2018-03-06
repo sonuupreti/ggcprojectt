@@ -1,4 +1,4 @@
-package com.gspann.itrack.config;
+package com.gspann.itrack.security;
 
 import com.gspann.itrack.security.*;
 

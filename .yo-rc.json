@@ -3,7 +3,7 @@
     "promptValues": {
       "packageName": "com.gspann.itrack"
     },
-    "jhipsterVersion": "4.14.0",
+    "jhipsterVersion": "4.14.1",
     "baseName": "itrack",
     "packageName": "com.gspann.itrack",
     "packageFolder": "com/gspann/itrack",

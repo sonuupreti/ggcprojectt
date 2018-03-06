@@ -1,4 +1,4 @@
-package com.gspann.itrack.config;
+package com.gspann.itrack.db;
 
 import io.github.jhipster.config.JHipsterConstants;
 

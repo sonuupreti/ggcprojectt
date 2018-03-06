@@ -1,8 +1,8 @@
 package com.gspann.itrack.repository;
 
 import com.gspann.itrack.ItrackApp;
+import com.gspann.itrack.audit.AuditEventConverter;
 import com.gspann.itrack.config.Constants;
-import com.gspann.itrack.config.audit.AuditEventConverter;
 import com.gspann.itrack.domain.PersistentAuditEvent;
 import org.junit.Before;
 import org.junit.Test;

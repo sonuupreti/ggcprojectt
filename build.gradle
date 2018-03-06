@@ -40,6 +40,13 @@ apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
 
+eclipse {
+    classpath {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
 dependencyManagement {
   imports {
     mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
@@ -52,7 +59,7 @@ defaultTasks 'bootRun'
 group = 'com.gspann.itrack'
 version = '0.0.1-SNAPSHOT'
 
-description = ''
+description = 'Professional Services Automation'
 
 bootRepackage {
    mainClass = 'com.gspann.itrack.ItrackApp'
@@ -234,6 +241,11 @@ dependencies {
     // dependencies for Lombok
     compileOnly 'org.projectlombok:lombok:1.16.20'
 	apt "org.projectlombok:lombok:1.16.20"
+
+	compile("org.zalando:logbook-spring-boot-starter:${logbook_version}") {
+		exclude group: "org.zalando", module: "logbook-httpclient"
+	}
+
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
 }
 

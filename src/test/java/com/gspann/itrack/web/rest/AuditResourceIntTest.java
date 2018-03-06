@@ -1,7 +1,7 @@
 package com.gspann.itrack.web.rest;
 
 import com.gspann.itrack.ItrackApp;
-import com.gspann.itrack.config.audit.AuditEventConverter;
+import com.gspann.itrack.audit.AuditEventConverter;
 import com.gspann.itrack.domain.PersistentAuditEvent;
 import com.gspann.itrack.repository.PersistenceAuditEventRepository;
 import com.gspann.itrack.service.AuditEventService;

@@ -1,6 +1,4 @@
-package com.gspann.itrack.config;
-
-import com.gspann.itrack.aop.logging.LoggingAspect;
+package com.gspann.itrack.logging;
 
 import io.github.jhipster.config.JHipsterConstants;
 

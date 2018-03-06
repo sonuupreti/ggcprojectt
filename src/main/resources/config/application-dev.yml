@@ -14,16 +14,17 @@
 # ===================================================================
 
 logging:
-    #file: logs\itrack.log
-    path: logs
+    #file: logs\dev\itrack.log
+    path: logs\dev
     file: ${logging.path}/itrack.log  
-    #level:
-        #ROOT: DEBUG
-        #com.gspann.itrack: DEBUG
-        #io.github.jhipster: DEBUG
+    level:
+        ROOT: DEBUG
+        com.gspann.itrack: DEBUG
+        io.github.jhipster: DEBUG
 
-    pattern:
-        file: '%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n'
+    #pattern:
+     #   console: 
+     #   file: '%d{dd-MM-yyyy HH:mm:ss.SSS} [%thread] %-5level %logger{36}.%M - %msg%n'
 
 spring:
     profiles:
@@ -34,6 +35,7 @@ spring:
             enabled: true
         livereload:
             enabled: false # we use gulp + BrowserSync for livereload
+
     jackson:
         serialization.indent_output: true
     datasource:
@@ -60,7 +62,11 @@ spring:
         cache-seconds: 1
     thymeleaf:
         cache: false
-
+    #main:
+        #banner-mode: off 
+    #output:
+        #ansi:
+            #enabled: ALWAYS
 liquibase:
     contexts: dev
 
@@ -127,7 +133,6 @@ jhipster:
             host: localhost
             port: 5000
             queue-size: 512
-
 
 # ===================================================================
 # Application specific properties
