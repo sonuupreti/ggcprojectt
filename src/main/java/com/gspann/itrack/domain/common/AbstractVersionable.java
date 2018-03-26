@@ -28,35 +28,24 @@ import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 import javax.persistence.Version;
 
-/**
- * 
- * 
- * @category: Domain
- * @version: 1.0.0-SNAPSHOT
- * 
- * @author: rajveer.singh
- * @created: 4/5/14 1:47 AM
- * @company: &copy; 2014, Ksoot Softwares
- */
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
+
+@Getter
+@Accessors(chain = true, fluent=true)
+@NoArgsConstructor
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 //@formatter:off
-public abstract class AbstractVersionable<Template extends Identifiable<IdType>, 
-        IdType extends Comparable<IdType> & Serializable, VersionType extends Comparable<VersionType> & Serializable>
-        extends AbstractIdentifiable<Template, IdType> implements
+public abstract class AbstractVersionable<VersionType extends Comparable<VersionType> & Serializable>
+        implements
         Versionable<VersionType> {
 //@formatter:on
 
     @Version
     @Access(AccessType.FIELD)
-    @Column(name = "version", nullable = false)
+    @Column(name = "VERSION", nullable = false)
     private VersionType version;
 
-    protected AbstractVersionable() {
-    }
-
-    @Override
-    public VersionType getVersion() {
-        return version;
-    }
 }

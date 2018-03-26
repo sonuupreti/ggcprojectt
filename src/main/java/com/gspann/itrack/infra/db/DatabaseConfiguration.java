@@ -1,4 +1,4 @@
-package com.gspann.itrack.db;
+package com.gspann.itrack.infra.db;
 
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.liquibase.AsyncSpringLiquibase;
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import javax.sql.DataSource;
 
 @Configuration
-@EnableJpaRepositories("com.gspann.itrack.repository")
+@EnableJpaRepositories("com.gspann.itrack.adapter.persistence.repository")
 @EnableJpaAuditing(auditorAwareRef = "springSecurityAuditorAware")
 @EnableTransactionManagement
 public class DatabaseConfiguration {

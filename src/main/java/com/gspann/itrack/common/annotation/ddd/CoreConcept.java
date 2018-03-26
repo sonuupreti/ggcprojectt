@@ -16,9 +16,10 @@ import java.lang.annotation.Target;
  * 
  * p. 419 of the Blue Book.
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
+@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.TYPE)
+@Documented
 public @interface CoreConcept {
 
+	public String description();
 }

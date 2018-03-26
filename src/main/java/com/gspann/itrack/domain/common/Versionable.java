@@ -4,5 +4,5 @@ import java.io.Serializable;
 
 public interface Versionable<VersionType extends Comparable<VersionType> & Serializable> {
 
-    public VersionType getVersion();
+    public VersionType version();
 }

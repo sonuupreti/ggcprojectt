@@ -1,17 +1,18 @@
 package com.gspann.itrack.web.rest;
 
-import com.gspann.itrack.ItrackApp;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.adapter.rest.UserResource;
+import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
+import com.gspann.itrack.adapter.rest.vm.ManagedUserVM;
+import com.gspann.itrack.application.service.UserService;
 import com.gspann.itrack.config.CacheConfiguration;
 import com.gspann.itrack.domain.Authority;
 import com.gspann.itrack.domain.User;
-import com.gspann.itrack.repository.UserRepository;
-import com.gspann.itrack.security.AuthoritiesConstants;
-
-import com.gspann.itrack.service.UserService;
+import com.gspann.itrack.infra.security.AuthoritiesConstants;
 import com.gspann.itrack.service.dto.UserDTO;
 import com.gspann.itrack.service.mapper.UserMapper;
-import com.gspann.itrack.web.rest.errors.ExceptionTranslator;
-import com.gspann.itrack.web.rest.vm.ManagedUserVM;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -44,7 +45,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see UserResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
 public class UserResourceIntTest {
 
     private static final String DEFAULT_LOGIN = "johndoe";

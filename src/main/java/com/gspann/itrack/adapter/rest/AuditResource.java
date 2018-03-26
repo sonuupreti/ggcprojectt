@@ -1,7 +1,7 @@
-package com.gspann.itrack.web.rest;
+package com.gspann.itrack.adapter.rest;
 
-import com.gspann.itrack.service.AuditEventService;
-import com.gspann.itrack.web.rest.util.PaginationUtil;
+import com.gspann.itrack.adapter.rest.util.PaginationUtil;
+import com.gspann.itrack.application.service.AuditEventService;
 
 import io.github.jhipster.web.util.ResponseUtil;
 import org.springframework.boot.actuate.audit.AuditEvent;

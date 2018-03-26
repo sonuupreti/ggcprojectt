@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
  * @see <a href="http://martinfowler.com/bliki/BoundedContext.html">Bounded
  *      Context</a>
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
+@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.PACKAGE)
+@Documented
 public @interface BoundedContext {
 
 	String name();

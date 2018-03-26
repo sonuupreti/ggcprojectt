@@ -6,9 +6,9 @@ import lombok.Value;
  * Application constants.
  */
 @Value
-public final class Constants {
+public final class ApplicationConstants {
 
-    private Constants() {
+    private ApplicationConstants() {
     }
 
     public static final String SPRING_PROFILE_DEVELOPMENT = "dev";

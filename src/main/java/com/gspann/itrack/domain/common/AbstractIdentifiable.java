@@ -9,33 +9,31 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.MappedSuperclass;
 
-import com.gspann.itrack.common.Constants;
+import com.gspann.itrack.adapter.persistence.PersistenceConstants;
 
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * 
  */
 @MappedSuperclass
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@NoArgsConstructor
 @EqualsAndHashCode
 //@formatter:off
 public abstract class AbstractIdentifiable<Template extends Identifiable<IdType>, 
-		IdType extends Comparable<IdType> & Serializable>
+		IdType extends Number & Comparable<IdType> & Serializable>
         implements Identifiable<IdType> {
 //@formatter:on
 
 	@Id
-    @GeneratedValue(generator = Constants.ID_GENERATOR)
-    @Column(name = "id", nullable = false)
+	@GeneratedValue(generator = PersistenceConstants.GLOBAL_SEQ_ID_GENERATOR)
+    @Column(name = "ID", nullable = false)
     private IdType id;
 
-    protected AbstractIdentifiable() {
-    }
-
     @Override
-    public IdType getId() {
+    public IdType id() {
         return id;
     }
-
 }

@@ -5,5 +5,6 @@ package com.gspann.itrack.common.enums;
  * 
  */
 public interface IntValuedEnum {
+	
     int getValue();
 }

@@ -1,12 +1,13 @@
 package com.gspann.itrack.web.rest;
 
-import com.gspann.itrack.ItrackApp;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.adapter.rest.AccountResource;
+import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
+import com.gspann.itrack.application.service.UserService;
 import com.gspann.itrack.domain.Authority;
 import com.gspann.itrack.domain.User;
-import com.gspann.itrack.repository.UserRepository;
-import com.gspann.itrack.security.AuthoritiesConstants;
-import com.gspann.itrack.service.UserService;
-import com.gspann.itrack.web.rest.errors.ExceptionTranslator;
+import com.gspann.itrack.infra.security.AuthoritiesConstants;
 
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
 import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
@@ -37,7 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
  * @see AccountResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
 public class AccountResourceIntTest {
 
     @Autowired

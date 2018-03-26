@@ -1,8 +1,8 @@
-package com.gspann.itrack.repository;
+package com.gspann.itrack.adapter.persistence.repository;
 
-import com.gspann.itrack.audit.AuditEventConverter;
 import com.gspann.itrack.config.Constants;
 import com.gspann.itrack.domain.PersistentAuditEvent;
+import com.gspann.itrack.infra.audit.AuditEventConverter;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

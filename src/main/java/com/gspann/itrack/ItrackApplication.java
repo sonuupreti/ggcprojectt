@@ -24,13 +24,13 @@ import java.util.Collection;
 @ComponentScan
 @EnableAutoConfiguration(exclude = {MetricFilterAutoConfiguration.class, MetricRepositoryAutoConfiguration.class})
 @EnableConfigurationProperties({LiquibaseProperties.class, ApplicationProperties.class})
-public class ItrackApp {
+public class ItrackApplication {
 
-    private static final Logger log = LoggerFactory.getLogger(ItrackApp.class);
+    private static final Logger log = LoggerFactory.getLogger(ItrackApplication.class);
 
     private final Environment env;
 
-    public ItrackApp(Environment env) {
+    public ItrackApplication(Environment env) {
         this.env = env;
     }
 
@@ -61,7 +61,7 @@ public class ItrackApp {
      * @throws UnknownHostException if the local host name could not be resolved into an address
      */
     public static void main(String[] args) throws UnknownHostException {
-        SpringApplication app = new SpringApplication(ItrackApp.class);
+        SpringApplication app = new SpringApplication(ItrackApplication.class);
         DefaultProfileUtil.addDefaultProfile(app);
         Environment env = app.run(args).getEnvironment();
         String protocol = "http";

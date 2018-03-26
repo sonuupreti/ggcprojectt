@@ -18,7 +18,8 @@ spring:
     application:
         name: itrack
     jackson:
-        serialization.write_dates_as_timestamps: false
+        serialization:
+            write-dates-as-timestamps: false
     cache:
         type: simple
     datasource:

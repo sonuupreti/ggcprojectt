@@ -1,6 +1,9 @@
 package com.gspann.itrack.web.rest.errors;
 
-import com.gspann.itrack.ItrackApp;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.rest.error.ErrorConstants;
+import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see ExceptionTranslator
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
 public class ExceptionTranslatorIntTest {
 
     @Autowired

@@ -1,4 +1,4 @@
-package com.gspann.itrack.web.rest.errors;
+package com.gspann.itrack.adapter.rest.error;
 
 public class EmailAlreadyUsedException extends BadRequestAlertException {
 

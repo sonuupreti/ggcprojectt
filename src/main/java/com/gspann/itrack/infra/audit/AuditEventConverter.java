@@ -1,4 +1,4 @@
-package com.gspann.itrack.audit;
+package com.gspann.itrack.infra.audit;
 
 import com.gspann.itrack.domain.PersistentAuditEvent;
 

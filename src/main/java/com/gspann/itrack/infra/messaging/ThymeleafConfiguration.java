@@ -1,4 +1,4 @@
-package com.gspann.itrack.email;
+package com.gspann.itrack.infra.messaging;
 
 import org.apache.commons.lang3.CharEncoding;
 import org.slf4j.Logger;

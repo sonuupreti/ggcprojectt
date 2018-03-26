@@ -1,12 +1,13 @@
-package com.gspann.itrack.web.rest;
+package com.gspann.itrack.adapter.rest;
 
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.adapter.rest.util.PaginationUtil;
+import com.gspann.itrack.application.service.UserService;
 import com.gspann.itrack.config.Constants;
+import com.gspann.itrack.infra.security.AuthoritiesConstants;
 import com.codahale.metrics.annotation.Timed;
-import com.gspann.itrack.repository.UserRepository;
-import com.gspann.itrack.security.AuthoritiesConstants;
-import com.gspann.itrack.service.UserService;
 import com.gspann.itrack.service.dto.UserDTO;
-import com.gspann.itrack.web.rest.util.PaginationUtil;
+
 import io.github.jhipster.web.util.ResponseUtil;
 
 import org.slf4j.Logger;

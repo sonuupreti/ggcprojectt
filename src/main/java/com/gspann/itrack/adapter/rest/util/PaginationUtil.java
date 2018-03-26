@@ -1,4 +1,4 @@
-package com.gspann.itrack.web.rest.util;
+package com.gspann.itrack.adapter.rest.util;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;

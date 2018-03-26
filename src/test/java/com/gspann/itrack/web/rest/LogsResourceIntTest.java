@@ -1,7 +1,9 @@
 package com.gspann.itrack.web.rest;
 
-import com.gspann.itrack.ItrackApp;
-import com.gspann.itrack.web.rest.vm.LoggerVM;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.rest.LogsResource;
+import com.gspann.itrack.adapter.rest.vm.LoggerVM;
+
 import ch.qos.logback.classic.AsyncAppender;
 import ch.qos.logback.classic.LoggerContext;
 import org.junit.Before;
@@ -27,7 +29,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see LogsResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
 public class LogsResourceIntTest {
 
     private MockMvc restLogsMockMvc;

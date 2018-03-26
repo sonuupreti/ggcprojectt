@@ -1,9 +1,8 @@
-package com.gspann.itrack.web.rest;
+package com.gspann.itrack.adapter.rest;
 
-import com.gspann.itrack.service.UserService;
+import com.gspann.itrack.adapter.rest.error.InternalServerErrorException;
+import com.gspann.itrack.application.service.UserService;
 import com.gspann.itrack.service.dto.UserDTO;
-import com.gspann.itrack.web.rest.errors.InternalServerErrorException;
-
 import com.codahale.metrics.annotation.Timed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

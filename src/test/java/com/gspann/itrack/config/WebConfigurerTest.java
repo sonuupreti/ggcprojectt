@@ -3,7 +3,7 @@ package com.gspann.itrack.config;
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.servlet.InstrumentedFilter;
 import com.codahale.metrics.servlets.MetricsServlet;
-import com.gspann.itrack.web.WebConfigurer;
+import com.gspann.itrack.infra.web.WebConfigurer;
 
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.JHipsterProperties;

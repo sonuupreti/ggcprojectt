@@ -1,4 +1,4 @@
 /**
  * Service layer beans.
  */
-package com.gspann.itrack.service;
+package com.gspann.itrack.application.service;

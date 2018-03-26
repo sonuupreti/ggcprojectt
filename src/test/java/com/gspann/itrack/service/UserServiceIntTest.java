@@ -1,9 +1,10 @@
 package com.gspann.itrack.service;
 
-import com.gspann.itrack.ItrackApp;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.application.service.UserService;
 import com.gspann.itrack.config.Constants;
 import com.gspann.itrack.domain.User;
-import com.gspann.itrack.repository.UserRepository;
 import com.gspann.itrack.service.dto.UserDTO;
 
 import org.junit.Before;
@@ -25,7 +26,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * @see UserService
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
 @Transactional
 public class UserServiceIntTest {
 

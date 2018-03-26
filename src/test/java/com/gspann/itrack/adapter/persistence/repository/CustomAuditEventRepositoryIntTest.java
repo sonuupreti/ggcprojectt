@@ -1,9 +1,16 @@
-package com.gspann.itrack.repository;
+package com.gspann.itrack.adapter.persistence.repository;
 
-import com.gspann.itrack.ItrackApp;
-import com.gspann.itrack.audit.AuditEventConverter;
-import com.gspann.itrack.config.Constants;
-import com.gspann.itrack.domain.PersistentAuditEvent;
+import static com.gspann.itrack.adapter.persistence.repository.CustomAuditEventRepository.EVENT_DATA_COLUMN_MAX_LENGTH;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.time.Instant;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,18 +20,16 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.servlet.http.HttpSession;
-import java.time.Instant;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static com.gspann.itrack.repository.CustomAuditEventRepository.EVENT_DATA_COLUMN_MAX_LENGTH;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.CustomAuditEventRepository;
+import com.gspann.itrack.adapter.persistence.repository.PersistenceAuditEventRepository;
+import com.gspann.itrack.config.Constants;
+import com.gspann.itrack.domain.PersistentAuditEvent;
+import com.gspann.itrack.infra.audit.AuditEventConverter;
 
 /**
  * Test class for the CustomAuditEventRepository class.
@@ -32,7 +37,8 @@ import static com.gspann.itrack.repository.CustomAuditEventRepository.EVENT_DATA
  * @see CustomAuditEventRepository
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
+@ActiveProfiles(profiles = "dev")
 @Transactional
 public class CustomAuditEventRepositoryIntTest {
 

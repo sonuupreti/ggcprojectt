@@ -3,4 +3,4 @@
  *
  * More information on https://github.com/zalando/problem-spring-web
  */
-package com.gspann.itrack.web.rest.errors;
+package com.gspann.itrack.adapter.rest.error;

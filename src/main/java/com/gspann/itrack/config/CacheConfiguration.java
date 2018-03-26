@@ -15,8 +15,8 @@ import org.springframework.boot.autoconfigure.cache.JCacheManagerCustomizer;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.*;
 
-import com.gspann.itrack.db.DatabaseConfiguration;
-import com.gspann.itrack.web.WebConfigurer;
+import com.gspann.itrack.infra.db.DatabaseConfiguration;
+import com.gspann.itrack.infra.web.WebConfigurer;
 
 @Configuration
 @EnableCaching
@@ -40,8 +40,8 @@ public class CacheConfiguration {
     @Bean
     public JCacheManagerCustomizer cacheManagerCustomizer() {
         return cm -> {
-            cm.createCache(com.gspann.itrack.repository.UserRepository.USERS_BY_LOGIN_CACHE, jcacheConfiguration);
-            cm.createCache(com.gspann.itrack.repository.UserRepository.USERS_BY_EMAIL_CACHE, jcacheConfiguration);
+            cm.createCache(com.gspann.itrack.adapter.persistence.repository.UserRepository.USERS_BY_LOGIN_CACHE, jcacheConfiguration);
+            cm.createCache(com.gspann.itrack.adapter.persistence.repository.UserRepository.USERS_BY_EMAIL_CACHE, jcacheConfiguration);
             cm.createCache(com.gspann.itrack.domain.User.class.getName(), jcacheConfiguration);
             cm.createCache(com.gspann.itrack.domain.Authority.class.getName(), jcacheConfiguration);
             cm.createCache(com.gspann.itrack.domain.User.class.getName() + ".authorities", jcacheConfiguration);

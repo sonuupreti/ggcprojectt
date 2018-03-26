@@ -1,4 +1,4 @@
-package com.gspann.itrack.repository;
+package com.gspann.itrack.adapter.persistence.repository;
 
 import com.gspann.itrack.domain.Authority;
 

@@ -1,6 +1,6 @@
-package com.gspann.itrack.web;
+package com.gspann.itrack.infra.web;
 
-import com.gspann.itrack.ItrackApp;
+import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.config.DefaultProfileUtil;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.support.SpringBootServletInitializer;
@@ -17,6 +17,6 @@ public class ApplicationWebXml extends SpringBootServletInitializer {
          * set a default to use when no profile is configured.
          */
         DefaultProfileUtil.addDefaultProfile(application.application());
-        return application.sources(ItrackApp.class);
+        return application.sources(ItrackApplication.class);
     }
 }

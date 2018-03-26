@@ -39,6 +39,9 @@ apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = 'com.gspann.itrack.ItrackApplication'
 
 eclipse {
     classpath {
@@ -61,18 +64,25 @@ version = '0.0.1-SNAPSHOT'
 
 description = 'Professional Services Automation'
 
-bootRepackage {
+/*bootRepackage {
    mainClass = 'com.gspann.itrack.ItrackApp'
-}
+}*/
 
-war {
+/*war {
 
-}
+}*/
 
-springBoot {
+/*springBoot {
     mainClass = 'com.gspann.itrack.ItrackApp'
     executable = true
     buildInfo()
+}*/
+
+bootWar {
+	classifier = 'boot'
+	mainClassName = 'com.gspann.itrack.ItrackApplication'
+    //executable = true
+    //buildInfo()
 }
 
 if (OperatingSystem.current().isWindows()) {
@@ -89,12 +99,15 @@ if (OperatingSystem.current().isWindows()) {
         }
     }
 
-    bootRun {
+    /*bootRun {
         addResources = false
         dependsOn pathingJar
         doFirst {
             classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", pathingJar.archivePath)
         }
+    }*/
+    bootRun {
+        sourceResources sourceSets.main
     }
 } else {
     bootRun {
@@ -220,6 +233,10 @@ dependencies {
     compile "io.springfox:springfox-bean-validators"
     compile "org.postgresql:postgresql"
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
+    
+	compile("org.javamoney:moneta:1.1")
+	compile("org.jadira.usertype:usertype.core:6.0.1.GA")
+	
     testCompile "com.jayway.jsonpath:json-path"
     testCompile "info.cukes:cucumber-junit"
     testCompile "info.cukes:cucumber-spring"
@@ -270,5 +287,6 @@ if (project.hasProperty('nodeInstall')) {
 }
 
 compileJava.dependsOn processResources
-processResources.dependsOn cleanResources,bootBuildInfo
-bootBuildInfo.mustRunAfter cleanResources
+//processResources.dependsOn cleanResources,bootBuildInfo
+processResources.dependsOn cleanResources
+//bootBuildInfo.mustRunAfter cleanResources

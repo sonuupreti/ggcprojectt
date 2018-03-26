@@ -1,6 +1,4 @@
-package com.gspann.itrack.web.rest.errors;
-
-import com.gspann.itrack.web.rest.util.HeaderUtil;
+package com.gspann.itrack.adapter.rest.error;
 
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +13,8 @@ import org.zalando.problem.ProblemBuilder;
 import org.zalando.problem.Status;
 import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.validation.ConstraintViolationProblem;
+
+import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;

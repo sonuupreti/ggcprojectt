@@ -1,4 +1,4 @@
-package com.gspann.itrack.web.rest;
+package com.gspann.itrack.adapter.rest;
 
 import com.gspann.itrack.config.DefaultProfileUtil;
 

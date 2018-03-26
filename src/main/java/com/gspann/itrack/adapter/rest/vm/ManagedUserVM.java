@@ -1,4 +1,4 @@
-package com.gspann.itrack.web.rest.vm;
+package com.gspann.itrack.adapter.rest.vm;
 
 import com.gspann.itrack.service.dto.UserDTO;
 import javax.validation.constraints.Size;

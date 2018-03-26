@@ -1,4 +1,4 @@
-package com.gspann.itrack.web;
+package com.gspann.itrack.infra.web;
 
 import com.fasterxml.jackson.datatype.hibernate5.Hibernate5Module;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;

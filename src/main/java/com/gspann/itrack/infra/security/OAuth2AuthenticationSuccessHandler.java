@@ -1,4 +1,4 @@
-package com.gspann.itrack.security;
+package com.gspann.itrack.infra.security;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static com.gspann.itrack.security.OAuth2Configuration.SAVED_LOGIN_ORIGIN_URI;
+import static com.gspann.itrack.infra.security.OAuth2Configuration.SAVED_LOGIN_ORIGIN_URI;
 
 import java.io.IOException;
 

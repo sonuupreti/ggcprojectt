@@ -1,10 +1,12 @@
 package com.gspann.itrack.web.rest;
 
-import com.gspann.itrack.ItrackApp;
-import com.gspann.itrack.audit.AuditEventConverter;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.PersistenceAuditEventRepository;
+import com.gspann.itrack.adapter.rest.AuditResource;
+import com.gspann.itrack.application.service.AuditEventService;
 import com.gspann.itrack.domain.PersistentAuditEvent;
-import com.gspann.itrack.repository.PersistenceAuditEventRepository;
-import com.gspann.itrack.service.AuditEventService;
+import com.gspann.itrack.infra.audit.AuditEventConverter;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,7 +35,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see AuditResource
  */
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
 @Transactional
 public class AuditResourceIntTest {
 

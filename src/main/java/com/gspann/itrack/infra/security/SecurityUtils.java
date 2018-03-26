@@ -1,4 +1,4 @@
-package com.gspann.itrack.security;
+package com.gspann.itrack.infra.security;
 
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;

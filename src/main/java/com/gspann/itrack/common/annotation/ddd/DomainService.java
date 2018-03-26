@@ -13,9 +13,9 @@ import java.lang.annotation.RetentionPolicy;
  * 
  * @author Cyrille.Martraire
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Inherited
+@Retention(RetentionPolicy.SOURCE)
 @Documented
+@Inherited
 public @interface DomainService {
 
     String brief() default "A Domain Service, i.e. a service that belongs to the domain and the domain language";

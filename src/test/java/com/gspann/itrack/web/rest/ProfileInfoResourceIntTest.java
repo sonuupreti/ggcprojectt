@@ -1,7 +1,9 @@
 package com.gspann.itrack.web.rest;
 
 import io.github.jhipster.config.JHipsterProperties;
-import com.gspann.itrack.ItrackApp;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.rest.ProfileInfoResource;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -25,7 +27,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * @see ProfileInfoResource
  **/
 @RunWith(SpringRunner.class)
-@SpringBootTest(classes = ItrackApp.class)
+@SpringBootTest(classes = ItrackApplication.class)
 public class ProfileInfoResourceIntTest {
 
     @Mock

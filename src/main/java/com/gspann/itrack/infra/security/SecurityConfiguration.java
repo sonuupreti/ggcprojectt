@@ -1,6 +1,4 @@
-package com.gspann.itrack.security;
-
-import com.gspann.itrack.security.*;
+package com.gspann.itrack.infra.security;
 
 import io.github.jhipster.security.*;
 
@@ -19,6 +17,8 @@ import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.web.filter.CorsFilter;
 import org.zalando.problem.spring.web.advice.security.SecurityProblemSupport;
+
+import com.gspann.itrack.infra.security.*;
 
 @Configuration
 @Import(SecurityProblemSupport.class)

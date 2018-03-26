@@ -11,7 +11,7 @@ import java.lang.annotation.RetentionPolicy;
  * @see <a href="http://en.wikipedia.org/wiki/Data_transfer_object">Data
  *      Transfer Object pattern</a>
  */
-@Retention(RetentionPolicy.RUNTIME)
+@Retention(RetentionPolicy.SOURCE)
 @Inherited
 @Documented
 public @interface DataTransferObject {

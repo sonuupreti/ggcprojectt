@@ -13,6 +13,8 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpHeaders;
 
+import com.gspann.itrack.adapter.rest.util.PaginationUtil;
+
 /**
  * Tests based on parsing algorithm in app/components/util/pagination-util.service.js
  *

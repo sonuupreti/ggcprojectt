@@ -1,4 +1,4 @@
-package com.gspann.itrack.web.rest.vm;
+package com.gspann.itrack.adapter.rest.vm;
 
 import ch.qos.logback.classic.Logger;
 

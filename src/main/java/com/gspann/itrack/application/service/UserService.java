@@ -1,12 +1,12 @@
-package com.gspann.itrack.service;
+package com.gspann.itrack.application.service;
 
+import com.gspann.itrack.adapter.persistence.repository.AuthorityRepository;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
 import com.gspann.itrack.config.CacheConfiguration;
 import com.gspann.itrack.domain.Authority;
 import com.gspann.itrack.domain.User;
-import com.gspann.itrack.repository.AuthorityRepository;
+import com.gspann.itrack.infra.security.SecurityUtils;
 import com.gspann.itrack.config.Constants;
-import com.gspann.itrack.repository.UserRepository;
-import com.gspann.itrack.security.SecurityUtils;
 import com.gspann.itrack.service.dto.UserDTO;
 
 import org.slf4j.Logger;

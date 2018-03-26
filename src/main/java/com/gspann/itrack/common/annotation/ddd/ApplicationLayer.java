@@ -18,9 +18,9 @@ import java.lang.annotation.Target;
  * 
  * @author Cyrille.Martraire
  */
-@Retention(RetentionPolicy.RUNTIME)
-@Documented
+@Retention(RetentionPolicy.SOURCE)
 @Target(ElementType.PACKAGE)
+@Documented
 public @interface ApplicationLayer {
 
     String[] domainLayer() default {};

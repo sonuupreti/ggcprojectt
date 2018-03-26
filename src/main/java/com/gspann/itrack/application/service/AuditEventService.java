@@ -1,7 +1,8 @@
-package com.gspann.itrack.service;
+package com.gspann.itrack.application.service;
 
-import com.gspann.itrack.audit.AuditEventConverter;
-import com.gspann.itrack.repository.PersistenceAuditEventRepository;
+import com.gspann.itrack.adapter.persistence.repository.PersistenceAuditEventRepository;
+import com.gspann.itrack.infra.audit.AuditEventConverter;
+
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

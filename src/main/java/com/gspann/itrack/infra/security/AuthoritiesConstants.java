@@ -1,4 +1,4 @@
-package com.gspann.itrack.security;
+package com.gspann.itrack.infra.security;
 
 /**
  * Constants for Spring Security authorities.

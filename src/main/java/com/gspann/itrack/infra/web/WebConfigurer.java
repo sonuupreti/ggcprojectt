@@ -1,4 +1,4 @@
-package com.gspann.itrack.web;
+package com.gspann.itrack.infra.web;
 
 import io.github.jhipster.config.JHipsterConstants;
 import io.github.jhipster.config.JHipsterProperties;

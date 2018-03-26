@@ -1,4 +1,4 @@
-package com.gspann.itrack.security;
+package com.gspann.itrack.infra.security;
 
 import com.gspann.itrack.config.Constants;
 

@@ -1,10 +1,10 @@
-package com.gspann.itrack.web.rest;
-
-import com.gspann.itrack.web.rest.vm.LoggerVM;
+package com.gspann.itrack.adapter.rest;
 
 import ch.qos.logback.classic.Level;
 import ch.qos.logback.classic.LoggerContext;
 import com.codahale.metrics.annotation.Timed;
+import com.gspann.itrack.adapter.rest.vm.LoggerVM;
+
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

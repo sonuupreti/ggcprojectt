@@ -6,7 +6,7 @@ package com.gspann.itrack.common.enums;
  */
 public interface StringValuedEnum {
 	
-    public String getValue();
+    public String value();
     
-    public StringValuedEnum getByValue(final String _value);
+    public StringValuedEnum enumByValue(final String value);
 }
