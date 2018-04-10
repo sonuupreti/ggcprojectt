@@ -1,17 +1,17 @@
 package com.gspann.itrack.web.rest;
 
-import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.adapter.persistence.repository.UserRepository;
-import com.gspann.itrack.adapter.rest.UserResource;
-import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
-import com.gspann.itrack.adapter.rest.vm.ManagedUserVM;
-import com.gspann.itrack.application.service.UserService;
-import com.gspann.itrack.config.CacheConfiguration;
-import com.gspann.itrack.domain.Authority;
-import com.gspann.itrack.domain.User;
-import com.gspann.itrack.infra.security.AuthoritiesConstants;
-import com.gspann.itrack.service.dto.UserDTO;
-import com.gspann.itrack.service.mapper.UserMapper;
+import static org.assertj.core.api.Assertions.*;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.Instant;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
+import javax.persistence.EntityManager;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
@@ -29,15 +29,16 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.persistence.EntityManager;
-import java.time.Instant;
-import java.util.*;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.Matchers.hasItem;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.adapter.rest.UserResource;
+import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
+import com.gspann.itrack.application.service.UserService;
+import com.gspann.itrack.domain.Authority;
+import com.gspann.itrack.domain.User;
+import com.gspann.itrack.infra.security.AuthoritiesConstants;
+import com.gspann.itrack.service.dto.UserDTO;
+import com.gspann.itrack.service.mapper.UserMapper;
 
 /**
  * Test class for the UserResource REST controller.
@@ -51,7 +52,7 @@ public class UserResourceIntTest {
     private static final String DEFAULT_LOGIN = "johndoe";
     private static final String UPDATED_LOGIN = "jhipster";
 
-    private static final Long DEFAULT_ID = 1L;
+    private static final String DEFAULT_ID = "id1";
 
     private static final String DEFAULT_PASSWORD = "passjohndoe";
     private static final String UPDATED_PASSWORD = "passjhipster";
@@ -120,6 +121,7 @@ public class UserResourceIntTest {
      */
     public static User createEntity(EntityManager em) {
         User user = new User();
+        user.setId(UUID.randomUUID().toString());
         user.setLogin(DEFAULT_LOGIN + RandomStringUtils.randomAlphabetic(5));
         user.setActivated(true);
         user.setEmail(RandomStringUtils.randomAlphabetic(5) + DEFAULT_EMAIL);
@@ -202,11 +204,11 @@ public class UserResourceIntTest {
     public void testUserEquals() throws Exception {
         TestUtil.equalsVerifier(User.class);
         User user1 = new User();
-        user1.setId(1L);
+        user1.setId("id1");
         User user2 = new User();
         user2.setId(user1.getId());
         assertThat(user1).isEqualTo(user2);
-        user2.setId(2L);
+        user2.setId("id2");
         assertThat(user1).isNotEqualTo(user2);
         user1.setId(null);
         assertThat(user1).isNotEqualTo(user2);

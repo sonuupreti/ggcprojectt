@@ -1,5 +1,13 @@
 package com.gspann.itrack.infra.security;
 
+import java.io.IOException;
+
+import javax.servlet.Filter;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,13 +24,6 @@ import org.springframework.security.web.FilterChainProxy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.Filter;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-
 /**
  * Development only configuration that is Browsersync-aware and redirects to the origin you clicked "login" from.
  * If you split your application into client and server on separate domains, you might want to enable this for prod
@@ -35,7 +36,8 @@ public class OAuth2Configuration {
 
     private final Logger log = LoggerFactory.getLogger(OAuth2Configuration.class);
 
-    @Bean
+    @SuppressWarnings("rawtypes")
+	@Bean
     public FilterRegistrationBean saveLoginOriginFilter() {
         Filter filter = new OncePerRequestFilter() {
             @Override
@@ -53,7 +55,9 @@ public class OAuth2Configuration {
                 filterChain.doFilter(request, response);
             }
         };
-        FilterRegistrationBean bean = new FilterRegistrationBean(filter);
+
+		@SuppressWarnings({ "rawtypes", "unchecked" })
+		FilterRegistrationBean bean = new FilterRegistrationBean(filter);
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }

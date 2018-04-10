@@ -8,7 +8,7 @@ package com.gspann.itrack.common.exception;
 public class BaseException extends Exception {
 
 	private static final long serialVersionUID = -1361793725840005644L;
-	
+
 	// To be set by exception throwing class
 	protected Object errorCode;
 

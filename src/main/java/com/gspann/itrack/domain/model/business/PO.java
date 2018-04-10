@@ -6,7 +6,7 @@ import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-import com.gspann.itrack.domain.common.AbstractAssignable;
+import com.gspann.itrack.domain.common.type.AbstractAutoAssignable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor(staticName="of")
 //@Entity
 //@Table(name = "PO")
-public class PO extends AbstractAssignable<PO, String>  {
+public class PO extends AbstractAutoAssignable<String>  {
 
     private String openingBalance;
     

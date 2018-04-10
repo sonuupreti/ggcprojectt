@@ -3,7 +3,7 @@ package com.gspann.itrack.adapter.persistence.exception;
 public class IdGenerationException extends RuntimeException {
 
 	private static final long serialVersionUID = -3853277589620431332L;
-	
+
 	// To be set by exception throwing class
 	protected String errorCode;
 

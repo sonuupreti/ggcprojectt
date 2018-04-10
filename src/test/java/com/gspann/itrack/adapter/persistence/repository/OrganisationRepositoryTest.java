@@ -1,5 +1,6 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
@@ -17,7 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.domain.common.location.City;
-import com.gspann.itrack.domain.model.organisation.Company;
+import com.gspann.itrack.domain.model.org.structure.Company;
+import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
+import com.gspann.itrack.domain.model.org.structure.EngagementStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
@@ -35,13 +38,13 @@ public class OrganisationRepositoryTest {
 	@Test
 	public void test01SaveCompany() {
 		List<City> india = locationRepository.findAllCitiesByCountryCode("IN");
-		systemUnderTest.saveCompany(Company.of("Whisk Software Pvt. Ltd.", Sets.newHashSet(india)));
+		systemUnderTest.saveCompany(Company.of("WHISK", "Whisk Software Pvt. Ltd.", Sets.newHashSet(india)));
 		
 		List<City> USA = locationRepository.findAllCitiesByCountryCode("US");
-		systemUnderTest.saveCompany(Company.of("GSPANN Technologies Inc.", Sets.newHashSet(USA)));
+		systemUnderTest.saveCompany(Company.of("GSPANN_INC", "GSPANN Technologies Inc.", Sets.newHashSet(USA)));
 
 		List<City> UK = locationRepository.findAllCitiesByCountryCode("GB");
-		systemUnderTest.saveCompany(Company.of("GSPANN Technologies Ltd.", Sets.newHashSet(UK)));
+		systemUnderTest.saveCompany(Company.of("GSPANN_LTG", "GSPANN Technologies Ltd.", Sets.newHashSet(UK)));
 	}
 
 	@Test
@@ -81,26 +84,32 @@ public class OrganisationRepositoryTest {
 
 	@Test
 	public void testSaveEmploymentStatus() {
-	}
-
-	@Test
-	public void testFindEmploymentStatusById() {
+		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.FULLTIME_EMPLOYEE));
+		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.DIRECT_CONTRACTOR));
+		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.SUB_CONTRACTOR));
+		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.W2_CONSULTANT));
 	}
 
 	@Test
 	public void testFindEmploymentStatusByCode() {
+		assertNotNull(systemUnderTest.findEmploymentStatusByCode(EmploymentStatus.CODE.FULLTIME_EMPLOYEE.name()));
 	}
 
 	@Test
 	public void testFindAllEmploymentStatuses() {
+		assertTrue(systemUnderTest.findAllEmploymentStatuses().size() == 4);
 	}
 
 	@Test
 	public void testSaveEngagementStatus() {
-	}
-
-	@Test
-	public void testFindEngagementStatusById() {
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.PENDING));
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ACTIVE));
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.DID_NOT_JOIN));
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ON_BENCH));
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ON_LONG_LEAVE));
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.RESIGNED));
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.TERMINATED));
+		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ABSCONDED));
 	}
 
 	@Test

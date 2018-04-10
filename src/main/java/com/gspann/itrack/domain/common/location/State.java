@@ -1,16 +1,19 @@
 package com.gspann.itrack.domain.common.location;
 
-import javax.persistence.CascadeType;
+import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.AbstractIdentifiable;
+import org.hibernate.annotations.Immutable;
+
+import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -22,18 +25,18 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor()
 @AllArgsConstructor(staticName = "of")
 @Entity
-@Table(name = "LOCATION_STATE", uniqueConstraints = @UniqueConstraint(name = "UNQ_STATE", columnNames = { "NAME",
-		"COUNTRY_ID" }))
-public class State extends AbstractIdentifiable<State, Integer> {
+@Table(name = "STATES", uniqueConstraints = @UniqueConstraint(name = UNQ_STATE, columnNames = { "NAME",
+		"COUNTRY_CODE" }))
+@Immutable
+public class State extends AbstractIdentifiable<Integer> {
 
 	@NotNull
 	@Column(name = "NAME", nullable = false, length = 20)
 	private String name;
 
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.common.location.Country.class, cascade = { CascadeType.PERSIST,
-			CascadeType.MERGE }, fetch = FetchType.LAZY)
-	@JoinColumn(name = "COUNTRY_ID", nullable = false)
+	@ManyToOne(targetEntity = com.gspann.itrack.domain.common.location.Country.class, fetch = FetchType.EAGER)
+	@JoinColumn(name = "COUNTRY_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_STATES_COUNTRY_CODE))
 	private Country country;
 
 	// @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy =

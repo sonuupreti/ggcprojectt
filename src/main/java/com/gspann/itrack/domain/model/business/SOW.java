@@ -3,7 +3,7 @@ package com.gspann.itrack.domain.model.business;
 import java.time.LocalDate;
 import java.util.List;
 
-import com.gspann.itrack.domain.common.AbstractAssignable;
+import com.gspann.itrack.domain.common.type.AbstractAutoAssignable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,7 +16,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor(staticName="of")
 //@Entity
 //@Table(name = "SOW")
-public class SOW extends AbstractAssignable<SOW, String>  {
+public class SOW extends AbstractAutoAssignable<String>  {
 
     private List<String> resources;
     

@@ -7,46 +7,60 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 import org.hibernate.HibernateException;
-import org.hibernate.engine.spi.SessionImplementor;
 import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 import com.gspann.itrack.adapter.persistence.exception.IdGenerationException;
+import com.gspann.itrack.domain.common.type.AbstractAssignable;
 import com.gspann.itrack.domain.model.business.Account;
-import com.gspann.itrack.domain.model.project.Project;
+import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 
 public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
-	
+
 	private static final long FTE_SEQUENCE_START = 10000;
 
 	private static final long NON_FTE_SEQUENCE_START = 20000;
-	
+
 	private static final int ACCOUNT_SEQUENCE_START = 1000;
 
 	private static final long PROJECT_CODE_LENGTH = 7;
-	
+
 	@Override
 	public Serializable generate(SharedSessionContractImplementor session, Object entity) throws HibernateException {
 		Connection connection = session.connection();
 		try {
-			if(entity instanceof Account) {
+			if (entity instanceof Account) {
 				return generateAccountCode(connection, (Account) entity);
-			} else if(entity instanceof Project) {
+			} else if (entity instanceof Project) {
 				return generateProjectCode(connection, (Project) entity);
-			} else if(entity instanceof Resource) {
+			} else if (entity instanceof Resource) {
 				return generateResourceCode(connection, (Resource) entity);
-			} 
-		} catch(SQLException e) {
+			} else {
+				// Return the manually provided code
+				return providedCode(entity);
+			}
+		} catch (SQLException e) {
 			// Exception while closing JDBC connection
 			e.printStackTrace();
 		}
 
-		throw new IdGenerationException("", "ID Generation strategy not defined for Entity class : " + entity.getClass());
+		throw new IdGenerationException("",
+				"ID Generation strategy not defined for Entity class : " + entity.getClass());
+	}
+
+	@SuppressWarnings("rawtypes")
+	private Serializable providedCode(Object entity) {
+		if (entity instanceof AbstractAssignable) {
+			return ((AbstractAssignable) entity).code();
+		} else {
+			throw new IdGenerationException("",
+					"The Entity class : " + entity.getClass() + " must be to type AbstractAssignable");
+		}
 	}
 
 	private String generateAccountCode(Connection connection, Account account) throws SQLException {
-		String query = null; 
+		String query = null;
 		ResultSet rs = null;
 		try {
 			Statement statement = connection.createStatement();
@@ -65,7 +79,7 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 			e.printStackTrace();
 			throw new IdGenerationException("Exception while generating Code, Query : " + query, e);
 		} finally {
-			if(rs != null) {
+			if (rs != null) {
 				try {
 					rs.close();
 				} catch (SQLException e) {
@@ -74,9 +88,9 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 		}
 		throw new IdGenerationException("Failed to generate Code");
 	}
-	
+
 	private String generateProjectCode(Connection connection, Project project) throws SQLException {
-		String query = null;  
+		String query = null;
 		ResultSet rs = null;
 		try {
 			Statement statement = connection.createStatement();
@@ -88,7 +102,8 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 			if (rs.next()) {
 				String highEnd = rs.getString("HIGH_END");
 				long nextSeq = highEnd == null ? 1 : Long.valueOf(highEnd) + 1;
-				String projectCode = project.projectType().code() + String.format("%0" + PROJECT_CODE_LENGTH + "d", nextSeq);
+				String projectCode = project.type().code()
+						+ String.format("%0" + PROJECT_CODE_LENGTH + "d", nextSeq);
 				System.out.println("projectCode --->>" + projectCode);
 				return projectCode;
 			}
@@ -96,7 +111,7 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 			e.printStackTrace();
 			throw new IdGenerationException("Exception while generating Code, Query : " + query, e);
 		} finally {
-			if(rs != null) {
+			if (rs != null) {
 				rs.close();
 			}
 		}
@@ -104,12 +119,12 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 	}
 
 	private String generateResourceCode(Connection connection, Resource resource) throws SQLException {
-		String query = null;  
+		String query = null;
 		ResultSet rs = null;
 		try {
 			Statement statement = connection.createStatement();
-			String whereClause = resource.employmentStatus().statusCode().equalsIgnoreCase("FTE") ? 
-					"where EMP_TYPE='FTE'" : "where EMP_TYPE!='FTE'";
+			String whereClause = resource.employmentStatus().code().equalsIgnoreCase("FTE") ? "where EMP_TYPE='FTE'"
+					: "where EMP_TYPE!='FTE'";
 			query = "select max(NUM_ID) as HIGH_END from (\r\n"
 					+ "	SELECT substring(CODE FROM '[0-9]+') as NUM_ID FROM RESOURCES " + whereClause + ") temp";
 			System.out.println("???????????? query -->" + query);
@@ -117,16 +132,17 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 
 			if (rs.next()) {
 				String highEnd = rs.getString("HIGH_END");
-				long nextSeq = highEnd == null ? 
-						resource.employmentStatus().statusCode().equalsIgnoreCase("FTE") ?
-								FTE_SEQUENCE_START : NON_FTE_SEQUENCE_START : Long.valueOf(highEnd) + 1;
+				long nextSeq = highEnd == null
+						? resource.employmentStatus().code().equalsIgnoreCase("FTE") ? FTE_SEQUENCE_START
+								: NON_FTE_SEQUENCE_START
+						: Long.valueOf(highEnd) + 1;
 				return "" + nextSeq;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 			throw new IdGenerationException("Exception while generating Code, Query : " + query, e);
 		} finally {
-			if(rs != null) {
+			if (rs != null) {
 				rs.close();
 			}
 		}

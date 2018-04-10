@@ -39,8 +39,8 @@ public class LocationRepositoryImpl implements LocationRepository {
 	public Optional<Country> findCountryByName(String countryName) {
 		Country country = null;
 		try {
-			country = entityManager
-					.createQuery("from Country c where name = '" + countryName + "'", Country.class).getSingleResult();
+			country = entityManager.createQuery("from Country c where name = '" + countryName + "'", Country.class)
+					.getSingleResult();
 		} catch (NoResultException e) {
 			// No state with such name exists, so return null
 		}

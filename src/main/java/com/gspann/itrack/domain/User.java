@@ -1,13 +1,11 @@
 package com.gspann.itrack.domain;
 
-import com.gspann.itrack.config.Constants;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gspann.itrack.infra.config.Constants;
+
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.annotations.BatchSize;
-import org.hibernate.annotations.Cache;
-import org.hibernate.annotations.CacheConcurrencyStrategy;
-import org.hibernate.validator.constraints.Email;
+import javax.validation.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -25,15 +23,13 @@ import java.time.Instant;
  */
 @Entity
 @Table(name = "jhi_user")
-@Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
 public class User extends AbstractAuditingEntity implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "sequenceGenerator")
-    @SequenceGenerator(name = "sequenceGenerator")
-    private Long id;
+    private String id;
 
     @NotNull
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -50,8 +46,8 @@ public class User extends AbstractAuditingEntity implements Serializable {
     private String lastName;
 
     @Email
-    @Size(min = 5, max = 100)
-    @Column(length = 100, unique = true)
+    @Size(min = 5, max = 254)
+    @Column(length = 254, unique = true)
     private String email;
 
     @NotNull
@@ -72,15 +68,15 @@ public class User extends AbstractAuditingEntity implements Serializable {
         name = "jhi_user_authority",
         joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
         inverseJoinColumns = {@JoinColumn(name = "authority_name", referencedColumnName = "name")})
-    @Cache(usage = CacheConcurrencyStrategy.NONSTRICT_READ_WRITE)
+
     @BatchSize(size = 20)
     private Set<Authority> authorities = new HashSet<>();
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

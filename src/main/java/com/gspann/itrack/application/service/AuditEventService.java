@@ -1,7 +1,7 @@
 package com.gspann.itrack.application.service;
 
-import com.gspann.itrack.adapter.persistence.repository.PersistenceAuditEventRepository;
-import com.gspann.itrack.infra.audit.AuditEventConverter;
+import java.time.Instant;
+import java.util.Optional;
 
 import org.springframework.boot.actuate.audit.AuditEvent;
 import org.springframework.data.domain.Page;
@@ -9,8 +9,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.Optional;
+import com.gspann.itrack.adapter.persistence.repository.PersistenceAuditEventRepository;
+import com.gspann.itrack.infra.audit.AuditEventConverter;
 
 /**
  * Service for managing audit events.
@@ -44,7 +44,9 @@ public class AuditEventService {
     }
 
     public Optional<AuditEvent> find(Long id) {
-        return Optional.ofNullable(persistenceAuditEventRepository.findOne(id)).map
-            (auditEventConverter::convertToAuditEvent);
+        return Optional.ofNullable(persistenceAuditEventRepository.findById(id))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
+            .map(auditEventConverter::convertToAuditEvent);
     }
 }

@@ -1,5 +1,13 @@
 package com.gspann.itrack.infra.security;
 
+import static com.gspann.itrack.infra.security.OAuth2Configuration.*;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
@@ -7,14 +15,6 @@ import org.springframework.security.web.DefaultRedirectStrategy;
 import org.springframework.security.web.RedirectStrategy;
 import org.springframework.security.web.WebAttributes;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import static com.gspann.itrack.infra.security.OAuth2Configuration.SAVED_LOGIN_ORIGIN_URI;
-
-import java.io.IOException;
 
 /**
  * AuthenticationSuccessHandler that looks for a saved login origin and redirects to it if it exists.

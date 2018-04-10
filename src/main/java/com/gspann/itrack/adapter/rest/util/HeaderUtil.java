@@ -16,8 +16,8 @@ public final class HeaderUtil {
 
     public static HttpHeaders createAlert(String message, String param) {
         HttpHeaders headers = new HttpHeaders();
-        headers.add("X-itrackApp-alert", message);
-        headers.add("X-itrackApp-params", param);
+        headers.add("X-itrack2App-alert", message);
+        headers.add("X-itrack2App-params", param);
         return headers;
     }
 
@@ -36,8 +36,8 @@ public final class HeaderUtil {
     public static HttpHeaders createFailureAlert(String entityName, String errorKey, String defaultMessage) {
         log.error("Entity processing failed, {}", defaultMessage);
         HttpHeaders headers = new HttpHeaders();
-        headers.add("X-itrackApp-error", defaultMessage);
-        headers.add("X-itrackApp-params", entityName);
+        headers.add("X-itrack2App-error", defaultMessage);
+        headers.add("X-itrack2App-params", entityName);
         return headers;
     }
 }

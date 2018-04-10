@@ -1,16 +1,19 @@
 package com.gspann.itrack.domain.common.location;
 
-import javax.persistence.CascadeType;
+import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.AbstractIdentifiable;
+import org.hibernate.annotations.Immutable;
+
+import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,21 +21,21 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Getter
-@Accessors(chain = true, fluent=true)
+@Accessors(chain = true, fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor(staticName="of")
+@AllArgsConstructor(staticName = "of")
 @Entity
-@Table(name = "LOCATION_CITY", uniqueConstraints = @UniqueConstraint(name = "UNQ_CITY", columnNames = { "NAME",
-		"STATE_ID" }))
-public class City extends AbstractIdentifiable<City, Integer> {
+@Table(name = "CITIES", uniqueConstraints = @UniqueConstraint(name = UNQ_CITY, columnNames = { "NAME", "STATE_ID" }))
+@Immutable
+public class City extends AbstractIdentifiable<Integer> {
 
 	@NotNull
 	@Column(name = "NAME", nullable = false, length = 20)
 	private String name;
 
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.common.location.State.class, cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch=FetchType.LAZY)
-	@JoinColumn(name = "STATE_ID", nullable = false)
+	@ManyToOne(targetEntity = com.gspann.itrack.domain.common.location.State.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "STATE_ID", nullable = false, foreignKey = @ForeignKey(name = FK_CITIES_STATE_ID))
 	private State state;
 
 	@Override

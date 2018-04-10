@@ -9,7 +9,7 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
-import com.gspann.itrack.domain.common.skill.Practice;
+import com.gspann.itrack.domain.model.org.structure.Practice;
 
 @Repository
 public class SkillsRepositoryImpl implements SkillsRepository {
@@ -37,8 +37,8 @@ public class SkillsRepositoryImpl implements SkillsRepository {
 	public Optional<Practice> findPracticeByName(String practiceName) {
 		Practice practice = null;
 		try {
-			practice = entityManager
-					.createQuery("from Practice p where name = '" + practiceName + "'", Practice.class).getSingleResult();
+			practice = entityManager.createQuery("from Practice p where name = '" + practiceName + "'", Practice.class)
+					.getSingleResult();
 		} catch (NoResultException e) {
 			// No state with such name exists, so return null
 		}

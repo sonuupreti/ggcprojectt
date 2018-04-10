@@ -1,8 +1,7 @@
 package com.gspann.itrack.web.rest.errors;
 
-import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.adapter.rest.error.ErrorConstants;
-import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,11 +15,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.zalando.problem.spring.web.advice.MediaTypes;
 
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.rest.error.ErrorConstants;
+import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
 
 /**
  * Test class for the ExceptionTranslator controller advice.

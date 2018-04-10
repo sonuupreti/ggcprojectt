@@ -1,5 +1,11 @@
 package com.gspann.itrack.security;
 
+import static org.assertj.core.api.Assertions.*;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Optional;
+
 import org.junit.Test;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -9,12 +15,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 
 import com.gspann.itrack.infra.security.AuthoritiesConstants;
 import com.gspann.itrack.infra.security.SecurityUtils;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Optional;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 /**
 * Test class for the SecurityUtils utility class.

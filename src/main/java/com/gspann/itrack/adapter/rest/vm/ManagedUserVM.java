@@ -1,7 +1,8 @@
 package com.gspann.itrack.adapter.rest.vm;
 
-import com.gspann.itrack.service.dto.UserDTO;
 import javax.validation.constraints.Size;
+
+import com.gspann.itrack.service.dto.UserDTO;
 
 /**
  * View Model extending the UserDTO, which is meant to be used in the user management UI.

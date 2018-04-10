@@ -1,11 +1,11 @@
 package com.gspann.itrack.adapter.rest;
 
-import com.gspann.itrack.config.DefaultProfileUtil;
-
 import io.github.jhipster.config.JHipsterProperties;
 
 import org.springframework.core.env.Environment;
 import org.springframework.web.bind.annotation.*;
+
+import com.gspann.itrack.infra.config.DefaultProfileUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;

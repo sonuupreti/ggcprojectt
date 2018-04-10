@@ -1,11 +1,6 @@
 package com.gspann.itrack.service;
 
-import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.adapter.persistence.repository.UserRepository;
-import com.gspann.itrack.application.service.UserService;
-import com.gspann.itrack.config.Constants;
-import com.gspann.itrack.domain.User;
-import com.gspann.itrack.service.dto.UserDTO;
+import static org.assertj.core.api.Assertions.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -17,8 +12,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
-
-import static org.assertj.core.api.Assertions.assertThat;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.application.service.UserService;
+import com.gspann.itrack.domain.User;
+import com.gspann.itrack.infra.config.Constants;
+import com.gspann.itrack.service.dto.UserDTO;
 
 /**
  * Test class for the UserResource REST controller.
@@ -57,7 +56,7 @@ public class UserServiceIntTest {
         if (!userRepository.findOneByLogin(Constants.ANONYMOUS_USER).isPresent()) {
             userRepository.saveAndFlush(user);
         }
-        final PageRequest pageable = new PageRequest(0, (int) userRepository.count());
+        final PageRequest pageable = PageRequest.of(0, (int) userRepository.count());
         final Page<UserDTO> allManagedUsers = userService.getAllManagedUsers(pageable);
         assertThat(allManagedUsers.getContent().stream()
             .noneMatch(user -> Constants.ANONYMOUS_USER.equals(user.getLogin())))

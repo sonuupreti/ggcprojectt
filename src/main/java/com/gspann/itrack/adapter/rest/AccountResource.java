@@ -1,9 +1,9 @@
 package com.gspann.itrack.adapter.rest;
 
-import com.gspann.itrack.adapter.rest.error.InternalServerErrorException;
-import com.gspann.itrack.application.service.UserService;
-import com.gspann.itrack.service.dto.UserDTO;
-import com.codahale.metrics.annotation.Timed;
+import java.security.Principal;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-import java.security.Principal;
-import java.util.*;
+import com.codahale.metrics.annotation.Timed;
+import com.gspann.itrack.adapter.rest.error.InternalServerErrorException;
+import com.gspann.itrack.application.service.UserService;
+import com.gspann.itrack.service.dto.UserDTO;
 
 /**
  * REST controller for managing the current user's account.

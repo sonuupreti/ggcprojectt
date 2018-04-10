@@ -1,59 +1,65 @@
 package com.gspann.itrack.domain.common.location;
 
+import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Immutable;
 
-import com.gspann.itrack.domain.common.Assignable;
+import com.gspann.itrack.common.enums.standard.CountryCode;
+import com.gspann.itrack.domain.common.type.AbstractAssignable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Getter
-@Accessors(chain = true, fluent=true)
+@Accessors(chain = true, fluent = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "LOCATION_COUNTRY", uniqueConstraints = 
-	{
-			@UniqueConstraint(name = "UNQ_CNTRY_CODE", columnNames = { "CODE" }),
-			@UniqueConstraint(name = "UNQ_CNTRY_NAME", columnNames = { "NAME" })
-	})
+@Table(name = "COUNTRIES", uniqueConstraints = {@UniqueConstraint(name = UNQ_COUNTRY_NAME, columnNames = { "NAME" })})
 @Immutable
-public class Country implements Assignable<String> {
+public class Country extends AbstractAssignable<String> {
 
-	@Id
-    @Column(name = "CODE", nullable = false, length = 2)
-    protected String code;
-	
-    @NotNull
-    @Column(name = "NAME", nullable = false, length = 100)
-    private String name;
+	@NotNull
+	@Column(name = "NAME", nullable = false, length = 100)
+	private String name;
 
-//    @NotNull
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch=FetchType.LAZY)
-//    private Set<State> states = new HashSet<State>();
-    
-    public static Country of(String code, String name) {
-    	Country country = new Country();
-    	country.code = code;
-    	country.name = name;
-    	return country;
-    }
+	// @NotNull
+	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "country",
+	// fetch=FetchType.LAZY)
+	// private Set<State> states = new HashSet<State>();
 
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("Country [code=");
-        builder.append(code());
-        builder.append(", name=");
-        builder.append(name);
-        builder.append("]");
-        return builder.toString();
-    }
+	public static Country of(String alpha2, String name) {
+		Country country = new Country();
+		country.code = alpha2;
+		country.name = name;
+		return country;
+	}
+
+	public static Country ofUSA(String alpha2, String name) {
+		return of(CountryCode.US.alpha2(), CountryCode.US.countryName());
+	}
+
+	public static Country ofUK(String alpha2, String name) {
+		return of(CountryCode.UK.alpha2(), CountryCode.UK.countryName());
+	}
+
+	public static Country ofIndia(String alpha2, String name) {
+		return of(CountryCode.IN.alpha2(), CountryCode.IN.countryName());
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Country [code=");
+		builder.append(code());
+		builder.append(", name=");
+		builder.append(name);
+		builder.append("]");
+		return builder.toString();
+	}
 }

@@ -23,11 +23,6 @@
         ],
         "scripts": []
     }],
-    "e2e": {
-        "protractor": {
-            "config": "src/test/javascript/protractor.conf.js"
-        }
-    },
     "lint": [{
             "project": "../../../tsconfig.json"
         },

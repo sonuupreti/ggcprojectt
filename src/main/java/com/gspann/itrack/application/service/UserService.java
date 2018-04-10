@@ -1,13 +1,14 @@
 package com.gspann.itrack.application.service;
 
-import com.gspann.itrack.adapter.persistence.repository.AuthorityRepository;
-import com.gspann.itrack.adapter.persistence.repository.UserRepository;
-import com.gspann.itrack.config.CacheConfiguration;
-import com.gspann.itrack.domain.Authority;
-import com.gspann.itrack.domain.User;
-import com.gspann.itrack.infra.security.SecurityUtils;
-import com.gspann.itrack.config.Constants;
-import com.gspann.itrack.service.dto.UserDTO;
+import java.time.Instant;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,10 +24,13 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import com.gspann.itrack.adapter.persistence.repository.AuthorityRepository;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.domain.Authority;
+import com.gspann.itrack.domain.User;
+import com.gspann.itrack.infra.config.Constants;
+import com.gspann.itrack.infra.security.SecurityUtils;
+import com.gspann.itrack.service.dto.UserDTO;
 
 /**
  * Service class for managing users.
@@ -67,8 +71,7 @@ public class UserService {
                 user.setEmail(email);
                 user.setLangKey(langKey);
                 user.setImageUrl(imageUrl);
-                cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
-                cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
+                this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
             });
     }
@@ -81,8 +84,11 @@ public class UserService {
      */
     public Optional<UserDTO> updateUser(UserDTO userDTO) {
         return Optional.of(userRepository
-            .findOne(userDTO.getId()))
+            .findById(userDTO.getId()))
+            .filter(Optional::isPresent)
+            .map(Optional::get)
             .map(user -> {
+                this.clearUserCaches(user);
                 user.setLogin(userDTO.getLogin());
                 user.setFirstName(userDTO.getFirstName());
                 user.setLastName(userDTO.getLastName());
@@ -93,10 +99,11 @@ public class UserService {
                 Set<Authority> managedAuthorities = user.getAuthorities();
                 managedAuthorities.clear();
                 userDTO.getAuthorities().stream()
-                    .map(authorityRepository::findOne)
+                    .map(authorityRepository::findById)
+                    .filter(Optional::isPresent)
+                    .map(Optional::get)
                     .forEach(managedAuthorities::add);
-                cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
-                cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
+                this.clearUserCaches(user);
                 log.debug("Changed Information for User: {}", user);
                 return user;
             })
@@ -106,8 +113,7 @@ public class UserService {
     public void deleteUser(String login) {
         userRepository.findOneByLogin(login).ifPresent(user -> {
             userRepository.delete(user);
-            cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
-            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
+            this.clearUserCaches(user);
             log.debug("Deleted User: {}", user);
         });
     }
@@ -146,6 +152,7 @@ public class UserService {
      * @param authentication OAuth2 authentication
      * @return the user from the authentication
      */
+    @SuppressWarnings("unchecked")
     public UserDTO getUserFromAuthentication(OAuth2Authentication authentication) {
         Map<String, Object> details = (Map<String, Object>) authentication.getUserAuthentication().getDetails();
         User user = getUser(details);
@@ -187,8 +194,7 @@ public class UserService {
         } else {
             log.debug("Saving user '{}' in local database...", user.getLogin());
             userRepository.save(user);
-            cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE).evict(user.getLogin());
-            cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE).evict(user.getEmail());
+            this.clearUserCaches(user);
         }
         return user;
     }
@@ -205,6 +211,7 @@ public class UserService {
         return token;
     }
 
+    @SuppressWarnings("unchecked")
     private static Set<Authority> extractAuthorities(OAuth2Authentication authentication, Map<String, Object> details) {
         Set<Authority> userAuthorities;
         // get roles from details
@@ -224,6 +231,7 @@ public class UserService {
 
     private static User getUser(Map<String, Object> details) {
         User user = new User();
+        user.setId((String) details.get("sub"));
         user.setLogin((String) details.get("preferred_username"));
         if (details.get("given_name") != null) {
             user.setFirstName((String) details.get("given_name"));
@@ -247,6 +255,7 @@ public class UserService {
         if (details.get("picture") != null) {
             user.setImageUrl((String) details.get("picture"));
         }
+        user.setActivated(true);
         return user;
     }
 
@@ -265,4 +274,8 @@ public class UserService {
                     }).collect(Collectors.toSet());
     }
 
+    private void clearUserCaches(User user) {
+        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_LOGIN_CACHE)).evict(user.getLogin());
+        Objects.requireNonNull(cacheManager.getCache(UserRepository.USERS_BY_EMAIL_CACHE)).evict(user.getEmail());
+    }
 }

@@ -1,14 +1,6 @@
 package com.gspann.itrack.adapter.rest;
 
-import com.gspann.itrack.adapter.persistence.repository.UserRepository;
-import com.gspann.itrack.adapter.rest.util.PaginationUtil;
-import com.gspann.itrack.application.service.UserService;
-import com.gspann.itrack.config.Constants;
-import com.gspann.itrack.infra.security.AuthoritiesConstants;
-import com.codahale.metrics.annotation.Timed;
-import com.gspann.itrack.service.dto.UserDTO;
-
-import io.github.jhipster.web.util.ResponseUtil;
+import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,9 +10,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import java.util.*;
+import com.codahale.metrics.annotation.Timed;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.adapter.rest.util.PaginationUtil;
+import com.gspann.itrack.application.service.UserService;
+import com.gspann.itrack.infra.config.Constants;
+import com.gspann.itrack.infra.security.AuthoritiesConstants;
+import com.gspann.itrack.service.dto.UserDTO;
+
+import io.github.jhipster.web.util.ResponseUtil;
 
 /**
  * REST controller for managing users.

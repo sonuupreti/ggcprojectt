@@ -3,24 +3,26 @@ import org.gradle.internal.os.OperatingSystem
 buildscript {
     repositories {
         mavenLocal()
-        mavenCentral()
         jcenter()
         maven { url "http://repo.spring.io/plugins-release" }
         maven { url "https://plugins.gradle.org/m2/" }
+        // TODO To remove after final Spring Boot 2 release
+        maven { url "https://repo.spring.io/milestone" }
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
         classpath "io.spring.gradle:propdeps-plugin:0.0.9.RELEASE"
-        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.17"
+        classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
     }
 }
 
 plugins {
-    id "org.sonarqube" version "2.5"
-    id "net.ltgt.apt-eclipse" version "0.13"
-    id "net.ltgt.apt-idea" version "0.13"
-    id "net.ltgt.apt" version "0.13"
+    id "org.sonarqube" version "2.6.2"
+    id "net.ltgt.apt-eclipse" version "0.15"
+    id "net.ltgt.apt-idea" version "0.15"
+    id "net.ltgt.apt" version "0.15"
     id "io.spring.dependency-management" version "1.0.3.RELEASE"
     id "com.moowork.node" version "1.2.0"
     //jhipster-needle-gradle-plugins - JHipster will add additional gradle plugins here
@@ -38,17 +40,7 @@ apply plugin: 'war'
 apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'eclipse'
-apply plugin: 'application'
-
-mainClassName = 'com.gspann.itrack.ItrackApplication'
-
-eclipse {
-    classpath {
-        downloadJavadoc = true
-        downloadSources = true
-    }
-}
+apply plugin: 'idea'
 
 dependencyManagement {
   imports {
@@ -62,33 +54,26 @@ defaultTasks 'bootRun'
 group = 'com.gspann.itrack'
 version = '0.0.1-SNAPSHOT'
 
-description = 'Professional Services Automation'
-
-/*bootRepackage {
-   mainClass = 'com.gspann.itrack.ItrackApp'
-}*/
-
-/*war {
-
-}*/
-
-/*springBoot {
-    mainClass = 'com.gspann.itrack.ItrackApp'
-    executable = true
-    buildInfo()
-}*/
+description = ''
 
 bootWar {
-	classifier = 'boot'
-	mainClassName = 'com.gspann.itrack.ItrackApplication'
-    //executable = true
-    //buildInfo()
+   mainClassName = 'com.gspann.itrack.ItrackApplication'
+}
+
+war {
+
+}
+
+springBoot {
+    mainClassName = 'com.gspann.itrack.ItrackApplication'
+    buildInfo()
 }
 
 if (OperatingSystem.current().isWindows()) {
-    task pathingJar(type: Jar) {
+    // https://stackoverflow.com/questions/40037487/the-filename-or-extension-is-too-long-error-using-gradle
+    task classpathJar(type: Jar) {
         dependsOn configurations.runtime
-        appendix = 'pathing'
+        appendix = 'classpath'
 
         doFirst {
             manifest {
@@ -99,19 +84,11 @@ if (OperatingSystem.current().isWindows()) {
         }
     }
 
-    /*bootRun {
-        addResources = false
-        dependsOn pathingJar
+    bootRun {
+        dependsOn classpathJar
         doFirst {
-            classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", pathingJar.archivePath)
+            classpath = files("$buildDir/classes/java/main", "$buildDir/resources/main", classpathJar.archivePath)
         }
-    }*/
-    bootRun {
-        sourceResources sourceSets.main
-    }
-} else {
-    bootRun {
-        addResources = false
     }
 }
 
@@ -124,32 +101,15 @@ test {
     reports.html.enabled = false
 }
 
-task cucumberTest(type: Test) {
-    description = "Execute cucumber BDD tests."
-    group = "verification"
-    include '**/CucumberTest*'
-
-    // uncomment if the tests reports are not generated
-    // see https://github.com/jhipster/generator-jhipster/pull/2771 and https://github.com/jhipster/generator-jhipster/pull/4484
-    // ignoreFailures true
-    reports.html.enabled = false
-}
-
-check.dependsOn cucumberTest
 task testReport(type: TestReport) {
     destinationDir = file("$buildDir/reports/tests")
     reportOn test
 }
 
-task cucumberTestReport(type: TestReport) {
-    destinationDir = file("$buildDir/reports/tests")
-    reportOn cucumberTest
-}
 
 apply from: 'gradle/docker.gradle'
 apply from: 'gradle/sonar.gradle'
 apply from: 'gradle/liquibase.gradle'
-apply from: 'gradle/mapstruct.gradle'
 //jhipster-needle-gradle-apply-from - JHipster will add additional gradle scripts to be applied here
 
 if (project.hasProperty('prod')) {
@@ -174,11 +134,18 @@ configurations {
 repositories {
     mavenLocal()
     jcenter()
+    // TODO To remove after final Spring Boot 2 release
+    maven { url "https://repo.spring.io/milestone" }
+    maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+    //jhipster-needle-gradle-repositories - JHipster will add additional repositories
 }
 
 dependencies {
+    // TODO To remove after final Spring Boot 2 release
+    compile "javax.xml.bind:jaxb-api"
     compile "org.springframework.boot:spring-boot-starter-cache"
-    compile "io.github.jhipster:jhipster"
+    // TODO remove the "changing: true" when the JHipster server library is released
+    compile group: "io.github.jhipster", name: "jhipster", version: jhipster_dependencies_version, changing: true
     compile "io.dropwizard.metrics:metrics-core"
     compile "io.dropwizard.metrics:metrics-jcache"
     compile "io.dropwizard.metrics:metrics-json"
@@ -201,17 +168,17 @@ dependencies {
     compile "commons-io:commons-io"
     compile "javax.transaction:javax.transaction-api"
     compile "org.ehcache:ehcache"
-    compile "org.hibernate:hibernate-jcache"
     compile "org.hibernate:hibernate-entitymanager"
     compile "org.hibernate:hibernate-envers"
-    compile "org.hibernate:hibernate-validator"
+    compile "org.hibernate.validator:hibernate-validator"
     compile "org.liquibase:liquibase-core"
     compile "com.mattbertolini:liquibase-slf4j"
-    compile "org.springframework.boot:spring-boot-actuator"
-    compile "org.springframework.boot:spring-boot-autoconfigure"
     compile "org.springframework.boot:spring-boot-loader-tools"
     compile "org.springframework.boot:spring-boot-starter-mail"
     compile "org.springframework.boot:spring-boot-starter-logging"
+    compile ("org.springframework.boot:spring-boot-starter-actuator") {
+        exclude module: 'micrometer-core'
+    }
     compile "org.springframework.boot:spring-boot-starter-aop"
     compile "org.springframework.boot:spring-boot-starter-data-jpa"
     compile "org.springframework.boot:spring-boot-starter-security"
@@ -222,11 +189,11 @@ dependencies {
     compile "org.springframework.boot:spring-boot-starter-thymeleaf"
     compile "org.zalando:problem-spring-web"
     compile "org.springframework.cloud:spring-cloud-spring-service-connector"
-    compile "org.springframework:spring-context-support"
     compile "org.springframework.security:spring-security-config"
     compile "org.springframework.security:spring-security-data"
     compile "org.springframework.security:spring-security-web"
     compile "org.springframework.security.oauth:spring-security-oauth2"
+    compile "org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure"
     compile ("io.springfox:springfox-swagger2") {
         exclude module: 'mapstruct'
     }
@@ -234,12 +201,14 @@ dependencies {
     compile "org.postgresql:postgresql"
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     
-	compile("org.javamoney:moneta:1.1")
-	compile("org.jadira.usertype:usertype.core:6.0.1.GA")
-	
+    annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+    annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
+        exclude group: 'com.vaadin.external.google', module: 'android-json'
+    }
+    annotationProcessor "org.projectlombok:lombok:1.16.20"
+    
     testCompile "com.jayway.jsonpath:json-path"
-    testCompile "info.cukes:cucumber-junit"
-    testCompile "info.cukes:cucumber-spring"
     testCompile ("org.springframework.boot:spring-boot-starter-test") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
@@ -251,19 +220,15 @@ dependencies {
     testCompile "com.mattbertolini:liquibase-slf4j"
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "com.h2database:h2"
-    optional ("org.springframework.boot:spring-boot-configuration-processor") {
-        exclude group: 'com.vaadin.external.google', module: 'android-json'
-    }
-    
-    // dependencies for Lombok
-    compileOnly 'org.projectlombok:lombok:1.16.20'
-	apt "org.projectlombok:lombok:1.16.20"
-
-	compile("org.zalando:logbook-spring-boot-starter:${logbook_version}") {
-		exclude group: "org.zalando", module: "logbook-httpclient"
-	}
-
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
+    
+	compile("org.javamoney:moneta:1.1")
+	compile("org.jadira.usertype:usertype.core:6.0.1.GA")
+	compileOnly('org.projectlombok:lombok:1.16.20')
+	
+	/*compile("org.zalando:logbook-spring-boot-starter:${logbook_version}") {
+		exclude group: "org.zalando", module: "logbook-httpclient"
+	}*/
 }
 
 task cleanResources(type: Delete) {
@@ -271,10 +236,10 @@ task cleanResources(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.4'
+    gradleVersion = '4.6'
 }
 
-task stage(dependsOn: 'bootRepackage') {
+task stage(dependsOn: 'bootWar') {
 }
 
 if (project.hasProperty('nodeInstall')) {
@@ -287,6 +252,5 @@ if (project.hasProperty('nodeInstall')) {
 }
 
 compileJava.dependsOn processResources
-//processResources.dependsOn cleanResources,bootBuildInfo
-processResources.dependsOn cleanResources
-//bootBuildInfo.mustRunAfter cleanResources
+processResources.dependsOn cleanResources,bootBuildInfo
+bootBuildInfo.mustRunAfter cleanResources

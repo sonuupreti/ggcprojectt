@@ -1,43 +1,14 @@
 import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { DatePipe } from '@angular/common';
+import { NgbDateAdapter } from '@ng-bootstrap/ng-bootstrap';
 
-import {
-    ItrackSharedLibsModule,
-    ItrackSharedCommonModule,
-    CSRFService,
-    AuthServerProvider,
-    AccountService,
-    UserService,
-    StateStorageService,
-    LoginService,
-    Principal,
-    HasAnyAuthorityDirective,
-} from './';
+import { NgbDateMomentAdapter } from './util/datepicker-adapter';
+import { Itrack2SharedLibsModule, Itrack2SharedCommonModule, HasAnyAuthorityDirective } from './';
 
 @NgModule({
-    imports: [
-        ItrackSharedLibsModule,
-        ItrackSharedCommonModule
-    ],
-    declarations: [
-        HasAnyAuthorityDirective
-    ],
-    providers: [
-        LoginService,
-        AccountService,
-        StateStorageService,
-        Principal,
-        CSRFService,
-        AuthServerProvider,
-        UserService,
-        DatePipe
-    ],
-    exports: [
-        ItrackSharedCommonModule,
-        HasAnyAuthorityDirective,
-        DatePipe
-    ],
-    schemas: [CUSTOM_ELEMENTS_SCHEMA]
-
+  imports: [Itrack2SharedLibsModule, Itrack2SharedCommonModule],
+  declarations: [HasAnyAuthorityDirective],
+  providers: [{ provide: NgbDateAdapter, useClass: NgbDateMomentAdapter }],
+  exports: [Itrack2SharedCommonModule, HasAnyAuthorityDirective],
+  schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
-export class ItrackSharedModule {}
+export class Itrack2SharedModule {}

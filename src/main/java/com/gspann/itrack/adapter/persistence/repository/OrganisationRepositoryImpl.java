@@ -9,11 +9,11 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
-import com.gspann.itrack.domain.model.organisation.Company;
-import com.gspann.itrack.domain.model.organisation.Department;
-import com.gspann.itrack.domain.model.organisation.Designation;
-import com.gspann.itrack.domain.model.organisation.EmploymentStatus;
-import com.gspann.itrack.domain.model.organisation.EngagementStatus;
+import com.gspann.itrack.domain.model.org.structure.Company;
+import com.gspann.itrack.domain.model.org.structure.Department;
+import com.gspann.itrack.domain.model.org.structure.Designation;
+import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
+import com.gspann.itrack.domain.model.org.structure.EngagementStatus;
 
 @Repository
 public class OrganisationRepositoryImpl implements OrganisationRepository {
@@ -36,7 +36,7 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	public Optional<Company> findCompanyById(Short id) {
 		return Optional.ofNullable(entityManager.find(Company.class, id));
 	}
-	
+
 	@Override
 	public Optional<Company> findCompanyByName(String name) {
 		Company company = null;
@@ -81,7 +81,7 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 		}
 		return Optional.ofNullable(department);
 	}
-	
+
 	@Override
 	public List<Department> findAllDepartments() {
 		return entityManager.createQuery("from Department d", Department.class).getResultList();
@@ -114,7 +114,7 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 		}
 		return Optional.ofNullable(designation);
 	}
-	
+
 	@Override
 	public List<Designation> findAllDesignations() {
 		return entityManager.createQuery("select d from Designation d", Designation.class).getResultList();
@@ -122,7 +122,7 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 
 	@Override
 	public EmploymentStatus saveEmploymentStatus(EmploymentStatus employmentStatus) {
-		Optional<Designation> existingEmploymentStatus = findDesignationById(employmentStatus.id());
+		Optional<EmploymentStatus> existingEmploymentStatus = findEmploymentStatusByCode(employmentStatus.code());
 		if (existingEmploymentStatus.isPresent()) {
 			return entityManager.merge(employmentStatus);
 		} else {
@@ -132,15 +132,8 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	}
 
 	@Override
-	public Optional<EmploymentStatus> findEmploymentStatusById(Short id) {
-		return Optional.ofNullable(entityManager.find(EmploymentStatus.class, id));
-	}
-
-	@Override
 	public Optional<EmploymentStatus> findEmploymentStatusByCode(String statusCode) {
-		return Optional.ofNullable(
-				entityManager.createQuery("select e from EmploymentStatus e where statusCode = '" + statusCode + "'",
-						EmploymentStatus.class).getSingleResult());
+		return Optional.ofNullable(entityManager.find(EmploymentStatus.class, statusCode));
 	}
 
 	@Override
@@ -149,19 +142,14 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	}
 
 	@Override
-	public EngagementStatus saveEngagementStatus(EngagementStatus employmentStatus) {
-		Optional<EngagementStatus> existingEngagementStatus = findEngagementStatusById(employmentStatus.id());
+	public EngagementStatus saveEngagementStatus(EngagementStatus engagementStatus) {
+		Optional<EngagementStatus> existingEngagementStatus = findEngagementStatusByCode(engagementStatus.code());
 		if (existingEngagementStatus.isPresent()) {
-			return entityManager.merge(employmentStatus);
+			return entityManager.merge(engagementStatus);
 		} else {
-			entityManager.persist(employmentStatus);
-			return employmentStatus;
+			entityManager.persist(engagementStatus);
+			return engagementStatus;
 		}
-	}
-
-	@Override
-	public Optional<EngagementStatus> findEngagementStatusById(Short id) {
-		return Optional.ofNullable(entityManager.find(EngagementStatus.class, id));
 	}
 
 	@Override

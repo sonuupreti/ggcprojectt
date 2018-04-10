@@ -1,28 +1,30 @@
 package com.gspann.itrack.domain.model.staff;
 
+import org.hibernate.annotations.Immutable;
+
 import com.gspann.itrack.common.enums.StringValuedEnum;
 
+@Immutable
 public enum Gender implements StringValuedEnum {
 	
-	MALE("Male"), FEMALE("Female"), OTHER("Other"); // Like transgender
+	MALE("Male"), FEMALE("Female"), OTHER("Other"); // Like trans-gender
 
-	private String value;
+	private String description;
 
-	private Gender(final String value) {
-		this.value = value;
+	private Gender(final String description) {
+		this.description = description;
 	}
 
 	@Override
 	public String value() {
-		return this.value;
+		return this.description;
 	}
 
 	@Override
-	public StringValuedEnum enumByValue(String value) {
+	public StringValuedEnum enumByValue(String description) {
 		for (Gender e : values())
-			if (e.value().equals(value))
+			if (e.value().equals(description))
 				return e;
 		throw new IllegalArgumentException();
 	}
-
 }

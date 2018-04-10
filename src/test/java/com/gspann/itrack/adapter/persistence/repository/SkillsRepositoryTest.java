@@ -13,7 +13,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.domain.common.skill.Practice;
+import com.gspann.itrack.domain.model.org.structure.Practice;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
@@ -27,14 +27,14 @@ public class SkillsRepositoryTest {
 
 	@Test
 	public void testSavePractice() {
-		Practice DevOps = Practice.of("DevOps", "Manoj Nautiyal", "Maven, Gradle, Jenkins, Docker, Promethius");
-		systemUnderTest.savePractice(DevOps);
-		
-		Practice QA = Practice.of("QA", "Ankit Bhardwaj", "JUnit, Salenium, Cucumber, Functional Testing,Integration Testing, Load Testing");
-		systemUnderTest.savePractice(QA);
-		
-		Practice development = Practice.of("Development", "Rajveer Singh", "Java, Spring, Hibernate, AngularJS");
-		systemUnderTest.savePractice(development);
+//		Practice DevOps = Practice.of("DevOps", "Manoj Nautiyal", "Maven, Gradle, Jenkins, Docker, Promethius");
+//		systemUnderTest.savePractice(DevOps);
+//		
+//		Practice QA = Practice.of("QA", "Ankit Bhardwaj", "JUnit, Salenium, Cucumber, Functional Testing,Integration Testing, Load Testing");
+//		systemUnderTest.savePractice(QA);
+//		
+//		Practice development = Practice.of("Development", "Rajveer Singh", "Java, Spring, Hibernate, AngularJS");
+//		systemUnderTest.savePractice(development);
 	}
 
 	@Test

@@ -1,16 +1,17 @@
 {
   "generator-jhipster": {
     "promptValues": {
-      "packageName": "com.gspann.itrack"
+      "packageName": "com.gspann.itrack2"
     },
-    "jhipsterVersion": "4.14.1",
-    "baseName": "itrack",
-    "packageName": "com.gspann.itrack",
-    "packageFolder": "com/gspann/itrack",
+    "jhipsterVersion": "5.0.0-beta.0",
+    "baseName": "itrack2",
+    "reactive": false,
+    "packageName": "com.gspann.itrack2",
+    "packageFolder": "com/gspann/itrack2",
     "serverPort": "8080",
     "authenticationType": "oauth2",
     "cacheProvider": "ehcache",
-    "enableHibernateCache": true,
+    "enableHibernateCache": false,
     "websocket": false,
     "databaseType": "sql",
     "devDatabaseType": "postgresql",
@@ -19,16 +20,12 @@
     "messageBroker": false,
     "serviceDiscoveryType": false,
     "buildTool": "gradle",
-    "enableSocialSignIn": false,
     "enableSwaggerCodegen": false,
     "clientFramework": "angularX",
     "useSass": false,
     "clientPackageManager": "yarn",
     "applicationType": "monolith",
-    "testFrameworks": [
-      "cucumber",
-      "protractor"
-    ],
+    "testFrameworks": [],
     "jhiPrefix": "jhi",
     "enableTranslation": false
   }

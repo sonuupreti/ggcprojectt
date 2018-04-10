@@ -1,5 +1,13 @@
 package com.gspann.itrack.adapter.rest.error;
 
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.dao.ConcurrencyFailureException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -15,12 +23,6 @@ import org.zalando.problem.spring.web.advice.ProblemHandling;
 import org.zalando.problem.spring.web.advice.validation.ConstraintViolationProblem;
 
 import com.gspann.itrack.adapter.rest.util.HeaderUtil;
-
-import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
-import javax.servlet.http.HttpServletRequest;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Controller advice to translate the server side exceptions to client-friendly json structures.
@@ -78,6 +80,15 @@ public class ExceptionTranslator implements ProblemHandling {
             .withStatus(defaultConstraintViolationStatus())
             .with("message", ErrorConstants.ERR_VALIDATION)
             .with("fieldErrors", fieldErrors)
+            .build();
+        return create(ex, problem, request);
+    }
+
+    @ExceptionHandler(NoSuchElementException.class)
+    public ResponseEntity<Problem> handleNoSuchElementException(NoSuchElementException ex, NativeWebRequest request) {
+        Problem problem = Problem.builder()
+            .withStatus(Status.NOT_FOUND)
+            .with("message", ErrorConstants.ENTITY_NOT_FOUND_TYPE)
             .build();
         return create(ex, problem, request);
     }

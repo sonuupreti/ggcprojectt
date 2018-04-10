@@ -1,9 +1,10 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
-import com.gspann.itrack.domain.PersistentAuditEvent;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.gspann.itrack.domain.PersistentAuditEvent;
 
 import java.time.Instant;
 import java.util.List;

@@ -1,11 +1,10 @@
 package com.gspann.itrack.web.rest;
 
-import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.adapter.persistence.repository.PersistenceAuditEventRepository;
-import com.gspann.itrack.adapter.rest.AuditResource;
-import com.gspann.itrack.application.service.AuditEventService;
-import com.gspann.itrack.domain.PersistentAuditEvent;
-import com.gspann.itrack.infra.audit.AuditEventConverter;
+import static org.hamcrest.Matchers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+import java.time.Instant;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -22,12 +21,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.format.DateTimeFormatter;
-
-import static org.hamcrest.Matchers.hasItem;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.PersistenceAuditEventRepository;
+import com.gspann.itrack.adapter.rest.AuditResource;
+import com.gspann.itrack.application.service.AuditEventService;
+import com.gspann.itrack.domain.PersistentAuditEvent;
+import com.gspann.itrack.infra.audit.AuditEventConverter;
 
 /**
  * Test class for the AuditResource REST controller.

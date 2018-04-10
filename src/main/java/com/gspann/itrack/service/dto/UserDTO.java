@@ -1,12 +1,11 @@
 package com.gspann.itrack.service.dto;
 
-import com.gspann.itrack.config.Constants;
-
 import com.gspann.itrack.domain.Authority;
 import com.gspann.itrack.domain.User;
+import com.gspann.itrack.infra.config.Constants;
 
-import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
 
 import javax.validation.constraints.*;
 import java.time.Instant;
@@ -18,7 +17,7 @@ import java.util.stream.Collectors;
  */
 public class UserDTO {
 
-    private Long id;
+    private String id;
 
     @NotBlank
     @Pattern(regexp = Constants.LOGIN_REGEX)
@@ -32,7 +31,7 @@ public class UserDTO {
     private String lastName;
 
     @Email
-    @Size(min = 5, max = 100)
+    @Size(min = 5, max = 254)
     private String email;
 
     @Size(max = 256)
@@ -75,11 +74,11 @@ public class UserDTO {
             .collect(Collectors.toSet());
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

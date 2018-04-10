@@ -1,24 +1,14 @@
 package com.gspann.itrack.web.rest;
 
-import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.adapter.persistence.repository.UserRepository;
-import com.gspann.itrack.adapter.rest.AccountResource;
-import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
-import com.gspann.itrack.application.service.UserService;
-import com.gspann.itrack.domain.Authority;
-import com.gspann.itrack.domain.User;
-import com.gspann.itrack.infra.security.AuthoritiesConstants;
-
-import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.user;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,6 +22,15 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.persistence.repository.UserRepository;
+import com.gspann.itrack.adapter.rest.AccountResource;
+import com.gspann.itrack.adapter.rest.error.ExceptionTranslator;
+import com.gspann.itrack.application.service.UserService;
+import com.gspann.itrack.domain.Authority;
+import com.gspann.itrack.domain.User;
+import com.gspann.itrack.infra.security.AuthoritiesConstants;
+
 /**
  * Test class for the AccountResource REST controller.
  *
@@ -39,7 +38,7 @@ import org.springframework.web.context.WebApplicationContext;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
-public class AccountResourceIntTest {
+public class AccountResourceIntTest{
 
     @Autowired
     private UserRepository userRepository;
@@ -58,8 +57,7 @@ public class AccountResourceIntTest {
     @Before
     public void setup() {
         MockitoAnnotations.initMocks(this);
-        AccountResource accountUserMockResource =
-            new AccountResource(userService);
+        AccountResource accountUserMockResource = new AccountResource(userService);
 
         this.restUserMockMvc = MockMvcBuilders.standaloneSetup(accountUserMockResource)
             .setControllerAdvice(exceptionTranslator)
@@ -95,6 +93,7 @@ public class AccountResourceIntTest {
         authorities.add(authority);
 
         User user = new User();
+        user.setId(RandomStringUtils.randomAlphanumeric(50));
         user.setLogin("test");
         user.setFirstName("john");
         user.setLastName("doe");

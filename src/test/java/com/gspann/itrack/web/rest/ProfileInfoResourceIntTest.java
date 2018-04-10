@@ -1,8 +1,8 @@
 package com.gspann.itrack.web.rest;
 
-import io.github.jhipster.config.JHipsterProperties;
-import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.adapter.rest.ProfileInfoResource;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -16,10 +16,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.adapter.rest.ProfileInfoResource;
+
+import io.github.jhipster.config.JHipsterProperties;
 
 /**
  * Test class for the ProfileInfoResource REST controller.
