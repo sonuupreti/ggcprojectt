@@ -57,6 +57,10 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	@Column(name = "CUSTOMER_REPORTING_MANAGER", nullable = false, length = 150)
 	private String customerReportingManager;
 
+	@Column(name = "CUSTOMER_TIME_TRACKING", length = 1)
+	@org.hibernate.annotations.Type(type = "yes_no")
+	private boolean customerTimeTracking = false;
+
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "ACCOUNT_MANAGER_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_ACCOUNTS_MGR_RESOURCE_CODE))
@@ -68,10 +72,6 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	@OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "LOCATION_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_ACCOUNTS_LOCATION_ID))
 	private City location;
-
-	@Column(name = "CUSTOMER_TIME_TRACKING", length = 1)
-	@org.hibernate.annotations.Type(type = "yes_no")
-	private boolean customerTimeTracking = false;
 
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "ACCOUNT_CODE", nullable = false)

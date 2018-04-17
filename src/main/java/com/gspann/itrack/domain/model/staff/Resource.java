@@ -162,10 +162,10 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	@Column(name = "EXIT_DATE", nullable = true)
 	private LocalDate exitDate;
 
-	@Column(name = "CUSTOMER_TIME_TRACKING", length = 1)
-	@org.hibernate.annotations.Type(type = "yes_no")
-	@org.hibernate.annotations.ColumnDefault("'N'")
-	private boolean customerTimeTracking = false;
+//	@Column(name = "CUSTOMER_TIME_TRACKING", length = 1)
+//	@org.hibernate.annotations.Type(type = "yes_no")
+//	@org.hibernate.annotations.ColumnDefault("'N'")
+//	private boolean customerTimeTracking = false;
 
 	@NotNull
 	@OneToMany(fetch = FetchType.LAZY)

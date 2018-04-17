@@ -142,3 +142,5 @@ Desktop.ini
 ######################
 .eslintcache
 /logs/
+/.cache-loader/
+/.apt_generated/

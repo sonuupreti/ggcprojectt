@@ -40,7 +40,7 @@ import lombok.experimental.Accessors;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "COST_RATE_TYPE")
-@DiscriminatorValue("NON_FTE_COST_RATE")
+@DiscriminatorValue("NON_FTE_COST_RATE") // CostRateType.NON_FTE_COST_RATE.name()
 // Discriminator values : FTE_COST_RATE, NON_FTE_COST_RATE
 // to be specified in child classes - FTECost, NonFTECost
 public class NonFTECost implements Costing, Versionable<Long> {

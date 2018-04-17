@@ -3,6 +3,7 @@ import org.gradle.internal.os.OperatingSystem
 buildscript {
     repositories {
         mavenLocal()
+		mavenCentral()
         jcenter()
         maven { url "http://repo.spring.io/plugins-release" }
         maven { url "https://plugins.gradle.org/m2/" }
@@ -15,6 +16,7 @@ buildscript {
         classpath "io.spring.gradle:propdeps-plugin:0.0.9.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
+		classpath('com.unquietcode.tools.flapi:flapi-gradle-plugin:2.0')
     }
 }
 
@@ -40,7 +42,8 @@ apply plugin: 'war'
 apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'idea'
+apply plugin: 'com.unquietcode.flapi.plugin'
+apply plugin: 'eclipse'
 
 dependencyManagement {
   imports {
@@ -133,6 +136,7 @@ configurations {
 
 repositories {
     mavenLocal()
+	mavenCentral()
     jcenter()
     // TODO To remove after final Spring Boot 2 release
     maven { url "https://repo.spring.io/milestone" }
@@ -202,7 +206,7 @@ dependencies {
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
-    annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+    //annotationProcessor "org.hibernate:hibernate-jpamodelgen"
     annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }
@@ -229,6 +233,20 @@ dependencies {
 	/*compile("org.zalando:logbook-spring-boot-starter:${logbook_version}") {
 		exclude group: "org.zalando", module: "logbook-httpclient"
 	}*/
+	//testCompile('com.unquietcode.tools.flapi:flapi:2.0')
+	compile('com.unquietcode.tools.flapi:flapi:2.0')
+}
+
+flapi {
+
+	descriptors = [
+		'com.gspann.itrack.domain.model.projects.builder.ProjectBuilder'
+	]
+	//classesDirectory = 'build/generated-sources'
+	//sourcesDirectory = 'src/main/java'
+	writeSources = true
+	includeRuntime = true
+	//writeClasses = true
 }
 
 task cleanResources(type: Delete) {

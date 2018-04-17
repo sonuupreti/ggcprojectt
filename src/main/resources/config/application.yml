@@ -47,6 +47,10 @@ spring:
             naming:
                 physical-strategy: org.springframework.boot.orm.jpa.hibernate.SpringPhysicalNamingStrategy
                 implicit-strategy: org.springframework.boot.orm.jpa.hibernate.SpringImplicitNamingStrategy
+        properties:
+            hibernate:
+                temp:
+                    use_jdbc_metadata_defaults: false
     messages:
         basename: i18n/messages
     mvc:

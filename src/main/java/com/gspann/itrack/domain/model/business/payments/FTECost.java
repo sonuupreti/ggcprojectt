@@ -20,7 +20,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @Entity
-@DiscriminatorValue("FTE_COST_RATE")
+@DiscriminatorValue("FTE_COST_RATE") // CostRateType.FTE_COST_RATE.name()
 @SecondaryTable(name = "FTE_COST_DETAILS", pkJoinColumns = @PrimaryKeyJoinColumn(name = "ID"))
 public class FTECost extends NonFTECost {
 

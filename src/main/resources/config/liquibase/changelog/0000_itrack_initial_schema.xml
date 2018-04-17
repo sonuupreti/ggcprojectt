@@ -283,10 +283,6 @@
 			<column name="exit_date" type="date">
 				<constraints nullable="true" />
 			</column>
-			<column name="customer_time_tracking" type="boolean"
-				defaultValueBoolean="false">
-				<constraints nullable="false" />
-			</column>
 		</createTable>
 		<createIndex indexName="idx_resources_name" tableName="resources"
 			unique="false">
@@ -370,6 +366,10 @@
 			<column name="customer_reporting_manager" type="varchar(150)">
 				<constraints nullable="false" />
 			</column>
+			<column name="customer_time_tracking" type="boolean"
+				defaultValueBoolean="false">
+				<constraints nullable="false" />
+			</column>
 			<column name="account_manager_code" type="varchar(20)">
 				<constraints foreignKeyName="fk_accounts_mgr_resource_code"
 					referencedColumnNames="code" referencedTableName="resources"
@@ -378,10 +378,6 @@
 			<column name="location_id" type="int">
 				<constraints foreignKeyName="fk_accounts_location_id"
 					referencedColumnNames="id" referencedTableName="cities" nullable="false" />
-			</column>
-			<column name="customer_time_tracking" type="boolean"
-				defaultValueBoolean="false">
-				<constraints nullable="false" />
 			</column>
 		</createTable>
 		<createIndex indexName="idx_customer_name" tableName="accounts"
@@ -441,25 +437,9 @@
 				<constraints unique="true" nullable="false"
 					uniqueConstraintName="unq_projects_name" />
 			</column>
-			<column name="customer_project_id" type="varchar(150)">
-				<constraints unique="true" nullable="true"
-					uniqueConstraintName="unq_projects_customer_project_id" />
-			</column>
-			<column name="customer_project_name" type="varchar(150)">
-				<constraints unique="true" nullable="true"
-					uniqueConstraintName="unq_projects_customer_project_name" />
-			</column>
 			<column name="prj_type_code" type="varchar(20)">
 				<constraints foreignKeyName="fk_projects_prj_type_code"
 					referencedColumnNames="code" referencedTableName="project_types"
-					nullable="false" />
-			</column>
-			<column name="technologies" type="varchar(255)">
-				<constraints nullable="false" />
-			</column>
-			<column name="account_code" type="varchar(20)">
-				<constraints foreignKeyName="fk_projects_account_code"
-					referencedColumnNames="code" referencedTableName="accounts"
 					nullable="false" />
 			</column>
 			<column name="offshore_mgr_code" type="varchar(20)">
@@ -472,9 +452,6 @@
 					referencedColumnNames="code" referencedTableName="resources"
 					nullable="false" />
 			</column>
-			<column name="customer_manager" type="varchar(150)">
-				<constraints nullable="false" />
-			</column>
 			<column name="location_id" type="int">
 				<constraints foreignKeyName="fk_projects_loc_id"
 					referencedColumnNames="id" referencedTableName="cities" nullable="false" />
@@ -483,6 +460,25 @@
 				<constraints nullable="true" />
 			</column>
 			<column name="till_date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="technologies" type="varchar(255)">
+				<constraints nullable="false" />
+			</column>
+			<column name="account_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_projects_account_code"
+					referencedColumnNames="code" referencedTableName="accounts"
+					nullable="false" />
+			</column>
+			<column name="customer_project_id" type="varchar(150)">
+				<constraints unique="true" nullable="true"
+					uniqueConstraintName="unq_projects_customer_project_id" />
+			</column>
+			<column name="customer_project_name" type="varchar(150)">
+				<constraints unique="true" nullable="true"
+					uniqueConstraintName="unq_projects_customer_project_name" />
+			</column>
+			<column name="customer_manager" type="varchar(150)">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
@@ -520,15 +516,6 @@
 			<column name="version" type="bigint">
 				<constraints nullable="false" />
 			</column>
-			<column name="from_date" type="date">
-				<constraints nullable="false" />
-			</column>
-			<column name="till_date" type="date">
-				<constraints nullable="true" />
-			</column>
-			<column name="proportion" type="tinyint">
-				<constraints nullable="false" />
-			</column>
 			<column name="poject_code" type="varchar(20)">
 				<constraints foreignKeyName="fk_allocations_poject_code"
 					referencedColumnNames="code" referencedTableName="projects"
@@ -538,6 +525,19 @@
 				<constraints foreignKeyName="fk_allocations_resource_code"
 					referencedColumnNames="code" referencedTableName="resources"
 					nullable="false" />
+			</column>
+			<column name="proportion" type="tinyint">
+				<constraints nullable="false" />
+			</column>
+			<column name="from_date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="till_date" type="date">
+				<constraints nullable="true" />
+			</column>
+			<column name="customer_time_tracking" type="boolean"
+				defaultValueBoolean="false">
+				<constraints nullable="false" />
 			</column>
 		</createTable>
 
