@@ -51,12 +51,56 @@ public class Practice extends AbstractAssignable<String> {
 	@JoinColumn(name = "LEAD_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PRACTICES_LEAD_RESOURCE_CODE))
 	private Resource lead;
 
-	public static Practice of(final String code, final String name, final String description, final Resource lead) {
-		Practice practice = new Practice();
-		practice.code = code;
-		practice.name = name;
-		practice.description = description;
-		practice.lead = lead;
-		return practice;
+	public static PracticeCodeBuilder practice() {
+		return new PracticeBuilder();
+	}
+
+	public interface PracticeCodeBuilder {
+		PracticeNameBuilder codedAs(final String code);
+	}
+
+	public interface PracticeNameBuilder {
+		PracticeDescriptionBuilder namedAs(final String name);
+	}
+
+	public interface PracticeDescriptionBuilder {
+		PracticeLeadBuilder withDescription(final String description);
+	}
+
+	public interface PracticeLeadBuilder {
+		Practice leadBy(final Resource lead);
+	}
+
+	private static class PracticeBuilder
+			implements PracticeCodeBuilder, PracticeNameBuilder, PracticeDescriptionBuilder, PracticeLeadBuilder {
+		private Practice practice;
+
+		PracticeBuilder() {
+			practice = new Practice();
+		}
+
+		@Override
+		public PracticeNameBuilder codedAs(final String code) {
+			practice.code = code;
+			return this;
+		}
+
+		@Override
+		public PracticeDescriptionBuilder namedAs(final String name) {
+			practice.name = name;
+			return this;
+		}
+
+		@Override
+		public PracticeLeadBuilder withDescription(String description) {
+			practice.description = description;
+			return this;
+		}
+
+		@Override
+		public Practice leadBy(Resource lead) {
+			practice.lead = lead;
+			return practice;
+		}
 	}
 }

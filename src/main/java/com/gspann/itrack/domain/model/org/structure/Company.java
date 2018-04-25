@@ -41,9 +41,9 @@ public class Company extends AbstractAssignable<String> {
  	@JoinTable(
 	        name = "COMPANY_LOCATION_MAP",
 	        joinColumns = @JoinColumn(name = "COMPANY_CODE", referencedColumnName="CODE", 
-	        	foreignKey = @ForeignKey(name = FK_COMPANY_LOCATION_COMPANY_CODE)),
+	        	foreignKey = @ForeignKey(name = FK_COMPANY_LOCATION_MAP_COMPANY_CODE)),
 	        inverseJoinColumns = @JoinColumn(name = "CITY_ID", referencedColumnName="ID", 
-	        	foreignKey = @ForeignKey(name = FK_COMPANY_LOCATION_CITY_ID))
+	        	foreignKey = @ForeignKey(name = FK_COMPANY_LOCATION_MAP_CITY_ID))
 	)
 	// @formatter:on
 	private Set<City> locations = new HashSet<City>();

@@ -6,8 +6,8 @@ import java.util.Optional;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
+import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
-import com.gspann.itrack.domain.model.org.structure.EngagementStatus;
 
 public interface OrganisationRepository {
 
@@ -35,15 +35,15 @@ public interface OrganisationRepository {
 
 	List<Designation> findAllDesignations();
 
-	EmploymentStatus saveEmploymentStatus(EmploymentStatus employmentStatus);
+	EmploymentType saveEmploymentStatus(EmploymentType employmentStatus);
 
-	Optional<EmploymentStatus> findEmploymentStatusByCode(String statusCode);
+	Optional<EmploymentType> findEmploymentStatusByCode(String statusCode);
 
-	List<EmploymentStatus> findAllEmploymentStatuses();
+	List<EmploymentType> findAllEmploymentStatuses();
 
-	EngagementStatus saveEngagementStatus(EngagementStatus engagementStatus);
+	EmploymentStatus saveEngagementStatus(EmploymentStatus engagementStatus);
 
-	Optional<EngagementStatus> findEngagementStatusByCode(String statusCode);
+	Optional<EmploymentStatus> findEngagementStatusByCode(String statusCode);
 
-	List<EngagementStatus> findAllEngagementStatuses();
+	List<EmploymentStatus> findAllEngagementStatuses();
 }

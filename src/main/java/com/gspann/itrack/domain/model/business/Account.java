@@ -79,5 +79,8 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	private Set<Rebate> rebates = new LinkedHashSet<Rebate>();
 
 	@OneToMany(mappedBy = "account")
-	private List<Project> projects = new ArrayList<>();
+	private List<Project> projects = new ArrayList<Project>();
+	
+	@OneToMany(mappedBy = "account")
+	private List<SOW> sows = new ArrayList<SOW>();
 }

@@ -75,7 +75,12 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	@Column(name = "APPROVAL_STATUS", nullable = false)
 	// TODO: Set updatable and insertable as false and
 	// apply formula (SQL) to calculate total hours from time_sheet_Entries
-	private ApprovalStatus status;
+	private TimesheetStatus status;
+	
+	@Column(name = "USE_AS_TEMPLATE", length = 1)
+	@org.hibernate.annotations.Type(type = "yes_no")
+	@org.hibernate.annotations.ColumnDefault("'N'")
+	private boolean useAsTemplate = false;
 
 	public Map<DayOfWeek, DailyTimeSheet> dailyWiseTimeSheets() {
 		return null;

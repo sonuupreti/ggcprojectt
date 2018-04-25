@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.model.org.structure.Company;
+import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
-import com.gspann.itrack.domain.model.org.structure.EngagementStatus;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
@@ -84,15 +84,15 @@ public class OrganisationRepositoryTest {
 
 	@Test
 	public void testSaveEmploymentStatus() {
-		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.FULLTIME_EMPLOYEE));
-		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.DIRECT_CONTRACTOR));
-		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.SUB_CONTRACTOR));
-		systemUnderTest.saveEmploymentStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.W2_CONSULTANT));
+		systemUnderTest.saveEmploymentStatus(EmploymentType.byStatusCode(EmploymentType.CODE.FULLTIME_EMPLOYEE));
+		systemUnderTest.saveEmploymentStatus(EmploymentType.byStatusCode(EmploymentType.CODE.DIRECT_CONTRACTOR));
+		systemUnderTest.saveEmploymentStatus(EmploymentType.byStatusCode(EmploymentType.CODE.SUB_CONTRACTOR));
+		systemUnderTest.saveEmploymentStatus(EmploymentType.byStatusCode(EmploymentType.CODE.W2_CONSULTANT));
 	}
 
 	@Test
 	public void testFindEmploymentStatusByCode() {
-		assertNotNull(systemUnderTest.findEmploymentStatusByCode(EmploymentStatus.CODE.FULLTIME_EMPLOYEE.name()));
+		assertNotNull(systemUnderTest.findEmploymentStatusByCode(EmploymentType.CODE.FULLTIME_EMPLOYEE.name()));
 	}
 
 	@Test
@@ -102,14 +102,14 @@ public class OrganisationRepositoryTest {
 
 	@Test
 	public void testSaveEngagementStatus() {
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.PENDING));
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ACTIVE));
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.DID_NOT_JOIN));
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ON_BENCH));
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ON_LONG_LEAVE));
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.RESIGNED));
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.TERMINATED));
-		systemUnderTest.saveEngagementStatus(EngagementStatus.byStatusCode(EngagementStatus.CODE.ABSCONDED));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.PENDING));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.ACTIVE));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.DID_NOT_JOIN));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.ON_BENCH));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.ON_LONG_LEAVE));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.RESIGNED));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.TERMINATED));
+		systemUnderTest.saveEngagementStatus(EmploymentStatus.byStatusCode(EmploymentStatus.CODE.ABSCONDED));
 	}
 
 	@Test

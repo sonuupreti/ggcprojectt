@@ -23,7 +23,7 @@ public class Week {
 
 	private Week(LocalDate startingFrom, int weekLength) {
 		this.duration = Duration.ofDays(weekLength);
-		this.dateRange = DateRange.of(startingFrom, startingFrom.plusDays(weekLength));
+		this.dateRange = DateRange.dateRange().startingOn(startingFrom).endingOn(startingFrom.plusDays(weekLength));
 	}
 
 	public static Week of(LocalDate startingFrom) {

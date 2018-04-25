@@ -18,51 +18,81 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 
 @Getter
-@Accessors(chain = true, fluent = true)
+@Accessors(chain = true, fluent=true)
 @NoArgsConstructor
 @Entity
-@Table(name = "EMPLOYMENT_STATUSES", uniqueConstraints = @UniqueConstraint(name = UNQ_EMP_STATUS_DESCRIPTION, columnNames = {
-		"DESCRIPTION" }))
+@Table(name = "EMPLOYMENT_STATUSES", uniqueConstraints = @UniqueConstraint(name = UNQ_EMP_STATUS_DESCRIPTION, columnNames = { "DESCRIPTION"}))
 @Immutable
 public class EmploymentStatus extends AbstractAssignable<String> {
 
+	// Active, Did Not Join, Terminated, On Long leave, On Bench, Pending, Resigned, Absconding
+
 	@NotNull
-	@Column(name = "DESCRIPTION", nullable = false, length = 50)
-	private String description;
-
-	public static EmploymentStatus of(String code, String description) {
-		EmploymentStatus employmentStatus = new EmploymentStatus();
-		employmentStatus.code = code;
-		employmentStatus.description = description;
-		return employmentStatus;
-	}
-
-	public static EmploymentStatus byStatusCode(CODE statusCode) {
-		return of(statusCode.code(), statusCode.description);
-	}
+    @Column(name = "DESCRIPTION", nullable = false, length = 50)
+    private String description;
+	
+    public static EmploymentStatus of(String code, String description) {
+    	EmploymentStatus engagementStatus = new EmploymentStatus();
+    	engagementStatus.code = code;
+    	engagementStatus.description = description;
+    	return engagementStatus;
+    }
+    
+    public static EmploymentStatus byStatusCode(CODE statusCode) {
+    	return of(statusCode.name(), statusCode.description);
+    }
+    
+    public static EmploymentStatus pending() {
+    	return of(CODE.PENDING.name(), CODE.PENDING.description);
+    }
+    
+    public static EmploymentStatus active() {
+    	return of(CODE.ACTIVE.name(), CODE.ACTIVE.description);
+    }
+    
+    public static EmploymentStatus didNotJoin() {
+    	return of(CODE.DID_NOT_JOIN.name(), CODE.DID_NOT_JOIN.description);
+    }
+    
+    public static EmploymentStatus terminated() {
+    	return of(CODE.TERMINATED.name(), CODE.TERMINATED.description);
+    }
+    
+    public static EmploymentStatus onLongLeave() {
+    	return of(CODE.ON_LONG_LEAVE.name(), CODE.ON_LONG_LEAVE.description);
+    }
+    
+    public static EmploymentStatus onBench() {
+    	return of(CODE.ON_BENCH.name(), CODE.ON_BENCH.description);
+    }
+    
+    public static EmploymentStatus resigned() {
+    	return of(CODE.RESIGNED.name(), CODE.RESIGNED.description);
+    }
+    
+    public static EmploymentStatus absconded() {
+    	return of(CODE.ABSCONDED.name(), CODE.ABSCONDED.description);
+    }
 
 	public enum CODE implements StringValuedEnum {
-		// FULLTIME_EMPLOYEE("FTE"), DIRECT_CONTRACTOR("DC"), SUB_CONTRACTOR("SC"),
-		// W2("W2");
-
-		//@formatter:off
-		FULLTIME_EMPLOYEE("FTE", "Full-time Employee"),
-		DIRECT_CONTRACTOR("DC", "Direct Contractor"),
-		SUB_CONTRACTOR("SC", "Sub Contractor"),
-		W2_CONSULTANT("W2", "W2 Consultant");
+		
+		// ACTIVE, DID_NOT_JOIN, TERMINATED, ON_LONG_LEAVE, ON_BENCH, PENDING, RESIGNED, ABSCONDING
+		
+		//@formatter:off 
+		PENDING("Joining Awaited"), 
+		ACTIVE("Active On Project"), 
+		DID_NOT_JOIN("Did Not Join"), 
+		TERMINATED("Terminated"), 
+		ON_LONG_LEAVE("On Long Leave"), 
+		ON_BENCH("On Bench"),
+		RESIGNED("Resigned"), 
+		ABSCONDED("Absconded");
 		//@formatter:on
-
-		private final String code;
-
+		
 		private final String description;
 
-		private CODE(final String code, final String description) {
-			this.code = code;
+		private CODE(final String description) {
 			this.description = description;
-		}
-
-		public String code() {
-			return this.code;
 		}
 
 		@Override
@@ -71,9 +101,9 @@ public class EmploymentStatus extends AbstractAssignable<String> {
 		}
 
 		@Override
-		public CODE enumByValue(String description) {
+		public StringValuedEnum enumByValue(String statusCode) {
 			for (CODE e : values())
-				if (e.value().equals(description))
+				if (e.value().equals(statusCode))
 					return e;
 			throw new IllegalArgumentException();
 		}

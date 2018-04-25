@@ -1,6 +1,7 @@
 package com.gspann.itrack.domain.model.projects;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -20,62 +21,50 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent=true)
 @NoArgsConstructor
 @Entity
-@Table(name = "PROJECT_TYPES", uniqueConstraints = @UniqueConstraint(name = UNQ_PRJ_TYPE_DESCRIPTION, columnNames = { "DESCRIPTION"}))
+@Table(name = "PROJECT_STATUSES", uniqueConstraints = @UniqueConstraint(name = UNQ_PRJ_STATUS_DESCRIPTION, columnNames = { "DESCRIPTION"}))
 @Immutable
-public class ProjectType extends AbstractAssignable<String> {
-
-	// Fix Bid, Time and Materials, Milestone, Investment, Bench, Time-Off
+public class ProjectStatus extends AbstractAssignable<String> {
 
 	@NotNull
     @Column(name = "DESCRIPTION", nullable = false, length = 100)
     private String description;
 	
-    public static ProjectType of(String code, String description) {
-    	ProjectType projectType = new ProjectType();
+    public static ProjectStatus of(String code, String description) {
+    	ProjectStatus projectType = new ProjectStatus();
     	projectType.code = code;
     	projectType.description = description;
     	return projectType;
     }
 	
-    public static ProjectType byTypeCode(CODE code) {
+    public static ProjectStatus byTypeCode(CODE code) {
     	return of(code.name(), code.description);
     }
     
-    public static ProjectType fixBid() {
-    	return of(CODE.FIX_BID.name(), CODE.FIX_BID.description);
+    public static ProjectStatus pending() {
+    	return of(CODE.PENDING.name(), CODE.PENDING.description);
     }
 
-    public static ProjectType TnM() {
-    	return of(CODE.TnM.name(), CODE.TnM.description);
+    public static ProjectStatus inProgress() {
+    	return of(CODE.WIP.name(), CODE.WIP.description);
     }
 
-    public static ProjectType milestone() {
-    	return of(CODE.MILESTONE.name(), CODE.MILESTONE.description);
+    public static ProjectStatus onHold() {
+    	return of(CODE.ON_HOLD.name(), CODE.ON_HOLD.description);
     }
 
-    public static ProjectType investment() {
-    	return of(CODE.INVESTMENT.name(), CODE.INVESTMENT.description);
-    }
-
-    public static ProjectType bench() {
-    	return of(CODE.BENCH.name(), CODE.BENCH.description);
-    }
-
-    public static ProjectType timeOff() {
-    	return of(CODE.TIME_OFF.name(), CODE.TIME_OFF.description);
+    public static ProjectStatus closed() {
+    	return of(CODE.CLOSED.name(), CODE.CLOSED.description);
     }
 
 	public enum CODE implements StringValuedEnum {
-	
-		// Fix Bid, T&M, Milestone, Investment, Bench, Time-off
+
+		// AWATING_START (Waiting to Start), WIP (Work in Progress), ON_HOLD (On Hold), CLOSED (Closed)
 	
 		//@formatter:off
-		FIX_BID("Fix Bid"), 
-		TnM("Time and Materials"), 
-		MILESTONE("Milestone"), 
-		INVESTMENT("Investment"), 
-		BENCH("Bench"), 
-		TIME_OFF("Time-Off");
+		PENDING("Waiting to Start"), 
+		WIP("Work in Progress"), 
+		ON_HOLD("On Hold"), 
+		CLOSED("Closed");
 		//@formatter:on
 		
 		private final String description;

@@ -14,6 +14,11 @@
     	name = TYPE_DEF_JADIRA_DURATION, 
         defaultForType = Duration.class,
         typeClass = org.jadira.usertype.dateandtime.threeten.PersistentDurationAsString.class
+    ),
+    @TypeDef(
+    	name = TYPE_DEF_JADIRA_MONTH_OF_YEAR, 
+        defaultForType = YearMonth.class,
+        typeClass = org.jadira.usertype.dateandtime.threeten.PersistentYearMonthAsString.class
     )
 })
 //@formatter:on
@@ -24,6 +29,7 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.Hibernat
 
 import java.time.Duration;
 import java.time.Year;
+import java.time.YearMonth;
 
 import org.hibernate.annotations.TypeDef;
 import org.hibernate.annotations.TypeDefs;

@@ -20,6 +20,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.OrderBy;
@@ -35,13 +36,14 @@ import org.hibernate.annotations.NaturalId;
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.type.BaseAutoAssignableVersionableEntity;
 import com.gspann.itrack.domain.model.allocations.Allocation;
+import com.gspann.itrack.domain.model.business.SOW;
 import com.gspann.itrack.domain.model.business.payments.Costing;
 import com.gspann.itrack.domain.model.docs.Document;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
+import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
-import com.gspann.itrack.domain.model.org.structure.EngagementStatus;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 
@@ -110,13 +112,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "EMP_STATUS_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_EMP_STATUS_CODE))
-	private EmploymentStatus employmentStatus;
+	@JoinColumn(name = "EMP_TYPE_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_EMP_TYPE_CODE))
+	private EmploymentType employmentType;
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "ENG_STATUS_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_ENG_STATUS_CODE))
-	private EngagementStatus engagementStatus;
+	@JoinColumn(name = "EMP_STATUS_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_EMP_STATUS_CODE))
+	private EmploymentStatus employmentStatus;
 
 	// The base location may not change as of now, but in future it may change
 	@NotNull
@@ -162,34 +164,22 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	@Column(name = "EXIT_DATE", nullable = true)
 	private LocalDate exitDate;
 
-//	@Column(name = "CUSTOMER_TIME_TRACKING", length = 1)
-//	@org.hibernate.annotations.Type(type = "yes_no")
-//	@org.hibernate.annotations.ColumnDefault("'N'")
-//	private boolean customerTimeTracking = false;
-
 	@NotNull
 	@OneToMany(fetch = FetchType.LAZY)
 	// @formatter:off
- 	@JoinTable(name = "RESOURCE_DOCUMENT_MAP", 
+ 	@JoinTable(name = "RESOURCE_RESUME_MAP", 
 		joinColumns = @JoinColumn(name = "RESOURCE_CODE", referencedColumnName = "CODE", 
-		foreignKey = @ForeignKey(name = FK_RESOURCE_DOCUMENT_MAP_RESOURCE_CODE), unique = false), 
-		inverseJoinColumns = @JoinColumn(name = "DOCUMENT_ID", referencedColumnName = "ID", 
-		foreignKey = @ForeignKey(name = FK_RESOURCE_DOCUMENT_MAP_DOCUMENT_ID), unique = false))
+		foreignKey = @ForeignKey(name = FK_RESOURCE_RESUME_MAP_RESOURCE_CODE), unique = false), 
+		inverseJoinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "ID", 
+		foreignKey = @ForeignKey(name = FK_RESOURCE_RESUME_MAP_RESUME_ID), unique = false))
 	// @formatter:on
 	@OrderBy("uploadDate DESC")
 	private Set<Document> resumes = new LinkedHashSet<Document>();
 
 	@NotNull
-	@OneToMany(fetch = FetchType.LAZY)
-	// @formatter:off
- 	@JoinTable(name = "RESOURCE_DOCUMENT_MAP", 
-		joinColumns = @JoinColumn(name = "RESOURCE_CODE", referencedColumnName = "CODE", 
-		foreignKey = @ForeignKey(name = FK_RESOURCE_DOCUMENT_MAP_RESOURCE_CODE), unique = false), 
-		inverseJoinColumns = @JoinColumn(name = "DOCUMENT_ID", referencedColumnName = "ID", 
-		foreignKey = @ForeignKey(name = FK_RESOURCE_DOCUMENT_MAP_DOCUMENT_ID), unique = false))
-	// @formatter:on
-	@OrderBy("uploadDate DESC")
-	private Set<Document> images = new LinkedHashSet<Document>();
+	@OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
+	@JoinColumn(name = "IMAGE_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_IMAGE_ID))
+	private Document image;
 
 	@NotEmpty(message = MESSAGE_COSTING_MANDATORY)
 	// @formatter:off
@@ -201,6 +191,9 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	@NotEmpty(message = MESSAGE_ALLOCATION_MANDATORY)
 	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY)
 	private List<Allocation> allocations = new ArrayList<>();
+
+	@ManyToMany(mappedBy = "resources")
+	private Set<SOW> sows = new HashSet<SOW>();
 
 	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY)
 	private List<WeeklyTimeSheet> timesheets = new ArrayList<>();

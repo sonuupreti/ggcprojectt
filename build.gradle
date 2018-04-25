@@ -10,13 +10,13 @@ buildscript {
         // TODO To remove after final Spring Boot 2 release
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url "https://oss.sonatype.org/content/repositories/releases" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
         classpath "io.spring.gradle:propdeps-plugin:0.0.9.RELEASE"
         classpath "gradle.plugin.com.gorylenko.gradle-git-properties:gradle-git-properties:1.4.21"
         //jhipster-needle-gradle-buildscript-dependency - JHipster will add additional gradle build script plugins here
-		classpath('com.unquietcode.tools.flapi:flapi-gradle-plugin:2.0')
     }
 }
 
@@ -42,7 +42,6 @@ apply plugin: 'war'
 apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
-apply plugin: 'com.unquietcode.flapi.plugin'
 apply plugin: 'eclipse'
 
 dependencyManagement {
@@ -233,20 +232,6 @@ dependencies {
 	/*compile("org.zalando:logbook-spring-boot-starter:${logbook_version}") {
 		exclude group: "org.zalando", module: "logbook-httpclient"
 	}*/
-	//testCompile('com.unquietcode.tools.flapi:flapi:2.0')
-	compile('com.unquietcode.tools.flapi:flapi:2.0')
-}
-
-flapi {
-
-	descriptors = [
-		'com.gspann.itrack.domain.model.projects.builder.ProjectBuilder'
-	]
-	//classesDirectory = 'build/generated-sources'
-	//sourcesDirectory = 'src/main/java'
-	writeSources = true
-	includeRuntime = true
-	//writeClasses = true
 }
 
 task cleanResources(type: Delete) {
@@ -254,7 +239,8 @@ task cleanResources(type: Delete) {
 }
 
 task wrapper(type: Wrapper) {
-    gradleVersion = '4.6'
+    //gradleVersion = '4.7'
+    gradleVersion = "${gradle_version}"
 }
 
 task stage(dependsOn: 'bootWar') {

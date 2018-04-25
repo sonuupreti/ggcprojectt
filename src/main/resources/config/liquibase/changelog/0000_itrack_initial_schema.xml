@@ -69,16 +69,18 @@
 		
 		<createTable tableName="company_location_map">
 			<column name="company_code" type="varchar(20)">
-				<constraints foreignKeyName="fk_company_location_company_code"
+				<constraints foreignKeyName="fk_company_location_map_company_code"
 					referencedColumnNames="code" referencedTableName="companies"
 					nullable="false" />
 			</column>
 			<column name="city_id" type="int">
-				<constraints foreignKeyName="fk_company_location_city_id"
+				<constraints foreignKeyName="fk_company_location_map_city_id"
 					referencedColumnNames="id" referencedTableName="cities"
 					nullable="false" />
 			</column>
 		</createTable>
+		<addPrimaryKey constraintName="pk_company_location_map"
+			columnNames="company_code, city_id" tableName="company_location_map" />
 		
 		<createTable tableName="departments">
 			<column name="id" type="smallint">
@@ -114,6 +116,17 @@
 		<addUniqueConstraint constraintName="unq_desig_name"
 			columnNames="name, department_id" tableName="designations" />
 
+		<createTable tableName="employment_types">
+			<column name="code" type="varchar(20)">
+				<constraints primaryKeyName="pk_emp_type_code"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="description" type="varchar(50)">
+				<constraints unique="true" nullable="false"
+					uniqueConstraintName="unq_emp_type_description" />
+			</column>
+		</createTable>
+
 		<createTable tableName="employment_statuses">
 			<column name="code" type="varchar(20)">
 				<constraints primaryKeyName="pk_emp_status_code"
@@ -122,17 +135,6 @@
 			<column name="description" type="varchar(50)">
 				<constraints unique="true" nullable="false"
 					uniqueConstraintName="unq_emp_status_description" />
-			</column>
-		</createTable>
-
-		<createTable tableName="engagement_statuses">
-			<column name="code" type="varchar(20)">
-				<constraints primaryKeyName="pk_eng_status_code"
-					primaryKey="true" nullable="false" />
-			</column>
-			<column name="description" type="varchar(50)">
-				<constraints unique="true" nullable="false"
-					uniqueConstraintName="unq_eng_status_description" />
 			</column>
 		</createTable>
 
@@ -250,14 +252,14 @@
 					referencedColumnNames="id" referencedTableName="designations"
 					nullable="false" />
 			</column>
+			<column name="emp_type_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_resources_emp_type_code"
+					referencedColumnNames="code" referencedTableName="employment_types"
+					nullable="false" />
+			</column>
 			<column name="emp_status_code" type="varchar(20)">
 				<constraints foreignKeyName="fk_resources_emp_status_code"
 					referencedColumnNames="code" referencedTableName="employment_statuses"
-					nullable="false" />
-			</column>
-			<column name="eng_status_code" type="varchar(20)">
-				<constraints foreignKeyName="fk_resources_eng_status_code"
-					referencedColumnNames="code" referencedTableName="engagement_statuses"
 					nullable="false" />
 			</column>
 			<column name="base_loc_id" type="int">
@@ -282,6 +284,11 @@
 			</column>
 			<column name="exit_date" type="date">
 				<constraints nullable="true" />
+			</column>
+			<column name="image_id" type="bigint">
+				<constraints foreignKeyName="fk_resources_image_id"
+					referencedColumnNames="id" referencedTableName="documents"
+					nullable="false" />
 			</column>
 		</createTable>
 		<createIndex indexName="idx_resources_name" tableName="resources"
@@ -333,19 +340,23 @@
 					nullable="false" />
 			</column>
 		</createTable>
+		<addPrimaryKey constraintName="pk_resource_practice_map"
+			columnNames="resource_code, practice_code" tableName="resource_practice_map" />
 
-		<createTable tableName="resource_document_map">
+		<createTable tableName="resource_resume_map">
 			<column name="resource_code" type="varchar(20)">
-				<constraints foreignKeyName="fk_resource_document_map_resource_code"
+				<constraints foreignKeyName="fk_resource_resume_map_resource_code"
 					referencedColumnNames="code" referencedTableName="resources"
 					nullable="false" />
 			</column>
-			<column name="document_id" type="bigint">
-				<constraints foreignKeyName="fk_resource_document_map_document_id"
+			<column name="resume_id" type="bigint">
+				<constraints foreignKeyName="fk_resource_resume_map_resume_id"
 					referencedColumnNames="id" referencedTableName="documents"
 					nullable="false" />
 			</column>
 		</createTable>
+		<addPrimaryKey constraintName="pk_resource_resume_map"
+			columnNames="resource_code, resume_id" tableName="resource_resume_map" />
 
 		<createTable tableName="accounts">
 			<column name="code" type="varchar(20)">
@@ -425,6 +436,17 @@
 			</column>
 		</createTable>
 
+		<createTable tableName="project_statuses">
+			<column name="code" type="varchar(20)">
+				<constraints primaryKeyName="pk_project_status_code"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="description" type="varchar(100)">
+				<constraints unique="true" nullable="false"
+					uniqueConstraintName="unq_prj_status_description" />
+			</column>
+		</createTable>
+
 		<createTable tableName="projects">
 			<column name="code" type="varchar(20)">
 				<constraints primaryKeyName="pk_project_code"
@@ -440,6 +462,11 @@
 			<column name="prj_type_code" type="varchar(20)">
 				<constraints foreignKeyName="fk_projects_prj_type_code"
 					referencedColumnNames="code" referencedTableName="project_types"
+					nullable="false" />
+			</column>
+			<column name="prj_status_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_projects_prj_status_code"
+					referencedColumnNames="code" referencedTableName="project_statuses"
 					nullable="false" />
 			</column>
 			<column name="offshore_mgr_code" type="varchar(20)">
@@ -507,6 +534,8 @@
 					nullable="false" />
 			</column>
 		</createTable>
+		<addPrimaryKey constraintName="pk_project_practice_map"
+			columnNames="project_code, practice_code" tableName="project_practice_map" />
 
 		<createTable tableName="allocations">
 			<column name="id" type="bigint">
@@ -653,7 +682,176 @@
 		<addForeignKeyConstraint baseColumnNames="id"
 			baseTableName="fte_cost_details" constraintName="fk_cost_details_id"
 			referencedColumnNames="id" referencedTableName="cost_details" />
-
+		
+		<createTable tableName="sows">
+			<column name="id" type="bigint">
+				<constraints primaryKeyName="pk_sow_id"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="version" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="sow_number" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+			<column name="account_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_sows_account_code"
+					referencedColumnNames="code" referencedTableName="accounts"
+					nullable="false" />
+			</column>
+			<column name="from_date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="till_date" type="date">
+				<constraints nullable="true" />
+			</column>
+			<column name="remarks" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="parent_sow_id" type="bigint">
+				<constraints foreignKeyName="fk_sows_parent_sow_id"
+					referencedColumnNames="id" referencedTableName="sows"
+					nullable="true" />
+			</column>
+		</createTable>
+		<addUniqueConstraint columnNames="sow_number, account_code"
+        	constraintName="unq_sow_number_account_code" tableName="sows" />
+		
+		<createTable tableName="sow_project_map">
+			<column name="sow_id" type="bigint">
+				<constraints foreignKeyName="fk_sow_project_map_sow_id"
+					referencedColumnNames="id" referencedTableName="sows"
+					nullable="false" />
+			</column>
+			<column name="project_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_sow_project_map_project_code"
+					referencedColumnNames="code" referencedTableName="projects"
+					nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey constraintName="pk_sow_project_map"
+			columnNames="sow_id, project_code" tableName="sow_project_map" />
+		
+		<createTable tableName="sow_resource_map">
+			<column name="sow_id" type="bigint">
+				<constraints foreignKeyName="fk_sow_resource_map_sow_id"
+					referencedColumnNames="id" referencedTableName="sows"
+					nullable="false" />
+			</column>
+			<column name="resource_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_sow_resource_map_resource_code"
+					referencedColumnNames="code" referencedTableName="resources"
+					nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey constraintName="pk_sow_resource_map"
+			columnNames="sow_id, resource_code" tableName="sow_resource_map" />
+		
+		<createTable tableName="sow_document_map">
+			<column name="sow_id" type="bigint">
+				<constraints foreignKeyName="fk_sow_document_map_sow_id"
+					referencedColumnNames="id" referencedTableName="sows"
+					nullable="false" />
+			</column>
+			<column name="document_id" type="bigint">
+				<constraints foreignKeyName="fk_sow_document_map_document_id"
+					referencedColumnNames="id" referencedTableName="documents"
+					nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey constraintName="pk_sow_document_map"
+			columnNames="sow_id, document_id" tableName="sow_document_map" />
+		
+		<createTable tableName="pos">
+			<column name="id" type="bigint">
+				<constraints primaryKeyName="pk_po_id"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="version" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="po_number" type="varchar(30)">
+				<constraints nullable="false" />
+			</column>
+			<column name="sow_id" type="bigint">
+				<constraints foreignKeyName="fk_pos_sow_id"
+					referencedColumnNames="id" referencedTableName="sows"
+					nullable="false" />
+			</column>
+			<column name="opening_balance_currency" type="varchar(3)">
+				<constraints nullable="false" />
+			</column>
+			<column name="opening_balance_amount" type="decimal">
+				<constraints nullable="false" />
+			</column>
+			<column name="available_balance_currency" type="varchar(3)">
+				<constraints nullable="false" />
+			</column>
+			<column name="available_balance_amount" type="decimal">
+				<constraints nullable="false" />
+			</column>
+			<column name="from_date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="till_date" type="date">
+				<constraints nullable="true" />
+			</column>
+			<column name="remarks" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="parent_po_id" type="bigint">
+				<constraints foreignKeyName="fk_pos_parent_po_id"
+					referencedColumnNames="id" referencedTableName="pos"
+					nullable="true" />
+			</column>
+		</createTable>
+		<createIndex indexName="idx_pos_po_number"
+			tableName="pos" unique="false">
+			<column name="po_number" type="varchar(30)" />
+		</createIndex>
+			
+		<createTable tableName="po_document_map">
+			<column name="po_id" type="bigint">
+				<constraints foreignKeyName="fk_po_document_map_po_id"
+					referencedColumnNames="id" referencedTableName="pos"
+					nullable="false" />
+			</column>
+			<column name="document_id" type="bigint">
+				<constraints foreignKeyName="fk_po_document_map_document_id"
+					referencedColumnNames="id" referencedTableName="documents"
+					nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey constraintName="pk_po_document_map"
+			columnNames="po_id, document_id" tableName="po_document_map" />
+		
+		<createTable tableName="invoices">
+			<column name="invoice_number" type="varchar(20)">
+				<constraints primaryKeyName="pk_invoice_id"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="version" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="po_id" type="bigint">
+				<constraints foreignKeyName="fk_invoices_po_id"
+					referencedColumnNames="id" referencedTableName="pos"
+					nullable="false" />
+			</column>
+			<column name="currency" type="varchar(3)">
+				<constraints nullable="false" />
+			</column>
+			<column name="amount" type="decimal">
+				<constraints nullable="false" />
+			</column>
+			<column name="date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="service_month" type="varchar(7)">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+		
 		<createTable tableName="weekly_time_sheets">
 			<column name="id" type="bigint">
 				<constraints primaryKeyName="pk_weekly_time_sheet_id"
@@ -679,7 +877,7 @@
 			<column name="total_hours" type="varchar(5)">
 				<constraints nullable="false" />
 			</column>
-			<column name="matching_customer_time_sheet" type="boolean">
+			<column name="matching_customer_time_sheet" type="boolean" defaultValueBoolean="false">
 				<constraints nullable="true" />
 			</column>
 			<column name="client_timesheet_screen_shot" type="blob">
@@ -687,6 +885,9 @@
 			</column>
 			<column name="approval_status" type="tinyint">
 				<constraints nullable="false" />
+			</column>
+			<column name="use_as_template" type="boolean" defaultValueBoolean="false">
+				<constraints nullable="true" />
 			</column>
 		</createTable>
 		<createIndex indexName="idx_weekly_time_sheets_resource_code"

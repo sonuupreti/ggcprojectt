@@ -5,13 +5,13 @@ import org.hibernate.annotations.Immutable;
 import com.gspann.itrack.common.enums.StringValuedEnum;
 
 @Immutable
-public enum ApprovalStatus implements StringValuedEnum {
+public enum TimesheetStatus implements StringValuedEnum {
 	
-	APPROVED("APPROVED"), REJECTED("REJECTED"), PARTIAL("PARTIAL"); 
+	SAVED("SAVED"), APPROVED("APPROVED"), REJECTED("REJECTED"), PARTIALLY_APPROVED("PARTIALLY_APPROVED"); 
 
 	private String value;
 
-	private ApprovalStatus(final String value) {
+	private TimesheetStatus(final String value) {
 		this.value = value;
 	}
 
@@ -22,7 +22,7 @@ public enum ApprovalStatus implements StringValuedEnum {
 
 	@Override
 	public StringValuedEnum enumByValue(String description) {
-		for (ApprovalStatus e : values())
+		for (TimesheetStatus e : values())
 			if (e.value().equals(description))
 				return e;
 		throw new IllegalArgumentException();

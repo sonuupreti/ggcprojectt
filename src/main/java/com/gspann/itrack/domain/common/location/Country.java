@@ -40,15 +40,15 @@ public class Country extends AbstractAssignable<String> {
 		return country;
 	}
 
-	public static Country ofUSA(String alpha2, String name) {
+	public static Country ofUSA() {
 		return of(CountryCode.US.alpha2(), CountryCode.US.countryName());
 	}
 
-	public static Country ofUK(String alpha2, String name) {
+	public static Country ofUK() {
 		return of(CountryCode.UK.alpha2(), CountryCode.UK.countryName());
 	}
 
-	public static Country ofIndia(String alpha2, String name) {
+	public static Country ofIndia() {
 		return of(CountryCode.IN.alpha2(), CountryCode.IN.countryName());
 	}
 
