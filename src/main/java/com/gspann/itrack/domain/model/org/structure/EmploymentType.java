@@ -45,15 +45,15 @@ public class EmploymentType extends AbstractAssignable<String> {
 		return of(CODE.FULLTIME_EMPLOYEE.code, CODE.FULLTIME_EMPLOYEE.description);
 	}
 
-	public static EmploymentType directContractor(CODE statusCode) {
+	public static EmploymentType directContractor() {
 		return of(CODE.DIRECT_CONTRACTOR.code, CODE.DIRECT_CONTRACTOR.description);
 	}
 
-	public static EmploymentType subContractor(CODE statusCode) {
+	public static EmploymentType subContractor() {
 		return of(CODE.SUB_CONTRACTOR.code, CODE.SUB_CONTRACTOR.description);
 	}
 
-	public static EmploymentType w2Consultant(CODE statusCode) {
+	public static EmploymentType w2Consultant() {
 		return of(CODE.W2_CONSULTANT.code, CODE.W2_CONSULTANT.description);
 	}
 

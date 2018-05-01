@@ -61,10 +61,10 @@ public class FTECost extends NonFTECost {
 	private Money otherCost;
 
 	@Override
-	public Money hourlyPayment() {
+	public Money hourlyCostRate() {
 		// TODO Apply the formula to calculate hourly rate
 		// if rateUnit is hourly, return rate(); otherwise calculate by formula
-		return payment().hourly();
+		return costRate().hourly();
 	}
 
 	@Override

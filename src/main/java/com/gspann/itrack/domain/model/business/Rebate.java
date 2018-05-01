@@ -14,15 +14,14 @@ import javax.validation.constraints.NotNull;
 
 import com.gspann.itrack.domain.common.type.BaseIdentifiableVersionableEntity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor(staticName = "of")
 @Entity
 @Table(name = "REBATES")
 public class Rebate extends BaseIdentifiableVersionableEntity<Long, Long> {
@@ -30,11 +29,35 @@ public class Rebate extends BaseIdentifiableVersionableEntity<Long, Long> {
 	@NotNull
 	@ManyToOne
     @JoinColumn(name = "ACCOUNT_CODE", updatable = false, insertable = false, foreignKey = @ForeignKey(name = FK_REBATES_ACCOUNT_CODE))
-	protected Account account;
+	@Setter
+	private Account account;
 
 	@Column(name = "YEAR", nullable = false)
 	private Year year;
 
-	@Column(name = "REBATE", nullable = false, columnDefinition = "Decimal(10,2) check (REBATE>=0.00 AND REBATE<=100.00) default '0.00'")
-	private float rebate;
+	@Column(name = "PERCENT", nullable = false, columnDefinition = "Decimal(10,2) check (REBATE>=0.00 AND REBATE<=100.00) default '0.00'")
+	private float percent;
+	
+	public static RebateYearBuilder of(final float percent) {
+		return new RebateBuilder(percent);
+	}
+	
+	public interface RebateYearBuilder {
+		public Rebate forYear(final Year year);
+	}
+	
+	public static class RebateBuilder implements RebateYearBuilder {
+		private Rebate rebate;
+		
+		RebateBuilder(final float percent) {
+			this.rebate = new Rebate();
+			rebate.percent = percent;
+		}
+
+		@Override
+		public Rebate forYear(Year year) {
+			this.rebate.year = year;
+			return this.rebate;
+		}
+	}
 }

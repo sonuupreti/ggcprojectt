@@ -3,6 +3,8 @@ package com.gspann.itrack.domain.model.business.payments;
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.Hibernate.*;
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
+import java.time.LocalDate;
+
 import javax.persistence.Access;
 import javax.persistence.AccessType;
 import javax.persistence.Column;
@@ -48,12 +50,12 @@ public class NonFTECost implements Costing, Versionable<Long> {
 	@Id
 	@GeneratedValue(generator = GLOBAL_SEQ_ID_GENERATOR)
 	@Column(name = "ID", nullable = false)
-	protected Long id;
+	private Long id;
 
 	@Version
 	@Access(AccessType.FIELD)
 	@Column(name = "VERSION", nullable = false)
-	protected Long version;
+	private Long version;
 
 	@NotNull
 	private DateRange dateRange;
@@ -73,7 +75,13 @@ public class NonFTECost implements Costing, Versionable<Long> {
 	private CostRateType costRateType;
 
 	@Override
-	public Money hourlyPayment() {
+	public Payment costRate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@Override
+	public Money hourlyCostRate() {
 		// TODO Apply the formula to calculate hourly rate
 		// if rateUnit is hourly, return rate(); otherwise calculate by formula
 		return payment.hourly();
@@ -84,4 +92,57 @@ public class NonFTECost implements Costing, Versionable<Long> {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	public static PayRateBuilder of(final Resource resource) {
+		return new CostBuilder(resource);
+	}
+	
+	public interface PayRateBuilder {
+		public CostingStartDateBuilder atHourlyRate(final Money money);
+	}
+	
+	public interface CostingStartDateBuilder {
+		public CostingEndDateBuilder startingFrom(final LocalDate fromDate);
+
+		public NonFTECost startingIndefinatelyFrom(final LocalDate fromDate);
+	}
+
+	public interface CostingEndDateBuilder {
+		public NonFTECost till(final LocalDate tillDate);
+	}
+
+	public static class CostBuilder implements PayRateBuilder, CostingStartDateBuilder, CostingEndDateBuilder {
+		private NonFTECost cost;
+		private LocalDate costStartDate;
+		
+		CostBuilder(final Resource resource) {
+			this.cost = new NonFTECost();
+			this.cost.resource = resource;
+		}
+
+		@Override
+		public CostingStartDateBuilder atHourlyRate(Money money) {
+			this.cost.payment = Payment.of(PayRateUnit.HOURLY, money);
+			return this;
+		}
+
+		@Override
+		public CostingEndDateBuilder startingFrom(LocalDate fromDate) {
+			this.costStartDate = fromDate;
+			return this;
+		}
+
+		@Override
+		public NonFTECost startingIndefinatelyFrom(LocalDate fromDate) {
+			this.cost.dateRange = DateRange.dateRange().startIndefinitelyOn(fromDate);
+			return this.cost;
+		}
+
+		@Override
+		public NonFTECost till(LocalDate tillDate) {
+			this.cost.dateRange = DateRange.dateRange().startingOn(this.costStartDate).endingOn(tillDate);
+			return this.cost;
+		}
+	}
+
 }

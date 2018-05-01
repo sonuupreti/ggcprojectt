@@ -6,11 +6,11 @@ import com.gspann.itrack.domain.common.DateRange;
 
 public interface Billing {
 
-	public Payment payment();
+	public Payment billRate();
 
+	public Money hourlyBillRate();
+	
 	public DateRange dateRange();
-
-	public Money hourlyPayMoney();
 
 	public BillabilityStatus billabilityStatus();
 }

@@ -28,8 +28,8 @@ public class PersistenceConstant {
 		public static final String IDX_RESOURCES_GREYT_HR_ID = "idx_resources_greyt_hr_id";
 
 		public static final String pk_resource_code = "PK_RESOURCE_CODE";
-		public static final String FK_RESOURCES_COMPANY_CODE = "fk_resources_company_code";
-		public static final String FK_RESOURCES_DEPARTMENT_ID = "fk_resources_department_id";
+//		public static final String FK_RESOURCES_COMPANY_CODE = "fk_resources_company_code";
+//		public static final String FK_RESOURCES_DEPARTMENT_ID = "fk_resources_department_id";
 		public static final String FK_RESOURCES_DESIGNATION_ID = "fk_resources_designation_id";
 		public static final String FK_RESOURCES_EMP_TYPE_CODE = "fk_resources_emp_type_code";
 		public static final String FK_RESOURCES_EMP_STATUS_CODE = "fk_resources_emp_status_code";
@@ -139,7 +139,7 @@ public class PersistenceConstant {
 		public static final String UNQ_CUSTOMER_ENTITY = "unq_customer_entity";
 		public static final String IDX_CUSTOMER_ENTITY = "idx_customer_entity";
 		public static final String FK_ACCOUNTS_MGR_RESOURCE_CODE = "fk_accounts_mgr_resource_code";
-		public static final String FK_ACCOUNTS_LOCATION_ID = "fk_accounts_location_id";
+		public static final String FK_ACCOUNTS_COUNTRY_CODE = "fk_accounts_country_code";
 		public static final String PK_ALLOCATION_ID = "pk_allocation_id";
 		public static final String FK_ALLOCATIONS_RESOURCE_CODE = "fk_allocations_resource_code";
 		public static final String FK_ALLOCATIONS_POJECT_CODE = "fk_allocations_poject_code";

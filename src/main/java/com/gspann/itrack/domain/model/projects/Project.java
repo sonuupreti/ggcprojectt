@@ -4,6 +4,7 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMet
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,16 +24,21 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.javamoney.moneta.Money;
+
 import com.gspann.itrack.domain.common.DateRange;
+import com.gspann.itrack.domain.common.Toggle;
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.type.BaseAutoAssignableVersionableEntity;
 import com.gspann.itrack.domain.common.type.Buildable;
 import com.gspann.itrack.domain.model.allocations.Allocation;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.business.SOW;
+import com.gspann.itrack.domain.model.business.payments.Billing;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.staff.Resource;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -65,13 +71,40 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	@JoinColumn(name = "PRJ_STATUS_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_PRJ_STATUS_CODE))
 	private ProjectStatus status;
 
+	public void startOn(final LocalDate startDate) {
+		this.dateRange = DateRange.dateRange().startingOn(startDate)
+				.endingOn(this.dateRange != null ? dateRange.tillDate() : null);
+		this.status = ProjectStatus.inProgress();
+	}
+
+	public void putOnHold() {
+		this.status = ProjectStatus.onHold();
+	}
+
+	public void close() {
+		this.dateRange.endOn(LocalDate.now());
+		this.status = ProjectStatus.closed();
+	}
+
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "LOCATION_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_LOC_ID))
 	private City location;
 
+	public void updateLocation(final City newLocation) {
+		this.location = newLocation;
+	}
+
 	@NotNull
 	private DateRange dateRange;
+
+	public void updateStartDate(final LocalDate newStartDate) {
+		dateRange.startOn(newStartDate);
+	}
+
+	public void updateEndDate(final LocalDate newEndDate) {
+		dateRange.endOn(newEndDate);
+	}
 
 	@NotNull
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
@@ -86,14 +119,38 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
     // @formatter:on
 	private Set<Practice> practices = new HashSet<Practice>();
 
+	public void addPractice(final Practice practice) {
+		this.practices.add(practice);
+	}
+
+	public void removePractice(final Practice practice) {
+		this.practices.remove(practice);
+	}
+
+	public void updatePractices(final Set<Practice> practices) {
+		this.practices = practices;
+	}
+
 	@NotNull
 	@Column(name = "TECHNOLOGIES", nullable = false, length = 255)
 	private String technologies;
+
+	public void updateTechnology(final String technologies) {
+		this.technologies = technologies;
+	}
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "OFFSHORE_MGR_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_OFFSHORE_MGR_CODE))
 	private Resource offshoreManager;
+
+	public void assignOffshoreManager(final Resource offshoreManager) {
+		this.offshoreManager = offshoreManager;
+	}
+
+	public void assignOnshoreManager(final Resource onshoreManager) {
+		this.onshoreManager = onshoreManager;
+	}
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
@@ -108,36 +165,191 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	@Column(name = "CUSTOMER_PROJECT_ID", nullable = true, length = 150)
 	private String customerProjectId;
 
+	public void updateCustomerProjectId(final String customerProjectId) {
+		this.customerProjectId = customerProjectId;
+	}
+
 	// Optional but unique
 	@Column(name = "CUSTOMER_PROJECT_NAME", nullable = true, length = 150)
 	private String customerProjectName;
+
+	public void updateCustomerProjectName(final String customerProjectName) {
+		this.customerProjectName = customerProjectName;
+	}
 
 	@NotNull
 	@Column(name = "CUSTOMER_MANAGER", nullable = false, length = 150)
 	private String customerManager;
 
-	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
-	private List<Allocation> allocations = new ArrayList<>();
+	public void updatecustomerManager(final String customerManager) {
+		this.customerManager = customerManager;
+	}
 
-    @ManyToMany(mappedBy = "projects")
-    private Set<SOW> sows = new HashSet<SOW>();
+	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
+	@Getter(value = AccessLevel.NONE)
+	private List<Allocation> allocations = new ArrayList<>();
+	
+	public List<Allocation> allocations() {
+		return Collections.unmodifiableList(allocations);
+	}
+	
+	public void allocate(final Set<Allocation> allocations) {
+		this.allocations.addAll(allocations);
+	}
+
+	public ProjectAllocationProportionBuilder allocateWith(final Resource resource) {
+		return new ProjectAllocationBuilder(resource);
+	}
+
+	public interface ProjectAllocationProportionBuilder {
+		public ProjectAllocationClientTimeTrackingBuilder fully();
+
+		public ProjectAllocationClientTimeTrackingBuilder partially(final short percentage);
+	}
+
+	public interface ProjectAllocationClientTimeTrackingBuilder {
+		public ProjectAllocationStartDateBuilder onboardedToClientTimeTrackingSystem(Toggle yesOrNo);
+	}
+
+	public interface ProjectAllocationStartDateBuilder {
+		public ProjectAllocationEndDateBuilder startingFrom(final LocalDate fromDate);
+
+		public ProjectAllocationBillabilityStatusBuilder startingIndefinatelyFrom(final LocalDate fromDate);
+	}
+
+	public interface ProjectAllocationEndDateBuilder {
+		public ProjectAllocationBillabilityStatusBuilder till(final LocalDate tillDate);
+	}
+
+	public interface ProjectAllocationBillabilityStatusBuilder {
+
+		public Allocation asBuffer();
+
+		public Allocation asNonBillable();
+
+		public Allocation atHourlyRate(final Money money);
+
+		public Allocation atBilling(final Billing billRate);
+	}
+
+	private class ProjectAllocationBuilder implements ProjectAllocationClientTimeTrackingBuilder, ProjectAllocationProportionBuilder,
+			ProjectAllocationStartDateBuilder, ProjectAllocationEndDateBuilder, ProjectAllocationBillabilityStatusBuilder {
+		private Resource resource;
+		private Toggle clientTimeTracking;
+		private short proportion;
+		private LocalDate allocationStartDate;
+		private LocalDate allocationEndDate;
+
+		ProjectAllocationBuilder(final Resource resource) {
+			this.resource = resource;
+		}
+
+		@Override
+		public ProjectAllocationClientTimeTrackingBuilder fully() {
+			this.proportion = 100;
+			return this;
+		}
+
+		@Override
+		public ProjectAllocationClientTimeTrackingBuilder partially(short percentage) {
+			this.proportion = percentage;
+			return this;
+		}
+
+		@Override
+		public ProjectAllocationStartDateBuilder onboardedToClientTimeTrackingSystem(Toggle yesOrNo) {
+			this.clientTimeTracking = yesOrNo;
+			return this;
+		}
+
+		@Override
+		public ProjectAllocationEndDateBuilder startingFrom(LocalDate fromDate) {
+			this.allocationStartDate = fromDate;
+			return this;
+		}
+
+		@Override
+		public ProjectAllocationBillabilityStatusBuilder startingIndefinatelyFrom(LocalDate fromDate) {
+			this.allocationStartDate = fromDate;
+			return this;
+		}
+
+		@Override
+		public ProjectAllocationBillabilityStatusBuilder till(LocalDate tillDate) {
+			this.allocationEndDate = tillDate;
+			return this;
+		}
+		
+		@Override
+		public Allocation asBuffer() {
+			Allocation allocation = Allocation.partial(proportion).of(resource).in(Project.this)
+					.startingFrom(allocationStartDate).till(allocationEndDate).asBuffer()
+					.onboardedToClientTimeTrackingSystem(clientTimeTracking);
+			allocations.add(allocation);
+			return allocation;
+		}
+
+		@Override
+		public Allocation asNonBillable() {
+			Allocation allocation = Allocation.partial(proportion).of(resource).in(Project.this)
+					.startingFrom(allocationStartDate).till(allocationEndDate).asNonBillable()
+					.onboardedToClientTimeTrackingSystem(clientTimeTracking);
+			allocations.add(allocation);
+			return allocation;
+		}
+
+		@Override
+		public Allocation atHourlyRate(final Money money) {
+			Allocation allocation = Allocation.partial(proportion).of(resource).in(Project.this)
+					.startingFrom(allocationStartDate).till(allocationEndDate).atHourlyRateOf(money)
+					.onboardedToClientTimeTrackingSystem(clientTimeTracking);
+			allocations.add(allocation);
+			return allocation;
+		}
+
+		@Override
+		public Allocation atBilling(Billing billRate) {
+			Allocation allocation = Allocation.partial(proportion).of(resource).in(Project.this)
+					.startingFrom(allocationStartDate).till(allocationEndDate).withBilling(billRate)
+					.onboardedToClientTimeTrackingSystem(clientTimeTracking);
+			allocations.add(allocation);
+			return allocation;
+		}
+	}
+
+	@ManyToMany(mappedBy = "projects")
+	private Set<SOW> sows = new HashSet<SOW>();
+
+	public void addSOW(final SOW sow) {
+		this.sows.add(sow);
+	}
 
 	public static ProjectTypeBuilder project() {
 		return new ProjectBuilder();
 	}
 
 	interface ProjectTypeBuilder {
-		NameBuilder fixBid();
+		ProjectStatusBuilder fixBid();
 
-		NameBuilder TnM();
+		ProjectStatusBuilder TnM();
 
-		NameBuilder milestone();
+		ProjectStatusBuilder milestone();
 
-		NameBuilder investment();
+		ProjectStatusBuilder investment();
 
-		NameBuilder bench();
+		ProjectStatusBuilder bench();
 
-		NameBuilder timeoff();
+		ProjectStatusBuilder timeoff();
+	}
+
+	interface ProjectStatusBuilder {
+		NameBuilder asPending();
+
+		NameBuilder asInProgress();
+
+		NameBuilder asOnHold();
+
+		NameBuilder asClosed();
 	}
 
 	public interface NameBuilder {
@@ -153,27 +365,17 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	}
 
 	public interface StartDateBuilder {
-		EndDateBuilder startingOn(final LocalDate startDate);
+		EndDateBuilder startingFrom(final LocalDate startDate);
 
-		ProjectPracticeBuilder startingIndefinatelyOn(final LocalDate startDate);
+		ProjectPracticeBuilder startingIndefinatelyFrom(final LocalDate startDate);
 	}
 
 	public interface EndDateBuilder {
-		ProjectPracticeBuilder endingOn(final LocalDate endDate);
+		ProjectPracticeBuilder till(final LocalDate endDate);
 	}
 
 	public interface ProjectPracticeBuilder {
-		TechnologiesBuilder practices(AddPracticeBuilder practice);
-
 		TechnologiesBuilder withPractices(final Set<Practice> practices);
-	}
-
-	public interface AddPracticeBuilder {
-		AndPracticeBuilder add(final Practice practice);
-	}
-
-	public interface AndPracticeBuilder {
-		AddPracticeBuilder and();
 	}
 
 	public interface TechnologiesBuilder {
@@ -185,140 +387,167 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	}
 
 	public interface OnshoreManagerBuilder {
-		Project atOnshoreManagedBy(final Resource onshoreManager);
+		CustomerManagerBuilder atOnshoreManagedBy(final Resource onshoreManager);
 	}
 
-	// public interface CustomerBuilder {
-	// TechnologiesBuilder withTechnologies();
-	// }
+	public interface CustomerManagerBuilder {
+		CustomerBuilder atCustomerEndManagedBy(final String customerManager);
+	}
 
-	// public interface AllocationBuilder extends Buildable<Project> {
-	// Buildable<Project> withResources(final List<Allocation> allocations);
-	// Buildable<Project> withResources(final List<Allocation> allocations);
-	// }
+	public interface CustomerBuilder extends Buildable<Project> {
+		Buildable<Project> withCustomerProjectId(final String customerProjectId);
 
-	private static class ProjectBuilder implements ProjectTypeBuilder, NameBuilder, LocationBuilder,
-			AccountBuilder, StartDateBuilder, EndDateBuilder, ProjectPracticeBuilder, AddPracticeBuilder, AndPracticeBuilder, 
-			TechnologiesBuilder, OffshoreManagerBuilder, OnshoreManagerBuilder {
-		
+		Buildable<Project> withCustomerProjectName(final String customerProjectName);
+	}
+
+	private static class ProjectBuilder
+			implements ProjectTypeBuilder, ProjectStatusBuilder, NameBuilder, LocationBuilder, AccountBuilder,
+			StartDateBuilder, EndDateBuilder, ProjectPracticeBuilder, TechnologiesBuilder, OffshoreManagerBuilder,
+			OnshoreManagerBuilder, CustomerManagerBuilder, CustomerBuilder {
+
 		private Project project = new Project();
-		private LocalDate startDate;
-		private AddPracticeBuilder addPracticeBuilder;
+		private LocalDate projectStartDate;
 
 		ProjectBuilder() {
 		}
 
 		@Override
-		public NameBuilder fixBid() {
-			project.type = ProjectType.fixBid();
+		public ProjectStatusBuilder fixBid() {
+			this.project.type = ProjectType.fixBid();
 			return this;
 		}
 
 		@Override
-		public NameBuilder TnM() {
-			project.type = ProjectType.TnM();
+		public ProjectStatusBuilder TnM() {
+			this.project.type = ProjectType.TnM();
 			return this;
 		}
 
 		@Override
-		public NameBuilder milestone() {
-			project.type = ProjectType.milestone();
+		public ProjectStatusBuilder milestone() {
+			this.project.type = ProjectType.milestone();
 			return this;
 		}
 
 		@Override
-		public NameBuilder investment() {
-			project.type = ProjectType.investment();
+		public ProjectStatusBuilder investment() {
+			this.project.type = ProjectType.investment();
 			return this;
 		}
 
 		@Override
-		public NameBuilder bench() {
-			project.type = ProjectType.bench();
+		public ProjectStatusBuilder bench() {
+			this.project.type = ProjectType.bench();
 			return this;
 		}
 
 		@Override
-		public NameBuilder timeoff() {
-			project.type = ProjectType.timeOff();
+		public ProjectStatusBuilder timeoff() {
+			this.project.type = ProjectType.timeOff();
+			return this;
+		}
+
+		public NameBuilder asPending() {
+			this.project.status = ProjectStatus.pending();
+			return this;
+		}
+
+		public NameBuilder asInProgress() {
+			this.project.status = ProjectStatus.inProgress();
+			return this;
+		}
+
+		public NameBuilder asOnHold() {
+			this.project.status = ProjectStatus.onHold();
+			return this;
+		}
+
+		public NameBuilder asClosed() {
+			this.project.status = ProjectStatus.closed();
 			return this;
 		}
 
 		@Override
 		public LocationBuilder namedAs(final String name) {
-			project.name = name;
+			this.project.name = name;
 			return this;
 		}
 
 		@Override
 		public AccountBuilder locatedAt(City location) {
-			project.location = location;
+			this.project.location = location;
 			return this;
 		}
 
 		@Override
 		public StartDateBuilder inAccount(final Account account) {
-			project.account = account;
+			this.project.account = account;
 			return this;
 		}
 
 		@Override
-		public EndDateBuilder startingOn(final LocalDate startDate) {
-			this.startDate = startDate;
+		public EndDateBuilder startingFrom(final LocalDate startDate) {
+			this.projectStartDate = startDate;
 			return this;
 		}
 
 		@Override
-		public ProjectPracticeBuilder endingOn(LocalDate endDate) {
-			project.dateRange = DateRange.dateRange().startingOn(this.startDate).endingOn(endDate);
+		public ProjectPracticeBuilder till(final LocalDate endDate) {
+			this.project.dateRange = DateRange.dateRange().startingOn(this.projectStartDate).endingOn(endDate);
 			return this;
 		}
 
 		@Override
-		public ProjectPracticeBuilder startingIndefinatelyOn(LocalDate startDate) {
-			project.dateRange = DateRange.dateRange().startIndefinitelyOn(startDate);
-			return this;
-		}
-
-		@Override
-		public TechnologiesBuilder practices(AddPracticeBuilder practice) {
-//			add(practice -> practice);
-			return this;
-		}
-		
-		@Override
-		public AndPracticeBuilder add(Practice practice) {
-			project.practices.add(practice);
-			return this;
-		}
-
-		@Override
-		public AddPracticeBuilder and() {
+		public ProjectPracticeBuilder startingIndefinatelyFrom(LocalDate startDate) {
+			this.project.dateRange = DateRange.dateRange().startIndefinitelyOn(startDate);
 			return this;
 		}
 
 		@Override
 		public TechnologiesBuilder withPractices(Set<Practice> practices) {
-			project.practices = practices;
+			this.project.practices = practices;
 			return this;
 		}
 
 		@Override
 		public OffshoreManagerBuilder withTechnologies(String technologies) {
-			project.technologies = technologies;
+			this.project.technologies = technologies;
 			return this;
 		}
 
 		@Override
 		public OnshoreManagerBuilder atOffshoreManagedBy(Resource offshoreManager) {
-			project.offshoreManager = offshoreManager;
+			this.project.offshoreManager = offshoreManager;
 			return this;
 		}
 
 		@Override
-		public Project atOnshoreManagedBy(Resource onshoreManager) {
-			project.onshoreManager = onshoreManager;
-			return project;
+		public CustomerManagerBuilder atOnshoreManagedBy(Resource onshoreManager) {
+			this.project.onshoreManager = onshoreManager;
+			return this;
+		}
+
+		@Override
+		public CustomerBuilder atCustomerEndManagedBy(final String customerManager) {
+			this.project.customerManager = customerManager;
+			return this;
+		}
+
+		@Override
+		public Buildable<Project> withCustomerProjectId(String customerProjectId) {
+			this.project.customerProjectId = customerProjectId;
+			return this;
+		}
+
+		@Override
+		public Buildable<Project> withCustomerProjectName(String customerProjectName) {
+			this.project.customerProjectName = customerProjectName;
+			return this;
+		}
+
+		@Override
+		public Project build() {
+			return this.project;
 		}
 	}
 }

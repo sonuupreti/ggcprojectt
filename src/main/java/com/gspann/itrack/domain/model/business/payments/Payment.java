@@ -44,4 +44,28 @@ public class Payment {
 		// if rateUnit is hourly, return rate(); otherwise calculate by formula
 		return null;
 	}
+
+	public PayRateBuilder of(final Money money) {
+		return new PaymentBuilder(money);
+	}
+
+	public interface PayRateBuilder {
+		public Payment atHourlyRate();
+	}
+
+	public class PaymentBuilder implements PayRateBuilder {
+
+		private Payment payment;
+
+		public PaymentBuilder(final Money money) {
+			this.payment = new Payment();
+			this.payment.payMoney = money;
+		}
+
+		@Override
+		public Payment atHourlyRate() {
+			this.payment.payRateUnit = PayRateUnit.HOURLY;
+			return this.payment;
+		}
+	}
 }

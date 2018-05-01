@@ -14,7 +14,7 @@
 			startValue="1000" incrementBy="50" />
 
 		<createTable tableName="countries">
-			<column name="code" type="varchar(20)">
+			<column name="code" type="varchar(3)">
 				<constraints primaryKeyName="pk_country_code"
 					primaryKey="true" nullable="false" />
 			</column>
@@ -32,7 +32,7 @@
 			<column name="name" type="varchar(100)">
 				<constraints nullable="false" />
 			</column>
-			<column name="country_code" type="varchar(20)">
+			<column name="country_code" type="varchar(3)">
 				<constraints foreignKeyName="fk_states_country_code"
 					referencedColumnNames="code" referencedTableName="countries" nullable="false" />
 			</column>
@@ -117,7 +117,7 @@
 			columnNames="name, department_id" tableName="designations" />
 
 		<createTable tableName="employment_types">
-			<column name="code" type="varchar(20)">
+			<column name="code" type="varchar(5)">
 				<constraints primaryKeyName="pk_emp_type_code"
 					primaryKey="true" nullable="false" />
 			</column>
@@ -237,22 +237,12 @@
 			<column name="gender" type="varchar(10)">
 				<constraints nullable="false" />
 			</column>
-			<column name="company_code" type="varchar(20)">
-				<constraints foreignKeyName="fk_resources_company_code"
-					referencedColumnNames="code" referencedTableName="companies"
-					nullable="false" />
-			</column>
-			<column name="department_id" type="smallint">
-				<constraints foreignKeyName="fk_resources_department_id"
-					referencedColumnNames="id" referencedTableName="departments"
-					nullable="false" />
-			</column>
 			<column name="designation_id" type="smallint">
 				<constraints foreignKeyName="fk_resources_designation_id"
 					referencedColumnNames="id" referencedTableName="designations"
 					nullable="false" />
 			</column>
-			<column name="emp_type_code" type="varchar(20)">
+			<column name="emp_type_code" type="varchar(5)">
 				<constraints foreignKeyName="fk_resources_emp_type_code"
 					referencedColumnNames="code" referencedTableName="employment_types"
 					nullable="false" />
@@ -386,9 +376,12 @@
 					referencedColumnNames="code" referencedTableName="resources"
 					nullable="false" />
 			</column>
-			<column name="location_id" type="int">
-				<constraints foreignKeyName="fk_accounts_location_id"
-					referencedColumnNames="id" referencedTableName="cities" nullable="false" />
+			<column name="country_code" type="varchar(3)">
+				<constraints foreignKeyName="fk_accounts_country_code"
+					referencedColumnNames="code" referencedTableName="countries" nullable="false" />
+			</column>
+			<column name="location" type="varchar(150)">
+				<constraints nullable="false" />
 			</column>
 		</createTable>
 		<createIndex indexName="idx_customer_name" tableName="accounts"
@@ -413,7 +406,7 @@
 					referencedColumnNames="code" referencedTableName="accounts"
 					nullable="false" />
 			</column>
-			<column name="rebate" type="decimal">
+			<column name="percent" type="decimal">
 				<constraints nullable="false" />
 			</column>
 			<column name="year" type="smallint">

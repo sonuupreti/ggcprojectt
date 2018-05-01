@@ -26,6 +26,14 @@ public class DateRange {
 
 	@Column(name = "TILL_DATE", nullable = true)
 	private LocalDate tillDate;
+	
+	public void endOn(final LocalDate endDate) {
+		this.tillDate = endDate;
+	}
+	
+	public void startOn(final LocalDate endDate) {
+		this.tillDate = endDate;
+	}
 
 	public static DateRangeBuilder dateRange() {
 		return new DateRangeBuilder();

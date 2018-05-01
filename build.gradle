@@ -155,6 +155,9 @@ dependencies {
     compile "io.dropwizard.metrics:metrics-jvm"
     compile "io.dropwizard.metrics:metrics-servlet"
     compile "io.dropwizard.metrics:metrics-servlets"
+    /*compile ("io.dropwizard.metrics:metrics-servlets") {
+    	exclude module: 'joda-time'
+    }*/
     compile "net.logstash.logback:logstash-logback-encoder"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-hppc"

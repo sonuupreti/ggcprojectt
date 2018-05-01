@@ -11,11 +11,11 @@ public interface Costing extends Identifiable<Long> {
 
 	public static final int NUMBER_OF_WEEKS_IN_A_YEAR = 52;
 
-	public Payment payment();
+	public Payment costRate();
+
+	public Money hourlyCostRate();
 
 	public DateRange dateRange();
-
-	public Money hourlyPayment();
 
 	public Money costToCompany();
 }
