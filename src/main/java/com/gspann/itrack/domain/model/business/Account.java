@@ -22,7 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.location.Country;
+import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.type.BaseAutoAssignableVersionableEntity;
 import com.gspann.itrack.domain.common.type.Buildable;
 import com.gspann.itrack.domain.model.projects.Project;
@@ -74,12 +74,8 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	// in case the customer is at different locations then separate account will be
 	// created for each location
 	@OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "COUNTRY_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_ACCOUNTS_COUNTRY_CODE))
-	private Country country;
-
-	@NotNull
-	@Column(name = "LOCATION", nullable = false, length = 150)
-	private String location;
+	@JoinColumn(name = "COUNTRY_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_ACCOUNTS_CITY_ID))
+	private City location;
 
 	@OneToMany(cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "ACCOUNT_CODE", nullable = false)
@@ -137,15 +133,11 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	}
 
 	public interface AccountManagerBuilder {
-		public AccountCountryBuilder managedBy(final Resource accountManager);
-	}
-
-	public interface AccountCountryBuilder {
-		public AccountLocationBuilder inCountry(final Country country);
+		public AccountLocationBuilder managedBy(final Resource accountManager);
 	}
 
 	public interface AccountLocationBuilder extends Buildable<Account> {
-		public AccountRebatePercentBuilder locatedAt(final String location);
+		public AccountRebatePercentBuilder locatedAt(final City location);
 	}
 
 	public interface AccountRebatePercentBuilder {
@@ -158,7 +150,7 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 
 	public static class AccountBuilder
 			implements CustomerReportingManagerBuilder, CustomerEntityBuilder, CustomerTimeTrackingBuilder, AccountManagerBuilder,
-			AccountCountryBuilder, AccountLocationBuilder, AccountRebatePercentBuilder, AccountYearBuilder {
+			AccountLocationBuilder, AccountRebatePercentBuilder, AccountYearBuilder {
 		private Account account;
 		private float rebatePercent;
 
@@ -197,19 +189,13 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 		}
 
 		@Override
-		public AccountCountryBuilder managedBy(Resource accountManager) {
+		public AccountLocationBuilder managedBy(Resource accountManager) {
 			this.account.accountManager = accountManager;
 			return this;
 		}
 
 		@Override
-		public AccountLocationBuilder inCountry(Country country) {
-			this.account.country = country;
-			return this;
-		}
-
-		@Override
-		public AccountRebatePercentBuilder locatedAt(String location) {
+		public AccountRebatePercentBuilder locatedAt(City location) {
 			this.account.location = location;
 			return this;
 		}

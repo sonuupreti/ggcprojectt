@@ -26,14 +26,25 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @Entity
-@Table(name = "DESIGNATIONS", uniqueConstraints = @UniqueConstraint(name = UNQ_DESIG_NAME, columnNames = { "NAME",
-		"DEPARTMENT_ID" }))
+// @formatter:off
+@Table(name = "DESIGNATIONS", 
+		uniqueConstraints = {
+				@UniqueConstraint(name = UNQ_DESIG_NAME, columnNames = { "NAME", "DEPARTMENT_ID" }),
+				@UniqueConstraint(name = UNQ_DESIG_LEVEL, columnNames = { "DEPARTMENT_ID", "LEVEL" })
+		}
+)
+// @formatter:on
+
 @Immutable
 public class Designation extends AbstractIdentifiable<Short> {
 
 	@NotNull
 	@Column(name = "NAME", nullable = false, length = 100)
 	private String name;
+
+	@NotNull
+	@Column(name = "LEVEL", nullable = false)
+	private short level;
 
 	@NotNull
 	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)

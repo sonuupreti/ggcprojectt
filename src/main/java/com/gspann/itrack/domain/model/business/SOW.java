@@ -2,10 +2,8 @@ package com.gspann.itrack.domain.model.business;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.persistence.CascadeType;
@@ -98,6 +96,20 @@ public class SOW extends BaseIdentifiableVersionableEntity<Long, Long> {
 	@OneToMany(mappedBy = "parentSOW", fetch = FetchType.LAZY)
 	private Set<SOW> childSOWs = new HashSet<SOW>();
 
-	@OneToMany(mappedBy = "sow", fetch = FetchType.LAZY)
-	private List<PO> pos = new ArrayList<PO>();
+//	@OneToMany(mappedBy = "sow", fetch = FetchType.LAZY)
+//	private List<PO> pos = new ArrayList<PO>();
+	
+
+	@ManyToMany(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
+	// @formatter:off
+    @JoinTable(
+        name = "SOW_PO_MAP",
+        joinColumns = @JoinColumn(name = "SOW_ID", referencedColumnName = "ID", 
+        		foreignKey = @ForeignKey(name = FK_SOW_PO_MAP_SOW_ID), unique = false),
+        inverseJoinColumns = @JoinColumn(name = "PO_ID", referencedColumnName = "ID", 
+        		foreignKey = @ForeignKey(name = FK_SOW_PO_MAP_PO_ID), unique = false)
+    )
+	// @formatter:on
+	private Set<PO> pos = new HashSet<PO>();
+
 }

@@ -97,6 +97,7 @@ public class PersistenceConstant {
 
 		public static final String PK_DESIGNATION_ID = "pk_designation_id";
 		public static final String UNQ_DESIG_NAME = "unq_desig_name";
+		public static final String UNQ_DESIG_LEVEL = "unq_desig_level";
 		public static final String FK_DESIGNATIONS_DEPARTMENT_ID = "fk_designations_department_id";
 		
 		public static final String PK_EMP_TYPE_CODE = "pk_emp_type_code";
@@ -139,7 +140,7 @@ public class PersistenceConstant {
 		public static final String UNQ_CUSTOMER_ENTITY = "unq_customer_entity";
 		public static final String IDX_CUSTOMER_ENTITY = "idx_customer_entity";
 		public static final String FK_ACCOUNTS_MGR_RESOURCE_CODE = "fk_accounts_mgr_resource_code";
-		public static final String FK_ACCOUNTS_COUNTRY_CODE = "fk_accounts_country_code";
+		public static final String FK_ACCOUNTS_CITY_ID = "fk_accounts_city_id";
 		public static final String PK_ALLOCATION_ID = "pk_allocation_id";
 		public static final String FK_ALLOCATIONS_RESOURCE_CODE = "fk_allocations_resource_code";
 		public static final String FK_ALLOCATIONS_POJECT_CODE = "fk_allocations_poject_code";
@@ -166,15 +167,19 @@ public class PersistenceConstant {
 		public static final String PK_SOW_PROJECT_MAP = "pk_sow_project_map";
 		public static final String FK_SOW_PROJECT_MAP_SOW_ID = "fk_sow_project_map_sow_id";
 		public static final String FK_SOW_PROJECT_MAP_PROJECT_CODE = "fk_sow_project_map_project_code";
-		public static final String FK_SOW_RESOURCE_MAP_SOW_ID = "fk_sow_resource_map_sow_id";
 		
 		public static final String PK_SOW_RESOURCE_MAP = "pk_sow_resource_map";
+		public static final String FK_SOW_RESOURCE_MAP_SOW_ID = "fk_sow_resource_map_sow_id";
 		public static final String FK_SOW_RESOURCE_MAP_RESOURCE_CODE = "fk_sow_resource_map_resource_code";
 		public static final String FK_SOWS_PARENT_SOW_ID = "fk_sows_parent_sow_id";
+		
+		public static final String PK_SOW_PO_MAP = "pk_sow_po_map";
+		public static final String FK_SOW_PO_MAP_SOW_ID = "fk_sow_po_map_sow_id";
+		public static final String FK_SOW_PO_MAP_PO_ID = "fk_sow_po_map_po_id";
 
 		public static final String PK_PO_ID = "pk_po_id";
 		public static final String IDX_POS_PO_NUMBER = "idx_pos_po_number";
-		public static final String FK_POS_SOW_ID = "fk_pos_sow_id";
+//		public static final String FK_POS_SOW_ID = "fk_pos_sow_id";
 		
 		public static final String PK_PO_DOCUMENT_MAP = "pk_po_document_map";
 		public static final String FK_PO_DOCUMENT_MAP_PO_ID = "fk_po_document_map_po_id";

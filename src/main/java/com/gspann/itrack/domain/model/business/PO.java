@@ -15,6 +15,7 @@ import javax.persistence.ForeignKey;
 import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OrderBy;
@@ -44,9 +45,12 @@ public class PO extends BaseIdentifiableVersionableEntity<Long, Long> {
 	@Column(name = "PO_NUMBER", unique = false, nullable = false, length = 30)
 	private String poNumber;
 
-	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "SOW_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_POS_SOW_ID))
-	private SOW sow;
+//	@ManyToOne(fetch = FetchType.EAGER)
+//	@JoinColumn(name = "SOW_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_POS_SOW_ID))
+//	private SOW sow;
+
+	@ManyToMany(mappedBy = "pos")
+	private Set<SOW> sows = new HashSet<SOW>();
 
 	@NotNull
 	//@formatter:off

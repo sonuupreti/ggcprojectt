@@ -72,7 +72,7 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 			if (rs.next()) {
 				String highEnd = rs.getString("HIGH_END");
 				int nextSeq = highEnd == null ? ACCOUNT_SEQUENCE_START : Integer.valueOf(highEnd) + 1;
-				return account.country().code() + nextSeq;
+				return account.location().state().country().code() + nextSeq;
 			}
 			rs.close();
 		} catch (SQLException e) {
