@@ -26,7 +26,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @Entity
-@Table(name = "DEPARTMENTS", uniqueConstraints = @UniqueConstraint(name = UNQ_DEPT_NAME, columnNames = { "NAME", "COMPANY_CODE" }))
+@Table(name = "DEPARTMENTS", uniqueConstraints = @UniqueConstraint(name = UNQ_DEPT_NAME, columnNames = { "NAME", "COMPANY_ID" }))
 @Immutable
 public class Department extends AbstractIdentifiable<Short> {
 
@@ -36,6 +36,6 @@ public class Department extends AbstractIdentifiable<Short> {
 
 	@NotNull
 	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "COMPANY_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_DEPARTMENTS_COMPANY_CODE))
+	@JoinColumn(name = "COMPANY_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DEPARTMENTS_COMPANY_ID))
 	private Company company;
 }

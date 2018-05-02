@@ -29,8 +29,7 @@ import lombok.experimental.Accessors;
 @Entity
 // @formatter:off
 @Table(name = "PRACTICES", uniqueConstraints = {
- 		@UniqueConstraint(name = UNQ_PRACTICE_NAME, columnNames = { "NAME"}),
- 		@UniqueConstraint(name = UNQ_PRACTICE_DESCRIPTION, columnNames = { "DESCRIPTION"})
+ 		@UniqueConstraint(name = UNQ_PRACTICE_NAME, columnNames = { "NAME"})
 	}
 )
 // @formatter:on
@@ -42,65 +41,26 @@ public class Practice extends AbstractAssignable<String> {
 	@Column(name = "NAME", nullable = false, length = 50)
 	private String name;
 
-	@NotNull
-	@Column(name = "DESCRIPTION", nullable = false, length = 100)
-	private String description;
-
-	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, optional = false)
-	@JoinColumn(name = "LEAD_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PRACTICES_LEAD_RESOURCE_CODE))
+	@OneToOne(fetch = FetchType.EAGER, optional = true)
+	@JoinColumn(name = "LEAD_CODE", unique = false, nullable = true, foreignKey = @ForeignKey(name = FK_PRACTICES_LEAD_RESOURCE_CODE))
 	private Resource lead;
 
-	public static PracticeCodeBuilder practice() {
-		return new PracticeBuilder();
+	public static Practice of(final String code, final String name) {
+		Practice practice = new Practice();
+		practice.code = code;
+		practice.name = name;
+		return practice;
 	}
 
-	public interface PracticeCodeBuilder {
-		PracticeNameBuilder codedAs(final String code);
+	public static Practice of(final String code, final String name, final Resource lead) {
+		Practice practice = new Practice();
+		practice.code = code;
+		practice.name = name;
+		practice.lead = lead;
+		return practice;
 	}
-
-	public interface PracticeNameBuilder {
-		PracticeDescriptionBuilder namedAs(final String name);
-	}
-
-	public interface PracticeDescriptionBuilder {
-		PracticeLeadBuilder withDescription(final String description);
-	}
-
-	public interface PracticeLeadBuilder {
-		Practice leadBy(final Resource lead);
-	}
-
-	private static class PracticeBuilder
-			implements PracticeCodeBuilder, PracticeNameBuilder, PracticeDescriptionBuilder, PracticeLeadBuilder {
-		private Practice practice;
-
-		PracticeBuilder() {
-			practice = new Practice();
-		}
-
-		@Override
-		public PracticeNameBuilder codedAs(final String code) {
-			practice.code = code;
-			return this;
-		}
-
-		@Override
-		public PracticeDescriptionBuilder namedAs(final String name) {
-			practice.name = name;
-			return this;
-		}
-
-		@Override
-		public PracticeLeadBuilder withDescription(String description) {
-			practice.description = description;
-			return this;
-		}
-
-		@Override
-		public Practice leadBy(Resource lead) {
-			practice.lead = lead;
-			return practice;
-		}
+	
+	public void updateLead(final Resource lead) {
+		this.lead = lead;
 	}
 }

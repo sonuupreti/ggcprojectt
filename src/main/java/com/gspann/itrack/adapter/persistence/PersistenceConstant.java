@@ -27,9 +27,7 @@ public class PersistenceConstant {
 		public static final String IDX_RESOURCES_LOGIN_ID = "idx_resources_login_id";
 		public static final String IDX_RESOURCES_GREYT_HR_ID = "idx_resources_greyt_hr_id";
 
-		public static final String pk_resource_code = "PK_RESOURCE_CODE";
-//		public static final String FK_RESOURCES_COMPANY_CODE = "fk_resources_company_code";
-//		public static final String FK_RESOURCES_DEPARTMENT_ID = "fk_resources_department_id";
+		public static final String PK_RESOURCE_CODE = "pk_resource_code";
 		public static final String FK_RESOURCES_DESIGNATION_ID = "fk_resources_designation_id";
 		public static final String FK_RESOURCES_EMP_TYPE_CODE = "fk_resources_emp_type_code";
 		public static final String FK_RESOURCES_EMP_STATUS_CODE = "fk_resources_emp_status_code";
@@ -72,49 +70,48 @@ public class PersistenceConstant {
 
 		public static final String PK_PROJECT_STATUS_CODE = "pk_project_status_code";
 		public static final String UNQ_PRJ_STATUS_DESCRIPTION = "unq_prj_status_description";
-		
+
 		public static final String FK_PROJECTS_PRJ_TYPE_CODE = "fk_projects_prj_type_code";
 		public static final String FK_PROJECTS_PRJ_STATUS_CODE = "fk_projects_prj_status_code";
 		public static final String FK_PROJECTS_ACCOUNT_CODE = "fk_projects_account_code";
 		public static final String FK_PROJECTS_OFFSHORE_MGR_CODE = "fk_projects_offshore_mgr_code";
 		public static final String FK_PROJECTS_ONSHORE_MGR_CODE = "fk_projects_onshore_mgr_code";
 		public static final String FK_PROJECTS_LOC_ID = "fk_projects_loc_id";
-		
+
 		public static final String PK_PROJECT_PRACTICE_MAP = "pk_project_practice_map";
 		public static final String FK_PROJECT_PRACTICE_MAP_PROJECT_CODE = "fk_project_practice_map_project_code";
 		public static final String FK_PROJECT_PRACTICE_MAP_PRACTICE_CODE = "fk_project_practice_map_practice_code";
 
-		public static final String PK_COMPANY_CODE = "pk_company_code";
+		public static final String PK_COMPANY_ID = "pk_company_id";
 		public static final String UNQ_COMP_NAME = "unq_comp_name";
 
 		public static final String PK_COMPANY_LOCATION_MAP = "pk_company_location_map";
-		public static final String FK_COMPANY_LOCATION_MAP_COMPANY_CODE = "fk_company_location_map_company_code";
+		public static final String FK_COMPANY_LOCATION_MAP_COMPANY_ID = "fk_company_location_map_company_id";
 		public static final String FK_COMPANY_LOCATION_MAP_CITY_ID = "fk_company_location_map_city_id";
 
 		public static final String PK_DEPARTMENT_ID = "pk_department_id";
 		public static final String UNQ_DEPT_NAME = "unq_dept_name";
-		public static final String FK_DEPARTMENTS_COMPANY_CODE = "fk_departments_company_code";
+		public static final String FK_DEPARTMENTS_COMPANY_ID = "fk_departments_company_id";
 
 		public static final String PK_DESIGNATION_ID = "pk_designation_id";
 		public static final String UNQ_DESIG_NAME = "unq_desig_name";
 		public static final String UNQ_DESIG_LEVEL = "unq_desig_level";
 		public static final String FK_DESIGNATIONS_DEPARTMENT_ID = "fk_designations_department_id";
-		
+
 		public static final String PK_EMP_TYPE_CODE = "pk_emp_type_code";
 		public static final String UNQ_EMP_TYPE_DESCRIPTION = "unq_emp_type_description";
-		
+
 		public static final String PK_EMP_STATUS_CODE = "pk_emp_status_code";
 		public static final String UNQ_EMP_STATUS_DESCRIPTION = "unq_emp_status_description";
 
 		public static final String PK_PRACTICE_CODE = "pk_practice_code";
 		public static final String UNQ_PRACTICE_NAME = "unq_practice_name";
-		public static final String UNQ_PRACTICE_DESCRIPTION = "unq_practice_description";
 		public static final String FK_PRACTICES_LEAD_RESOURCE_CODE = "fk_practices_lead_resource_code";
 
 		public static final String PK_HOLIDAY_CALENDAR_YEAR = "pk_holiday_calendar_year";
 		public static final String PK_HOLIDAY_ID = "pk_holiday_id";
 		public static final String FK_HOLIDAYS_HOLIDAY_CALENDARS_YEAR = "fk_holidays_holiday_calendars_year";
-		
+
 		public static final String PK_OCCASION_ID = "pk_occasion_id";
 		public static final String UNQ_OCCASION_NAME = "unq_occasion_name";
 
@@ -122,9 +119,9 @@ public class PersistenceConstant {
 		public static final String FK_HOLIDAY_LOCATION_MAP_HOLIDAY_ID = "fk_holiday_location_map_holiday_id";
 		public static final String FK_HOLIDAY_LOCATION_MAP_LOCATION_ID = "fk_holiday_location_map_location_id";
 		public static final String FK_HOLIDAY_LOCATION_MAP_OCCASION_ID = "fk_holiday_location_map_occasion_id";
-		
+
 		public static final String PK_DOCUMENT_ID = "pk_document_id";
-		
+
 		public static final String PK_BILLING_CODE = "pk_billing_code";
 		public static final String FK_BILLINGS_BILL_STATUS_CODE = "fk_billings_bill_status_code";
 		public static final String PK_BILLING_ID = "pk_billing_id";
@@ -133,7 +130,7 @@ public class PersistenceConstant {
 
 		public static final String PK_REBATE_ID = "pk_rebate_id";
 		public static final String FK_REBATES_ACCOUNT_CODE = "fk_rebates_account_code";
-		
+
 		public static final String PK_ACCOUNT_CODE = "pk_account_code";
 		public static final String UNQ_CUSTOMER_NAME = "unq_customer_name";
 		public static final String IDX_CUSTOMER_NAME = "idx_customer_name";
@@ -147,40 +144,39 @@ public class PersistenceConstant {
 
 		public static final String PK_COUNTRY_CODE = "pk_country_code";
 		public static final String UNQ_COUNTRY_NAME = "unq_country_name";
-		
+
 		public static final String PK_STATE_ID = "pk_state_id";
 		public static final String UNQ_STATE = "unq_state";
 		public static final String FK_STATES_COUNTRY_CODE = "fk_states_country_code";
-		
+
 		public static final String PK_CITY_ID = "pk_city_id";
 		public static final String UNQ_CITY = "unq_city";
 		public static final String FK_CITIES_STATE_ID = "fk_cities_state_id";
-		
+
 		public static final String PK_SOW_ID = "pk_sow_id";
 		public static final String FK_SOWS_ACCOUNT_CODE = "fk_sows_account_code";
 		public static final String UNQ_SOW_NUMBER_ACCOUNT_CODE = "unq_sow_number_account_code";
-		
+
 		public static final String PK_SOW_DOCUMENT_MAP = "pk_sow_document_map";
 		public static final String FK_SOW_DOCUMENT_MAP_SOW_ID = "fk_sow_document_map_sow_id";
 		public static final String FK_SOW_DOCUMENT_MAP_DOCUMENT_ID = "fk_sow_document_map_document_id";
-		
+
 		public static final String PK_SOW_PROJECT_MAP = "pk_sow_project_map";
 		public static final String FK_SOW_PROJECT_MAP_SOW_ID = "fk_sow_project_map_sow_id";
 		public static final String FK_SOW_PROJECT_MAP_PROJECT_CODE = "fk_sow_project_map_project_code";
-		
+
 		public static final String PK_SOW_RESOURCE_MAP = "pk_sow_resource_map";
 		public static final String FK_SOW_RESOURCE_MAP_SOW_ID = "fk_sow_resource_map_sow_id";
 		public static final String FK_SOW_RESOURCE_MAP_RESOURCE_CODE = "fk_sow_resource_map_resource_code";
 		public static final String FK_SOWS_PARENT_SOW_ID = "fk_sows_parent_sow_id";
-		
+
 		public static final String PK_SOW_PO_MAP = "pk_sow_po_map";
 		public static final String FK_SOW_PO_MAP_SOW_ID = "fk_sow_po_map_sow_id";
 		public static final String FK_SOW_PO_MAP_PO_ID = "fk_sow_po_map_po_id";
 
 		public static final String PK_PO_ID = "pk_po_id";
 		public static final String IDX_POS_PO_NUMBER = "idx_pos_po_number";
-//		public static final String FK_POS_SOW_ID = "fk_pos_sow_id";
-		
+
 		public static final String PK_PO_DOCUMENT_MAP = "pk_po_document_map";
 		public static final String FK_PO_DOCUMENT_MAP_PO_ID = "fk_po_document_map_po_id";
 		public static final String FK_PO_DOCUMENT_MAP_DOCUMENT_ID = "fk_po_document_map_document_id";
@@ -188,6 +184,6 @@ public class PersistenceConstant {
 
 		public static final String PK_INVOICE_ID = "pk_invoice_id";
 		public static final String FK_INVOICES_PO_ID = "fk_invoices_po_id";
-		
+
 	}
 }

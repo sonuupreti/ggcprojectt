@@ -12,8 +12,11 @@ import org.springframework.stereotype.Repository;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
-import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
+import com.gspann.itrack.domain.model.org.structure.EmploymentType;
+import com.gspann.itrack.domain.model.org.structure.Practice;
+import com.gspann.itrack.domain.model.projects.ProjectStatus;
+import com.gspann.itrack.domain.model.projects.ProjectType;
 
 @Repository
 public class OrganisationRepositoryImpl implements OrganisationRepository {
@@ -22,7 +25,7 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	private EntityManager entityManager;
 
 	@Override
-	public Company saveCompany(Company company) {
+	public Company saveCompany(final Company company) {
 		Optional<Company> existingCompany = findCompanyByName(company.name());
 		if (existingCompany.isPresent()) {
 			return entityManager.merge(company);
@@ -33,16 +36,16 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	}
 
 	@Override
-	public Optional<Company> findCompanyById(Short id) {
+	public Optional<Company> findCompanyById(final Short id) {
 		return Optional.ofNullable(entityManager.find(Company.class, id));
 	}
 
 	@Override
-	public Optional<Company> findCompanyByName(String name) {
+	public Optional<Company> findCompanyByName(final String name) {
 		Company company = null;
 		try {
-			company = entityManager.createQuery("from Company c where name = '" + name + "'", Company.class)
-					.getSingleResult();
+			company = entityManager.createQuery("from Company c where name = :name", Company.class)
+					.setParameter("name", name).getSingleResult();
 		} catch (NoResultException e) {
 			// No state with such name exists, so return null
 		}
@@ -51,12 +54,13 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 
 	@Override
 	public List<Company> findAllCompanies() {
-		return entityManager.createQuery("select c from Company c", Company.class).getResultList();
+		return entityManager.createQuery("from Company c", Company.class).getResultList();
 	}
 
 	@Override
-	public Department saveDepartment(Department department) {
-		Optional<Department> existingDepartment = findDepartmentByName(department.name());
+	public Department saveDepartment(final Department department) {
+		Optional<Department> existingDepartment = findDepartmentByNameAndCompany(department.name(),
+				department.company().id());
 		if (existingDepartment.isPresent()) {
 			return entityManager.merge(department);
 		} else {
@@ -66,16 +70,18 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	}
 
 	@Override
-	public Optional<Department> findDepartmentById(Short id) {
+	public Optional<Department> findDepartmentById(final Short id) {
 		return Optional.ofNullable(entityManager.find(Department.class, id));
 	}
 
 	@Override
-	public Optional<Department> findDepartmentByName(String name) {
+	public Optional<Department> findDepartmentByNameAndCompany(final String name, final short companyId) {
 		Department department = null;
 		try {
-			department = entityManager.createQuery("from Department d where name = '" + name + "'", Department.class)
-					.getSingleResult();
+			department = entityManager
+					.createQuery("from Department d where d.name = :name and d.company.id= :companyId",
+							Department.class)
+					.setParameter("name", name).setParameter("companyId", companyId).getSingleResult();
 		} catch (NoResultException e) {
 			// No state with such name exists, so return null
 		}
@@ -85,6 +91,12 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	@Override
 	public List<Department> findAllDepartments() {
 		return entityManager.createQuery("from Department d", Department.class).getResultList();
+	}
+
+	@Override
+	public List<Department> findAllDepartmentsByCompany(final short companyId) {
+		return entityManager.createQuery("from Department d where d.company.id = :companyId", Department.class)
+				.setParameter("companyId", companyId).getResultList();
 	}
 
 	@Override
@@ -99,16 +111,16 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	}
 
 	@Override
-	public Optional<Designation> findDesignationById(Short id) {
+	public Optional<Designation> findDesignationById(final short id) {
 		return Optional.ofNullable(entityManager.find(Designation.class, id));
 	}
 
 	@Override
-	public Optional<Designation> findDesignationByName(String name) {
+	public Optional<Designation> findDesignationByName(final String name) {
 		Designation designation = null;
 		try {
-			designation = entityManager.createQuery("from Designation d where name = '" + name + "'", Designation.class)
-					.getSingleResult();
+			designation = entityManager.createQuery("from Designation d where name = :name", Designation.class)
+					.setParameter("name", name).getSingleResult();
 		} catch (NoResultException e) {
 			// No state with such name exists, so return null
 		}
@@ -117,12 +129,87 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 
 	@Override
 	public List<Designation> findAllDesignations() {
-		return entityManager.createQuery("select d from Designation d", Designation.class).getResultList();
+		return entityManager.createQuery("from Designation d", Designation.class).getResultList();
 	}
 
 	@Override
-	public EmploymentType saveEmploymentStatus(EmploymentType employmentStatus) {
-		Optional<EmploymentType> existingEmploymentStatus = findEmploymentStatusByCode(employmentStatus.code());
+	public List<Designation> findAllDesignationsByCompany(final short companyId) {
+		return entityManager.createQuery("select d from Designation d where d.department.company.id = :companyId",
+				Designation.class).setParameter("companyId", companyId).getResultList();
+	}
+
+	@Override
+	public List<Designation> findAllDesignationsByDepartment(final short departmentId) {
+		return entityManager
+				.createQuery("select d from Designation d where d.department.id = :departmentId", Designation.class)
+				.setParameter("departmentId", departmentId).getResultList();
+	}
+
+	@Override
+	public List<Designation> findAllDesignationsByDepartmentAndCompany(final short departmentId,
+			final short companyId) {
+		return entityManager.createQuery("select d from Designation d where d.department.id = :departmentId"
+				+ " and d.department.company.id = :companyId", Designation.class).getResultList();
+	}
+
+	
+	@Override
+	public Practice savePractice(final Practice practice) {
+		Optional<Practice> existingPractice = findPracticeByName(practice.name());
+		if (existingPractice.isPresent()) {
+			return entityManager.merge(practice);
+		} else {
+			entityManager.persist(practice);
+			return practice;
+		}
+	}
+
+	@Override
+	public Optional<Practice> findPracticeByCode(final String practiceCode) {
+		return Optional.ofNullable(entityManager.find(Practice.class, practiceCode));
+	}
+
+	@Override
+	public Optional<Practice> findPracticeByName(final String name) {
+		Practice practice = null;
+		try {
+			practice = entityManager.createQuery("from Practice p where name = :name", Practice.class)
+					.setParameter("name", name).getSingleResult();
+		} catch (NoResultException e) {
+			// No state with such name exists, so return null
+		}
+		return Optional.ofNullable(practice);
+	}
+	
+	@Override
+	public List<Practice> findAllPractices() {
+		return entityManager.createQuery("from Practice p", Practice.class).getResultList();
+	}
+
+	@Override
+	public EmploymentType saveEmploymentType(final EmploymentType employmentType) {
+		Optional<EmploymentType> existingEmploymentType = findEmploymentTypeByCode(employmentType.code());
+		if (existingEmploymentType.isPresent()) {
+			return entityManager.merge(employmentType);
+		} else {
+			entityManager.persist(employmentType);
+			return employmentType;
+		}
+	}
+
+	@Override
+	public Optional<EmploymentType> findEmploymentTypeByCode(final String employmentTypeCode) {
+		return Optional.ofNullable(entityManager.find(EmploymentType.class, employmentTypeCode));
+	}
+
+	@Override
+	public List<EmploymentType> findAllEmploymentTypes() {
+		return entityManager.createQuery("from EmploymentType e", EmploymentType.class).getResultList();
+	}
+
+	@Override
+	public EmploymentStatus saveEmploymentStatus(final EmploymentStatus employmentStatus) {
+		Optional<EmploymentStatus> existingEmploymentStatus = findEmploymentStatusByCode(employmentStatus.code());
 		if (existingEmploymentStatus.isPresent()) {
 			return entityManager.merge(employmentStatus);
 		} else {
@@ -132,36 +219,54 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	}
 
 	@Override
-	public Optional<EmploymentType> findEmploymentStatusByCode(String statusCode) {
-		return Optional.ofNullable(entityManager.find(EmploymentType.class, statusCode));
+	public Optional<EmploymentStatus> findEmploymentStatusByCode(final String employmentStatusCode) {
+		return Optional.ofNullable(entityManager.find(EmploymentStatus.class, employmentStatusCode));
 	}
 
 	@Override
-	public List<EmploymentType> findAllEmploymentStatuses() {
-		return entityManager.createQuery("select e from EmploymentStatus e", EmploymentType.class).getResultList();
+	public List<EmploymentStatus> findAllEmploymentStatuses() {
+		return entityManager.createQuery("from EmploymentStatus e", EmploymentStatus.class).getResultList();
 	}
 
 	@Override
-	public EmploymentStatus saveEngagementStatus(EmploymentStatus engagementStatus) {
-		Optional<EmploymentStatus> existingEngagementStatus = findEngagementStatusByCode(engagementStatus.code());
-		if (existingEngagementStatus.isPresent()) {
-			return entityManager.merge(engagementStatus);
+	public ProjectType saveProjectType(final ProjectType projectType) {
+		Optional<ProjectType> existingProjectType = findProjectTypeByCode(projectType.code());
+		if (existingProjectType.isPresent()) {
+			return entityManager.merge(projectType);
 		} else {
-			entityManager.persist(engagementStatus);
-			return engagementStatus;
+			entityManager.persist(projectType);
+			return projectType;
 		}
 	}
 
 	@Override
-	public Optional<EmploymentStatus> findEngagementStatusByCode(String statusCode) {
-		return Optional.ofNullable(
-				entityManager.createQuery("select e from EngagementStatus e where statusCode = '" + statusCode + "'",
-						EmploymentStatus.class).getSingleResult());
+	public Optional<ProjectType> findProjectTypeByCode(final String projectTypeCode) {
+		return Optional.ofNullable(entityManager.find(ProjectType.class, projectTypeCode));
 	}
 
 	@Override
-	public List<EmploymentStatus> findAllEngagementStatuses() {
-		return entityManager.createQuery("select e from EngagementStatus e", EmploymentStatus.class).getResultList();
+	public List<ProjectType> findAllProjectTypes() {
+		return entityManager.createQuery("from ProjectType p", ProjectType.class).getResultList();
 	}
 
+	@Override
+	public ProjectStatus saveProjectStatus(ProjectStatus projectStatus) {
+		Optional<ProjectStatus> existingProjectStatus = findProjectStatusByCode(projectStatus.code());
+		if (existingProjectStatus.isPresent()) {
+			return entityManager.merge(projectStatus);
+		} else {
+			entityManager.persist(projectStatus);
+			return projectStatus;
+		}
+	}
+
+	@Override
+	public Optional<ProjectStatus> findProjectStatusByCode(String projectStatusCode) {
+		return Optional.ofNullable(entityManager.find(ProjectStatus.class, projectStatusCode));
+	}
+
+	@Override
+	public List<ProjectStatus> findAllProjectStatuses() {
+		return entityManager.createQuery("from ProjectStatus p", ProjectStatus.class).getResultList();
+	}
 }

@@ -12,10 +12,12 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.common.annotation.spring.Dev;
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.location.Country;
 import com.gspann.itrack.domain.common.location.State;
@@ -25,6 +27,8 @@ import com.gspann.itrack.domain.common.location.State;
 @Transactional
 @Commit
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@Dev
+@ActiveProfiles(profiles = {"dev"})
 public class LocationRepositoryTest {
 
 	@Autowired
@@ -127,6 +131,9 @@ public class LocationRepositoryTest {
 		City pune = City.of("Pune", systemUnderTest.findStateByName("Maharashtra").get());
 		System.out.println(systemUnderTest.saveCity(pune));
 
+		City mumbai = City.of("Mumbai", systemUnderTest.findStateByName("Maharashtra").get());
+		System.out.println(systemUnderTest.saveCity(mumbai));
+		
 		City milpitas = City.of("Milpitas", systemUnderTest.findStateByName("California").get());
 		System.out.println(systemUnderTest.saveCity(milpitas));
 
@@ -150,8 +157,8 @@ public class LocationRepositoryTest {
 	@Test
 	public void test10FindAllCities() {
 		List<City> cities = systemUnderTest.findAllCities();
-		assertTrue(cities.size() == 10);
 		System.out.println("cities --->>" + cities);
+		assertTrue(cities.size() == 11);
 	}
 
 	@Test
@@ -169,6 +176,6 @@ public class LocationRepositoryTest {
 	@Test
 	public void testFindAllCitiesByCountryCode() {
 		List<City> cities = systemUnderTest.findAllCitiesByCountryCode("IN");
-		assertTrue(cities.size() == 5);
+		assertTrue(cities.size() == 6);
 	}
 }

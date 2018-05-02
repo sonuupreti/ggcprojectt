@@ -11,7 +11,7 @@
 
 		<!-- Global sequence for auto increment generated primary key of entities -->
 		<createSequence sequenceName="global_sequence"
-			startValue="1000" incrementBy="50" />
+			startValue="1" incrementBy="1" />
 
 		<createTable tableName="countries">
 			<column name="code" type="varchar(3)">
@@ -57,8 +57,8 @@
 			columnNames="name, state_id" tableName="cities" />
 
 		<createTable tableName="companies">
-			<column name="code" type="varchar(20)">
-				<constraints primaryKeyName="pk_company_code"
+			<column name="id" type="smallint">
+				<constraints primaryKeyName="pk_company_id"
 					primaryKey="true" nullable="false" />
 			</column>
 			<column name="name" type="varchar(255)">
@@ -68,9 +68,9 @@
 		</createTable>
 		
 		<createTable tableName="company_location_map">
-			<column name="company_code" type="varchar(20)">
-				<constraints foreignKeyName="fk_company_location_map_company_code"
-					referencedColumnNames="code" referencedTableName="companies"
+			<column name="company_id" type="smallint">
+				<constraints foreignKeyName="fk_company_location_map_company_id"
+					referencedColumnNames="id" referencedTableName="companies"
 					nullable="false" />
 			</column>
 			<column name="city_id" type="int">
@@ -80,7 +80,7 @@
 			</column>
 		</createTable>
 		<addPrimaryKey constraintName="pk_company_location_map"
-			columnNames="company_code, city_id" tableName="company_location_map" />
+			columnNames="company_id, city_id" tableName="company_location_map" />
 		
 		<createTable tableName="departments">
 			<column name="id" type="smallint">
@@ -90,14 +90,14 @@
 			<column name="name" type="varchar(100)">
 				<constraints nullable="false" />
 			</column>
-			<column name="company_code" type="varchar(20)">
-				<constraints foreignKeyName="fk_departments_company_code"
-					referencedColumnNames="code" referencedTableName="companies"
+			<column name="company_id" type="smallint">
+				<constraints foreignKeyName="fk_departments_company_id"
+					referencedColumnNames="id" referencedTableName="companies"
 					nullable="false" />
 			</column>
 		</createTable>
 		<addUniqueConstraint constraintName="unq_dept_name"
-			columnNames="name, company_code" tableName="departments" />
+			columnNames="name, company_id" tableName="departments" />
 
 		<createTable tableName="designations">
 			<column name="id" type="smallint">
@@ -310,14 +310,10 @@
 				<constraints unique="true" nullable="false"
 					uniqueConstraintName="unq_practice_name" />
 			</column>
-			<column name="description" type="varchar(100)">
-				<constraints unique="true" nullable="false"
-					uniqueConstraintName="unq_practice_description" />
-			</column>
 			<column name="lead_code" type="varchar(20)">
 				<constraints foreignKeyName="fk_practices_lead_resource_code"
 					referencedColumnNames="code" referencedTableName="resources"
-					nullable="false" />
+					nullable="true" />
 			</column>
 		</createTable>
 
