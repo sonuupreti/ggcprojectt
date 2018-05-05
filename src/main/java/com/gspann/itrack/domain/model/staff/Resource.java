@@ -39,11 +39,13 @@ import com.gspann.itrack.domain.common.DateRange;
 import com.gspann.itrack.domain.common.Toggle;
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.type.BaseAutoAssignableVersionableEntity;
+import com.gspann.itrack.domain.common.type.Buildable;
 import com.gspann.itrack.domain.model.allocations.Allocation;
 import com.gspann.itrack.domain.model.business.SOW;
 import com.gspann.itrack.domain.model.business.payments.Bill;
 import com.gspann.itrack.domain.model.business.payments.Billing;
-import com.gspann.itrack.domain.model.business.payments.Costing;
+import com.gspann.itrack.domain.model.business.payments.FTECost;
+import com.gspann.itrack.domain.model.business.payments.NonFTECost;
 import com.gspann.itrack.domain.model.docs.Document;
 import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
@@ -53,7 +55,6 @@ import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -61,12 +62,12 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor(staticName = "of")
+// @AllArgsConstructor(staticName = "of")
 @Entity
 // @formatter:off
 @Table(name = "RESOURCES", 
 		uniqueConstraints = {
-				@UniqueConstraint(name = UNQ_RESOURCES_LOGIN_ID, columnNames = {"LOGIN_ID"}),
+//				@UniqueConstraint(name = UNQ_RESOURCES_LOGIN_ID, columnNames = {"LOGIN_ID"}),
 				@UniqueConstraint(name = UNQ_RESOURCES_EMAIL_ID, columnNames = {"EMAIL_ID"}),
 				@UniqueConstraint(name = UNQ_RESOURCES_GREYT_HR_ID, columnNames = {"GREYT_HR_ID"})
 		},
@@ -77,11 +78,11 @@ import lombok.experimental.Accessors;
 // @formatter:on
 public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> {
 
-	@Pattern(regexp = REGEX_LOGIN_ID, message = MESSAGE_LOGIN_ID_INVALID)
-	@NotNull(message = MESSAGE_LOGIN_ID_MANDATORY)
-	@NaturalId(mutable = false)
-	@Column(name = "LOGIN_ID", nullable = false, length = 100)
-	private String loginId;
+	// @Pattern(regexp = REGEX_LOGIN_ID, message = MESSAGE_LOGIN_ID_INVALID)
+	// @NotNull(message = MESSAGE_LOGIN_ID_MANDATORY)
+	// @NaturalId(mutable = false)
+	// @Column(name = "LOGIN_ID", nullable = false, length = 100)
+	// private String loginId;
 
 	@Email(message = MESSAGE_EMAIL_INVALID)
 	@NaturalId(mutable = false)
@@ -202,12 +203,12 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		this.primarySkills = newPrimarySkills;
 	}
 
-	@NotEmpty(message = MESSAGE_SECONDARY_SKILLS_MANDATORY)
+	// @NotEmpty(message = MESSAGE_SECONDARY_SKILLS_MANDATORY)
 	@Column(name = "SECONDARY_SKILLS", nullable = false, length = 255)
 	private String secondarySkills;
 
 	public void updateSecondarySkills(final String newSecondarySkills) {
-		this.primarySkills = newSecondarySkills;
+		this.secondarySkills = newSecondarySkills;
 	}
 
 	@NotNull
@@ -267,8 +268,8 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		// TODO: Implement later
 	}
 
-	@NotNull
-	@OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
+	// @NotNull
+	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "IMAGE_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_IMAGE_ID))
 	private Document image;
 
@@ -278,17 +279,17 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 
 	@NotEmpty(message = MESSAGE_COSTING_MANDATORY)
 	// @formatter:off
- 	@OneToMany(mappedBy = "resource", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY,
- 			targetEntity = com.gspann.itrack.domain.model.business.payments.NonFTECost.class)
+ 	@OneToMany(mappedBy = "resource", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
  	// @formatter:on
-	private List<Costing> costings = new ArrayList<>();
+//	private List<Costing> costings = new ArrayList<>();
+	private List<NonFTECost> costings = new ArrayList<>();
 
 	public void changeCost() {
 		// TODO: Implement later
 	}
 
-	@NotEmpty(message = MESSAGE_ALLOCATION_MANDATORY)
-	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY)
+	// @NotEmpty(message = MESSAGE_ALLOCATION_MANDATORY)
+	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
 	@Getter(value = AccessLevel.NONE)
 	private List<Allocation> allocations = new ArrayList<>();
 
@@ -315,15 +316,15 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	public Allocation allocateAsBufferIn(final Project project, final LocalDate fromDate, final LocalDate tillDate,
 			final Toggle onboardedToClientTimeTrackingsystem) {
 		// TODO: Implement later
-		return project.allocateWith(this).fully().onboardedToClientTimeTrackingSystem(Toggle.YES)
-				.startingFrom(fromDate).till(tillDate).asBuffer();
+		return project.allocateWith(this).fully().onboardedToClientTimeTrackingSystem(Toggle.YES).startingFrom(fromDate)
+				.till(tillDate).asBuffer();
 	}
 
 	public Allocation allocateAsNonBillableIn(final Project project, final LocalDate fromDate, final LocalDate tillDate,
 			final Toggle onboardedToClientTimeTrackingsystem) {
 		// TODO: Implement later
-		return project.allocateWith(this).fully().onboardedToClientTimeTrackingSystem(Toggle.YES)
-				.startingFrom(fromDate).till(tillDate).asNonBillable();
+		return project.allocateWith(this).fully().onboardedToClientTimeTrackingSystem(Toggle.YES).startingFrom(fromDate)
+				.till(tillDate).asNonBillable();
 	}
 
 	public ResourceAllocationProjectBuilder allocate() {
@@ -487,31 +488,31 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface AnnualSalaryBuilder {
-		public CommissionBuilder withAnnualSalary(final Money money);
+		public CommissionBuilder withAnnualSalary(final Money annualSalary);
 
-		public NameBuilder withJustAnnualSalary(final Money money);
+		public NameBuilder withJustAnnualSalary(final Money annualSalary);
 	}
 
 	public interface CommissionBuilder {
-		public BonusBuilder plusCommission(final Money money);
+		public BonusBuilder plusCommission(final Money commission);
 
 		public BonusBuilder noCommission();
 	}
 
 	public interface BonusBuilder {
-		public OtherCostBuilder plusBonus(final Money money);
+		public OtherCostBuilder plusBonus(final Money bonus);
 
 		public OtherCostBuilder noBonus();
 	}
 
 	public interface OtherCostBuilder {
-		public NameBuilder andOtherCost(final Money money);
+		public NameBuilder andOtherCost(final Money otherCost);
 
 		public NameBuilder noOtherCost();
 	}
 
 	public interface NonFTECostBuilder {
-		public NameBuilder atHourlyCost(final Money money);
+		public NameBuilder atHourlyCost(final Money hourlyCost);
 	}
 
 	public interface NameBuilder {
@@ -519,32 +520,53 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface GenderBuilder {
-		public EmailBuilder male();
+		public DesignationBuilder male();
 
-		public EmailBuilder female();
+		public DesignationBuilder female();
+	}
+
+	public interface DesignationBuilder {
+		public EmailBuilder onDesignation(final Designation designation);
 	}
 
 	public interface EmailBuilder {
-		// public void withEmailAsLogin(final String emailId);
-		public GreytHRIDBuilder withEmail(final String emailId);
+		public ResourcePrimarySkillsBuilder withEmail(final String emailId);
 	}
 
-	public interface GreytHRIDBuilder {
-		public DeputedLocationBuilder withGreytHRID(final String greytHRID);
+	public interface ResourcePrimarySkillsBuilder {
+		public ResourcePracticeBuilder withPrimarySkills(final String primarySkills);
+	}
 
-		public DeputedLocationBuilder withNoGreytHRID();
+	public interface ResourcePracticeBuilder extends DeputedLocationBuilder {
+		public ResourcePracticeBuilder addPractice(final Practice practice);
 	}
 
 	public interface DeputedLocationBuilder {
-		public Resource deputeAt(City deputedLocation);
+		public OptionalPropertiesBuilder deputeAt(City deputedLocation);
+
+		public OptionalPropertiesBuilder deputeAtJoiningLocation();
 	}
 
-	public static class ResourceBuilder
-			implements BaseLocationBuilder, EmployementTypeBuilder, AnnualSalaryBuilder, CommissionBuilder,
-			NonFTECostBuilder, NameBuilder, GenderBuilder, EmailBuilder, GreytHRIDBuilder, DeputedLocationBuilder {
+	public interface OptionalPropertiesBuilder extends Buildable<Resource> {
+
+		public Buildable<Resource> withGreytHRID(final String greytHRID);
+
+		public Buildable<Resource> withSecondarySkills(final String secondarySkills);
+	}
+
+	public static class ResourceBuilder implements BaseLocationBuilder, EmployementTypeBuilder, AnnualSalaryBuilder,
+			CommissionBuilder, BonusBuilder, OtherCostBuilder, NonFTECostBuilder, NameBuilder, GenderBuilder,
+			DesignationBuilder, EmailBuilder, ResourcePrimarySkillsBuilder, ResourcePracticeBuilder,
+			DeputedLocationBuilder, OptionalPropertiesBuilder, Buildable<Resource> {
 		private Resource resource;
+		private Money annualSalary;
+		private Money commission;
+		private Money bonus;
+		// private Money hourlyRate;
 
 		ResourceBuilder(final LocalDate expectedJoiningDate) {
+			this.resource = new Resource();
+			this.resource.employmentStatus = EmploymentStatus.pending();
 			this.resource.expectedJoiningDate = expectedJoiningDate;
 		}
 
@@ -561,27 +583,53 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public CommissionBuilder withAnnualSalary(Money money) {
-			// TODO Auto-generated method stub
-			return null;
+		public CommissionBuilder withAnnualSalary(Money annualSalary) {
+			this.annualSalary = annualSalary;
+			return this;
 		}
 
 		@Override
-		public NameBuilder withJustAnnualSalary(Money money) {
-			// TODO Auto-generated method stub
-			return null;
+		public NameBuilder withJustAnnualSalary(Money annualSalary) {
+			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingIndefinatelyFrom(LocalDate.now())
+					.withAnnualSalary(annualSalary).build());
+			return this;
 		}
 
 		@Override
-		public BonusBuilder plusCommission(Money money) {
-			// TODO Auto-generated method stub
-			return null;
+		public BonusBuilder plusCommission(Money commission) {
+			this.commission = commission;
+			return this;
 		}
 
 		@Override
 		public BonusBuilder noCommission() {
-			// TODO Auto-generated method stub
-			return null;
+			return this;
+		}
+
+		@Override
+		public OtherCostBuilder plusBonus(Money bonus) {
+			this.bonus = bonus;
+			return this;
+		}
+
+		@Override
+		public OtherCostBuilder noBonus() {
+			return this;
+		}
+
+		@Override
+		public NameBuilder andOtherCost(Money otherCost) {
+			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingIndefinatelyFrom(LocalDate.now())
+					.withAnnualSalary(annualSalary).withCommission(commission).withBonus(bonus).withOtherCost(otherCost)
+					.build());
+			return this;
+		}
+
+		@Override
+		public NameBuilder noOtherCost() {
+			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingIndefinatelyFrom(LocalDate.now())
+					.withAnnualSalary(annualSalary).withCommission(commission).withBonus(bonus).build());
+			return this;
 		}
 
 		@Override
@@ -603,9 +651,10 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public NameBuilder atHourlyCost(Money money) {
-			// TODO Auto-generated method stub
-			return null;
+		public NameBuilder atHourlyCost(Money hourlyCost) {
+			this.resource.costings.add(NonFTECost.nonFTECostOf(this.resource).atHourlyRate(hourlyCost)
+					.startingIndefinatelyFrom(LocalDate.now()));
+			return this;
 		}
 
 		@Override
@@ -615,38 +664,68 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public EmailBuilder male() {
+		public DesignationBuilder male() {
 			this.resource.gender = Gender.MALE;
 			return this;
 		}
 
 		@Override
-		public EmailBuilder female() {
+		public DesignationBuilder female() {
 			this.resource.gender = Gender.FEMALE;
 			return this;
 		}
 
 		@Override
-		public GreytHRIDBuilder withEmail(String emailId) {
+		public EmailBuilder onDesignation(final Designation designation) {
+			this.resource.designation = designation;
+			return this;
+		}
+
+		@Override
+		public ResourcePrimarySkillsBuilder withEmail(String emailId) {
 			this.resource.emailId = emailId;
 			return this;
 
 		}
 
 		@Override
-		public DeputedLocationBuilder withGreytHRID(String greytHRID) {
+		public ResourcePracticeBuilder withPrimarySkills(String primarySkills) {
+			this.resource.primarySkills = primarySkills;
+			return this;
+		}
+
+		@Override
+		public ResourcePracticeBuilder addPractice(Practice practice) {
+			this.resource.practices.add(practice);
+			return this;
+		}
+
+		@Override
+		public OptionalPropertiesBuilder deputeAt(City deputedLocation) {
+			this.resource.deputedLocation = deputedLocation;
+			return this;
+		}
+
+		@Override
+		public OptionalPropertiesBuilder deputeAtJoiningLocation() {
+			this.resource.deputedLocation = this.resource.baseLocation;
+			return this;
+		}
+
+		@Override
+		public Buildable<Resource> withGreytHRID(String greytHRID) {
 			this.resource.greytHRID = greytHRID;
 			return this;
 		}
 
 		@Override
-		public DeputedLocationBuilder withNoGreytHRID() {
+		public Buildable<Resource> withSecondarySkills(String secondarySkills) {
+			this.resource.secondarySkills = secondarySkills;
 			return this;
 		}
 
 		@Override
-		public Resource deputeAt(City deputedLocation) {
-			this.resource.deputedLocation = deputedLocation;
+		public Resource build() {
 			return this.resource;
 		}
 	}

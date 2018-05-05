@@ -37,7 +37,7 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 			} else if (entity instanceof Resource) {
 				return generateResourceCode(connection, (Resource) entity);
 			} else {
-				// Return the manually provided code
+				// Return the explicitly provided code, not generated
 				return providedCode(entity);
 			}
 		} catch (SQLException e) {
@@ -101,6 +101,7 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 
 			if (rs.next()) {
 				String highEnd = rs.getString("HIGH_END");
+				System.out.println("highEnd --->>" + highEnd);
 				long nextSeq = highEnd == null ? 1 : Long.valueOf(highEnd) + 1;
 				String projectCode = project.type().code()
 						+ String.format("%0" + PROJECT_CODE_LENGTH + "d", nextSeq);
@@ -123,11 +124,11 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 		ResultSet rs = null;
 		try {
 			Statement statement = connection.createStatement();
-			String whereClause = resource.employmentStatus().code().equalsIgnoreCase("FTE") ? "where EMP_TYPE='FTE'"
-					: "where EMP_TYPE!='FTE'";
+			String whereClause = resource.isFTE() ? "where EMP_TYPE_CODE = 'FTE'"
+					: "where EMP_TYPE_CODE != 'FTE'";
 			query = "select max(NUM_ID) as HIGH_END from (\r\n"
 					+ "	SELECT substring(CODE FROM '[0-9]+') as NUM_ID FROM RESOURCES " + whereClause + ") temp";
-			System.out.println("???????????? query -->" + query);
+//			System.out.println("???????????? query -->" + query);
 			rs = statement.executeQuery(query);
 
 			if (rs.next()) {

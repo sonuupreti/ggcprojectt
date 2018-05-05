@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd
+                        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<changeSet id="0001" author="rajveer.singh">
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/001.countries.csv"
+                  separator=","
+                  tableName="countries"
+                  commentLineStartsWith="#">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/002.states.csv"
+                  separator=","
+                  tableName="states"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/003.cities.csv"
+                  separator=","
+                  tableName="cities"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/004.companies.csv"
+                  separator=","
+                  tableName="companies"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/005.company_location_map.csv"
+                  separator=","
+                  tableName="company_location_map"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/006.departments.csv"
+                  separator=","
+                  tableName="departments"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/007.designations.csv"
+                  separator=","
+                  tableName="designations"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/008.practices.csv"
+                  separator=","
+                  tableName="practices"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/009.project_types.csv"
+                  separator=","
+                  tableName="project_types"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/010.project_statuses.csv"
+                  separator=","
+                  tableName="project_statuses"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/011.employment_types.csv"
+                  separator=","
+                  tableName="employment_types"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/012.employment_statuses.csv"
+                  separator=","
+                  tableName="employment_statuses"
+                  commentLineStartsWith="#">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/013.holiday_occasions.csv"
+                  separator=","
+                  tableName="occasions"
+                  commentLineStartsWith="#">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/020.resources.csv"
+                  separator=","
+                  tableName="resources"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/021.resource_practice_map.csv"
+                  separator=","
+                  tableName="resource_practice_map"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/022.cost_details.csv"
+                  separator=","
+                  tableName="cost_details"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/023.fte_cost_details.csv"
+                  separator=","
+                  tableName="fte_cost_details"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/024.accounts.csv"
+                  separator=","
+                  tableName="accounts"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/025.projects.csv"
+                  separator=","
+                  tableName="projects"
+                  commentLineStartsWith="#">
+        </loadData>
+        
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/026.project_practice_map.csv"
+                  separator=","
+                  tableName="project_practice_map"
+                  commentLineStartsWith="#">
+        </loadData>
+	</changeSet>
+
+</databaseChangeLog>

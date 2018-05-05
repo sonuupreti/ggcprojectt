@@ -7,17 +7,23 @@ import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CountryCode;
+import com.gspann.itrack.domain.common.location.City;
+import com.gspann.itrack.domain.model.business.Account;
+import com.gspann.itrack.domain.model.staff.Resource;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
 @Transactional
 @Commit
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@ActiveProfiles(profiles = { ApplicationConstant.SPRING_PROFILE_DEVELOPMENT })
 public class AccountRepositoryTest {
 
 	@Autowired
@@ -26,9 +32,12 @@ public class AccountRepositoryTest {
 	@Autowired
 	private LocationRepository locationRepository;
 
-//	static {
-//		TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"));
-//	}
+	@Autowired
+	private ResourceRepository resourceRepository;
+
+	// static {
+	// TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"));
+	// }
 
 	public static void main(String[] args) {
 
@@ -38,25 +47,16 @@ public class AccountRepositoryTest {
 		System.out.println(CountryCode.US.name());
 		System.out.println(CountryCode.US.name());
 	}
-	
+
 	@Test
 	public void test01Save() {
-		
-		// Account account = Account.of("Mecy", "Mecy Inc.", "Angrez Singh", false,
-		// locationRepository.findCityByName("Gurgaon").get());
-		// systemUnderTest.save(account);
-
-		// Account account1 = Account.of("Koal", "Koal Inc.", "Madam Singh", false,
-		// locationRepository.findCityByName("Chicago").get());
-		// systemUnderTest.save(account1);
-
-		// Account account = Account.of("Mecy", "Mecy Inc.", "Angrez Singh", false,
-		// locationRepository.findCityByName("Gurgaon").get(), Money.of(100, "INR"));
-		// systemUnderTest.save(account);
-
-//		Account account1 = Account.of("Koal", "Koal Inc.", "Madam Singh", false,
-//				locationRepository.findCityByName("Chicago").get(), Money.of(75, CurrencyCode.USD.name()));
-//		systemUnderTest.save(account1);
+		// Resource admin = resourceRepository.findById("20000").get();
+		// City gurgaon = locationRepository.findCityByName("Gurgaon").get();
+		Resource admin = resourceRepository.getOne("20000");
+		City gurgaon = locationRepository.findCityByName("Gurgaon").get();
+		Account account = Account.ofCustomer("Internal").reportingTo("Internal").withNoEntity()
+				.customerTimeTrackingNotAvailable().managedBy(admin).locatedAt(gurgaon).build();
+		systemUnderTest.saveAndFlush(account);
 	}
 
 	// @Test

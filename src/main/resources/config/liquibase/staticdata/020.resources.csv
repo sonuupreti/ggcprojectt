@@ -1,0 +1,2 @@
+code,version,email_id,greyt_hr_id,name,gender,designation_id,emp_type_code,emp_status_code,base_loc_id,deputed_loc_id,primary_skills,secondary_skills,expected_joining_date,actual_joining_date,exit_date,image_id
+20000,0,admin@gspann.com,NULL,Admin,MALE,37,FTE,ACTIVE,1,1,administration,NULL,2018-05-05,NULL,NULL,NULL

@@ -61,8 +61,12 @@ public class ProjectType extends AbstractAssignable<String> {
     	return of(CODE.BENCH.value(), CODE.BENCH.description);
     }
 
-    public static ProjectType timeOff() {
-    	return of(CODE.TIME_OFF.value(), CODE.TIME_OFF.description);
+    public static ProjectType paidLeave() {
+    	return of(CODE.PAID_LEAVE.value(), CODE.PAID_LEAVE.description);
+    }
+
+    public static ProjectType unpaidLeave() {
+    	return of(CODE.UNPAID_LEAVE.value(), CODE.UNPAID_LEAVE.description);
     }
 
 	public enum CODE implements StringValuedEnum {
@@ -74,11 +78,13 @@ public class ProjectType extends AbstractAssignable<String> {
 		TnM("TnM", "Time and Materials"), 
 		MILESTONE("MIL", "Milestone"), 
 		INVESTMENT("INV", "Investment"), 
-		BENCH("BNCH", "Bench"), 
-		TIME_OFF("TMO", "Time-Off");
+		BENCH("BNH", "Bench"), 
+		PAID_LEAVE("PDL", "Paid Leave"), 
+		UNPAID_LEAVE("UPL", "Unpaid Leave");
 		//@formatter:on
 
 		private final String value;
+		
 		private final String description;
 
 		private CODE(final String value, final String description) {

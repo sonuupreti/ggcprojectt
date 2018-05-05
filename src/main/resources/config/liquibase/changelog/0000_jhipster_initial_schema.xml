@@ -78,7 +78,7 @@
                                  referencedColumnNames="name"
                                  referencedTableName="jhi_authority"/>
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/users.csv"
+                  file="config/liquibase/staticdata/jhipster/users.csv"
                   separator=";"
                   tableName="jhi_user">
             <column name="activated" type="boolean"/>
@@ -86,12 +86,12 @@
         </loadData>
         <dropDefaultValue tableName="jhi_user" columnName="created_date" columnDataType="datetime"/>
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/authorities.csv"
+                  file="config/liquibase/staticdata/jhipster/authorities.csv"
                   separator=";"
                   tableName="jhi_authority"/>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/users_authorities.csv"
+                  file="config/liquibase/staticdata/jhipster/users_authorities.csv"
                   separator=";"
                   tableName="jhi_user_authority"/>
         <createTable tableName="jhi_persistent_audit_event">

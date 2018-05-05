@@ -1,0 +1,10 @@
+id,name,company_id
+1,Delivery,1
+2,SG&A,1
+3,Management,1
+4,Delivery,2
+5,SG&A,2
+6,Management,2
+7,Delivery,3
+8,SG&A,3
+9,Management,3

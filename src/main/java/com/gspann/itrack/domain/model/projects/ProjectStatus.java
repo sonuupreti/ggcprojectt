@@ -36,24 +36,24 @@ public class ProjectStatus extends AbstractAssignable<String> {
     	return projectType;
     }
 	
-    public static ProjectStatus byTypeCode(CODE code) {
+    public static ProjectStatus byStatusCode(CODE code) {
     	return of(code.name(), code.description);
     }
     
     public static ProjectStatus pending() {
-    	return of(CODE.PENDING.name(), CODE.PENDING.description);
+    	return byStatusCode(CODE.PENDING);
     }
 
     public static ProjectStatus inProgress() {
-    	return of(CODE.WIP.name(), CODE.WIP.description);
+    	return byStatusCode(CODE.WIP);
     }
 
     public static ProjectStatus onHold() {
-    	return of(CODE.ON_HOLD.name(), CODE.ON_HOLD.description);
+    	return byStatusCode(CODE.ON_HOLD);
     }
 
     public static ProjectStatus closed() {
-    	return of(CODE.CLOSED.name(), CODE.CLOSED.description);
+    	return byStatusCode(CODE.CLOSED);
     }
 
 	public enum CODE implements StringValuedEnum {

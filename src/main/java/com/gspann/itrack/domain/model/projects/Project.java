@@ -107,7 +107,7 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	}
 
 	@NotNull
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, fetch = FetchType.LAZY)
+	@OneToMany(fetch = FetchType.LAZY)
 	// @formatter:off
  	@JoinTable(
 	        name = "PROJECT_PRACTICE_MAP",
@@ -232,7 +232,7 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		public Allocation atBilling(final Billing billRate);
 	}
 
-	private class ProjectAllocationBuilder implements ProjectAllocationClientTimeTrackingBuilder, ProjectAllocationProportionBuilder,
+	public class ProjectAllocationBuilder implements ProjectAllocationClientTimeTrackingBuilder, ProjectAllocationProportionBuilder,
 			ProjectAllocationStartDateBuilder, ProjectAllocationEndDateBuilder, ProjectAllocationBillabilityStatusBuilder {
 		private Resource resource;
 		private Toggle clientTimeTracking;
@@ -328,7 +328,7 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		return new ProjectBuilder();
 	}
 
-	interface ProjectTypeBuilder {
+	public interface ProjectTypeBuilder {
 		ProjectStatusBuilder fixBid();
 
 		ProjectStatusBuilder TnM();
@@ -339,10 +339,12 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 
 		ProjectStatusBuilder bench();
 
-		ProjectStatusBuilder timeoff();
+		ProjectStatusBuilder paidLeave();
+
+		ProjectStatusBuilder unpaidLeave();
 	}
 
-	interface ProjectStatusBuilder {
+	public interface ProjectStatusBuilder {
 		NameBuilder asPending();
 
 		NameBuilder asInProgress();
@@ -400,7 +402,7 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		Buildable<Project> withCustomerProjectName(final String customerProjectName);
 	}
 
-	private static class ProjectBuilder
+	public static class ProjectBuilder
 			implements ProjectTypeBuilder, ProjectStatusBuilder, NameBuilder, LocationBuilder, AccountBuilder,
 			StartDateBuilder, EndDateBuilder, ProjectPracticeBuilder, TechnologiesBuilder, OffshoreManagerBuilder,
 			OnshoreManagerBuilder, CustomerManagerBuilder, CustomerBuilder {
@@ -442,8 +444,14 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		}
 
 		@Override
-		public ProjectStatusBuilder timeoff() {
-			this.project.type = ProjectType.timeOff();
+		public ProjectStatusBuilder paidLeave() {
+			this.project.type = ProjectType.paidLeave();
+			return this;
+		}
+
+		@Override
+		public ProjectStatusBuilder unpaidLeave() {
+			this.project.type = ProjectType.unpaidLeave();
 			return this;
 		}
 

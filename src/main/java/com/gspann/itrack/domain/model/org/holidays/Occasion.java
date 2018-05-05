@@ -26,35 +26,52 @@ import lombok.experimental.Accessors;
 @Table(name = "OCCASIONS", uniqueConstraints = @UniqueConstraint(name = UNQ_OCCASION_NAME, columnNames = { "NAME" }))
 @Immutable
 public class Occasion extends AbstractIdentifiable<Short> {
-	// Holi, Diwali etc.
 
 	@NotNull
 	@Column(name = "NAME", nullable = false, unique = true, length = 100)
 	private String name;
 
+	public static Occasion byReasonCode(REASON reason) {
+		return of(reason.value());
+	}
+
 	public static enum REASON implements StringValuedEnum {
 
 		//@formatter:off
-		NEW_YEAR("New Year"),
+		GLOBAL_DAY_NEW_YEAR("New Year"),
+		GLOBAL_EVE_CHRISTMAS("Christmas Day"),
+		// USA
+		US_NH_MEMORIAL_DAY("Memorial Day"),
+		US_NH_INDEPENDENCE_DAY("USA Independence Day"),
+		US_NH_LABOR_DAY("Labor Day"),
+		EVE_THANKS_GIVING_DAY_1("Thanksgiving Day - 1"),
+		EVE_THANKS_GIVING_DAY_2("Thanksgiving Day - 2"),
+		
 		// India
+		IN_NH_REPUBLIC_DAY("Republic Day"),
+		IN_NH_INDEPENDENCE_DAY("Independence Day"),
+		IN_NH_GANDHI_JAYANTI("Gandhi Jayanti"),
+		EVE_PONGAL("Pongal"),
 		EVE_HOLI("Holi"),
 		EVE_DIWALI("Diwali"),
+		EVE_GANESH_CHATURTHI("Ganesh Chaturthi"),
+		EVE_ID_UL_FITR_RAMZAN("Id-ul-Fitr / Ramzan"),
 		
-		// US/UK
-		EVE_CHRISTMAS("Christmas"),
-		EVE_EASTER("Easter"),
-		GOOD_FRIDAY("Good Friday");
+		// UK
+		UK_NH_BOXING_DAY("Boxing Day"),
+		EVE_EASTER_MONDAY("Easter Monday"),
+		EVE_GOOD_FRIDAY("Good Friday");
 		//@formatter:on
 
-		private final String description;
+		private final String value;
 
-		private REASON(final String description) {
-			this.description = description;
+		private REASON(final String value) {
+			this.value = value;
 		}
 
 		@Override
 		public String value() {
-			return this.description;
+			return this.value;
 		}
 
 		@Override

@@ -1,6 +1,6 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.common.annotation.spring.Dev;
+import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.location.Country;
 import com.gspann.itrack.domain.common.location.State;
@@ -27,8 +27,7 @@ import com.gspann.itrack.domain.common.location.State;
 @Transactional
 @Commit
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-@Dev
-@ActiveProfiles(profiles = {"dev"})
+@ActiveProfiles(profiles = { ApplicationConstant.SPRING_PROFILE_DEVELOPMENT })
 public class LocationRepositoryTest {
 
 	@Autowired
@@ -133,7 +132,7 @@ public class LocationRepositoryTest {
 
 		City mumbai = City.of("Mumbai", systemUnderTest.findStateByName("Maharashtra").get());
 		System.out.println(systemUnderTest.saveCity(mumbai));
-		
+
 		City milpitas = City.of("Milpitas", systemUnderTest.findStateByName("California").get());
 		System.out.println(systemUnderTest.saveCity(milpitas));
 
@@ -166,13 +165,13 @@ public class LocationRepositoryTest {
 		List<City> cities = systemUnderTest.findAllCitiesByStateId(1);
 		assertTrue(cities.size() == 1);
 	}
-	
+
 	@Test
 	public void testFindAllCitiesByStateName() {
 		List<City> cities = systemUnderTest.findAllCitiesByStateName("Haryana");
 		assertTrue(cities.size() == 1);
 	}
-	
+
 	@Test
 	public void testFindAllCitiesByCountryCode() {
 		List<City> cities = systemUnderTest.findAllCitiesByCountryCode("IN");

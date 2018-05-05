@@ -62,7 +62,6 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	private String customerReportingManager;
 
 	@Column(name = "CUSTOMER_TIME_TRACKING", length = 1)
-	@org.hibernate.annotations.Type(type = "yes_no")
 	private boolean customerTimeTracking = false;
 
 	@NotNull
@@ -73,8 +72,9 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	// An account will have a single location,
 	// in case the customer is at different locations then separate account will be
 	// created for each location
+	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "COUNTRY_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_ACCOUNTS_CITY_ID))
+	@JoinColumn(name = "CITY_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_ACCOUNTS_CITY_ID))
 	private City location;
 
 	@OneToMany(cascade = CascadeType.PERSIST)
@@ -111,8 +111,7 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 	@OneToMany(mappedBy = "account")
 	private List<SOW> sows = new ArrayList<SOW>();
 
-	public static CustomerReportingManagerBuilder ofCustomer(final String name, final String entity,
-			final String reportingTo) {
+	public static CustomerReportingManagerBuilder ofCustomer(final String name) {
 		return new AccountBuilder(name);
 	}
 
@@ -136,11 +135,11 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 		public AccountLocationBuilder managedBy(final Resource accountManager);
 	}
 
-	public interface AccountLocationBuilder extends Buildable<Account> {
+	public interface AccountLocationBuilder {
 		public AccountRebatePercentBuilder locatedAt(final City location);
 	}
 
-	public interface AccountRebatePercentBuilder {
+	public interface AccountRebatePercentBuilder extends Buildable<Account> {
 		public AccountYearBuilder withRebateOf(final float rebate);
 	}
 
@@ -195,6 +194,12 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 		}
 
 		@Override
+		public AccountYearBuilder withRebateOf(float rebatePercent) {
+			this.rebatePercent = rebatePercent;
+			return this;
+		}
+
+		@Override
 		public AccountRebatePercentBuilder locatedAt(City location) {
 			this.account.location = location;
 			return this;
@@ -203,12 +208,6 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 		@Override
 		public Buildable<Account> forYear(Year year) {
 			this.account.rebates.add(Rebate.of(this.rebatePercent).forYear(year));
-			return this;
-		}
-
-		@Override
-		public AccountYearBuilder withRebateOf(float rebatePercent) {
-			this.rebatePercent = rebatePercent;
 			return this;
 		}
 

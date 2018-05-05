@@ -38,7 +38,7 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "DAY_OF_WEEK", nullable = false, length = 10)
+	@Column(name = "DAY_OF_WEEK", nullable = false)
 	private DayOfWeek dow;
 
 	@NotNull

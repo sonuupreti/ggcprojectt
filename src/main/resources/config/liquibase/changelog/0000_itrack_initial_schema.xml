@@ -11,7 +11,15 @@
 
 		<!-- Global sequence for auto increment generated primary key of entities -->
 		<createSequence sequenceName="global_sequence"
-			startValue="1" incrementBy="1" />
+			startValue="1000" incrementBy="1" />
+			
+		<createTable tableName="hibernate_sequences">
+			<column name="sequence_name" type="varchar(255)">
+				<constraints primaryKeyName="pk_hibernate_sequences"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="sequence_next_hi_value" type="bigint" />
+		</createTable>
 
 		<createTable tableName="countries">
 			<column name="code" type="varchar(3)">
@@ -153,13 +161,19 @@
 				<constraints primaryKeyName="pk_holiday_id" primaryKey="true"
 					nullable="false" />
 			</column>
-			<column name="date" type="date">
-				<constraints nullable="false" />
-			</column>
 			<column name="year" type="smallint">
 				<constraints foreignKeyName="fk_holidays_holiday_calendars_year"
 					referencedColumnNames="year" referencedTableName="holiday_calendars"
 					nullable="false" />
+			</column>
+			<column name="date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="day" type="tinyint">
+				<constraints nullable="false" />
+			</column>
+			<column name="type" type="tinyint">
+				<constraints nullable="false" />
 			</column>
 		</createTable>
 
@@ -222,10 +236,10 @@
 			<column name="version" type="bigint">
 				<constraints nullable="false" />
 			</column>
-			<column name="login_id" type="varchar(100)">
-				<constraints unique="true" nullable="false"
-					uniqueConstraintName="unq_resources_login_id" />
-			</column>
+<!-- 			<column name="login_id" type="varchar(100)"> -->
+<!-- 				<constraints unique="true" nullable="false" -->
+<!-- 					uniqueConstraintName="unq_resources_login_id" /> -->
+<!-- 			</column> -->
 			<column name="email_id" type="varchar(255)">
 				<constraints unique="true" nullable="false"
 					uniqueConstraintName="unq_resources_email_id" />
@@ -281,7 +295,7 @@
 			<column name="image_id" type="bigint">
 				<constraints foreignKeyName="fk_resources_image_id"
 					referencedColumnNames="id" referencedTableName="documents"
-					nullable="false" />
+					nullable="true" />
 			</column>
 		</createTable>
 		<createIndex indexName="idx_resources_name" tableName="resources"
@@ -292,10 +306,10 @@
 			unique="true">
 			<column name="email_id" type="varchar(255)" />
 		</createIndex>
-		<createIndex indexName="idx_resources_login_id" tableName="resources"
-			unique="true">
-			<column name="login_id" type="varchar(100)" />
-		</createIndex>
+<!-- 		<createIndex indexName="idx_resources_login_id" tableName="resources" -->
+<!-- 			unique="true"> -->
+<!-- 			<column name="login_id" type="varchar(100)" /> -->
+<!-- 		</createIndex> -->
 		<createIndex indexName="idx_resources_greyt_hr_id" tableName="resources"
 			unique="true">
 			<column name="greyt_hr_id" type="varchar(100)" />
@@ -375,12 +389,9 @@
 					referencedColumnNames="code" referencedTableName="resources"
 					nullable="false" />
 			</column>
-			<column name="country_code" type="varchar(3)">
-				<constraints foreignKeyName="fk_accounts_country_code"
-					referencedColumnNames="code" referencedTableName="countries" nullable="false" />
-			</column>
-			<column name="location" type="varchar(150)">
-				<constraints nullable="false" />
+			<column name="city_id" type="int">
+				<constraints foreignKeyName="fk_accounts_city_id"
+					referencedColumnNames="id" referencedTableName="cities" nullable="false" />
 			</column>
 		</createTable>
 		<createIndex indexName="idx_customer_name" tableName="accounts"
@@ -476,10 +487,10 @@
 					referencedColumnNames="id" referencedTableName="cities" nullable="false" />
 			</column>
 			<column name="from_date" type="date">
-				<constraints nullable="true" />
+				<constraints nullable="false" />
 			</column>
 			<column name="till_date" type="date">
-				<constraints nullable="false" />
+				<constraints nullable="true" />
 			</column>
 			<column name="technologies" type="varchar(255)">
 				<constraints nullable="false" />

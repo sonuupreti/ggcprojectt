@@ -14,6 +14,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Immutable;
 
+import com.gspann.itrack.common.enums.StringValuedEnum;
 import com.gspann.itrack.domain.common.type.AbstractAssignable;
 import com.gspann.itrack.domain.model.staff.Resource;
 
@@ -62,5 +63,74 @@ public class Practice extends AbstractAssignable<String> {
 	
 	public void updateLead(final Resource lead) {
 		this.lead = lead;
+	}
+
+    public static Practice byStatusCode(CODE code) {
+    	return of(code.name(), code.description);
+    }
+    
+    public static Practice ia() {
+    	return byStatusCode(CODE.IA);
+    }
+
+    public static Practice qa() {
+    	return byStatusCode(CODE.QA);
+    }
+
+    public static Practice devOps() {
+    	return byStatusCode(CODE.DEV_OPS);
+    }
+
+    public static Practice content() {
+    	return byStatusCode(CODE.CONTENT);
+    }
+
+    public static Practice eCommerce() {
+    	return byStatusCode(CODE.E_COMMERCE);
+    }
+
+    public static Practice experience() {
+    	return byStatusCode(CODE.EXPERIENCE);
+    }
+
+    public static Practice mobility() {
+    	return byStatusCode(CODE.MOBILITY);
+    }
+
+    public static Practice adms() {
+    	return byStatusCode(CODE.ADMS);
+    }
+
+	public enum CODE implements StringValuedEnum {
+
+		//@formatter:off
+		IA("IA"), 
+		QA("QA"), 
+		DEV_OPS("DevOps"), 
+		CONTENT("Content"), 
+		E_COMMERCE("eCommerce"), 
+		EXPERIENCE("Experience"), 
+		MOBILITY("Mobility"), 
+		ADMS("ADMS");
+		//@formatter:on
+		
+		private final String description;
+
+		private CODE(final String description) {
+			this.description = description;
+		}
+
+		@Override
+		public String value() {
+			return this.description;
+		}
+
+		@Override
+		public StringValuedEnum enumByValue(String type) {
+			for (CODE e : values())
+				if (e.value().equals(type))
+					return e;
+			throw new IllegalArgumentException();
+		}
 	}
 }

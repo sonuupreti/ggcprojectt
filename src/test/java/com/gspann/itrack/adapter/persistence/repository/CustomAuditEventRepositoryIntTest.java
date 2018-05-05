@@ -19,10 +19,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.domain.PersistentAuditEvent;
 import com.gspann.itrack.infra.audit.AuditEventConverter;
 import com.gspann.itrack.infra.config.Constants;
@@ -35,6 +37,7 @@ import com.gspann.itrack.infra.config.Constants;
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
 @Transactional
+@ActiveProfiles(profiles = { ApplicationConstant.SPRING_PROFILE_DEVELOPMENT })
 public class CustomAuditEventRepositoryIntTest {
 
     @Autowired

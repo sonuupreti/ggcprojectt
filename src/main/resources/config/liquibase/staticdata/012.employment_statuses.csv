@@ -1,0 +1,9 @@
+code,description
+PENDING,Joining Awaited
+ACTIVE,Active On Project
+DID_NOT_JOIN,Did Not Join
+ON_BENCH,On Bench
+ON_LONG_LEAVE,On Long Leave
+RESIGNED,Resigned
+TERMINATED,Terminated
+ABSCONDED,Absconded

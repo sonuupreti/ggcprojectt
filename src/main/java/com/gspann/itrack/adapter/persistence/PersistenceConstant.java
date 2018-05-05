@@ -6,10 +6,15 @@ import lombok.Value;
 public class PersistenceConstant {
 
 	public static class Hibernate {
+		
 		public static final String GLOBAL_SEQ_ID_GENERATOR = "GLOBAL_SEQ_ID_GENERATOR";
 		public static final String GLOBAL_SEQ_NAME = "global_sequence";
 		public static final String GLOBAL_SEQ_INITIAL_VALUE = "1000";
 		public static final String PREFIXED_SEQUENTIAL_CODE_GENERATOR = "PREFIXED_SEQUENTIAL_CODE_GENERATOR";
+		public static final String POOLED_TABLE_GENERATOR = "POOLED_TABLE_GENERATOR";
+		
+		// Change the ID generator here and the same for all entities will change
+		public static final String iTrack_ID_GENERATOR = GLOBAL_SEQ_ID_GENERATOR; // OR POOLED_TABLE_GENERATOR
 
 		public static final String TYPE_DEF_JADIRA_MONEY = "jadira_money";
 		public static final String TYPE_DEF_JADIRA_YEAR = "jadira_year";

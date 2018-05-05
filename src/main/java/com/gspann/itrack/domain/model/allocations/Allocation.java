@@ -62,8 +62,6 @@ public class Allocation extends BaseIdentifiableVersionableEntity<Long, Long> {
 	private DateRange dateRange;
 
 	@Column(name = "CUSTOMER_TIME_TRACKING", length = 1)
-	@org.hibernate.annotations.Type(type = "yes_no")
-	@org.hibernate.annotations.ColumnDefault("'N'")
 	private boolean customerTimeTracking = false;
 
 	@NotNull

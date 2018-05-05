@@ -2,6 +2,7 @@ package com.gspann.itrack.domain.model.org.holidays;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -9,6 +10,8 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
@@ -35,13 +38,22 @@ import lombok.experimental.Accessors;
 @Immutable
 public class Holiday extends AbstractIdentifiable<Long> {
 
-	@NotNull
-	@Column(name = "DATE", nullable = false)
-	private LocalDate date;
-
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "year", foreignKey = @ForeignKey(name = FK_HOLIDAYS_HOLIDAY_CALENDARS_YEAR))
 	private HolidayCalendar calendar;
+
+	@NotNull
+	@Column(name = "DATE", nullable = false)
+	private LocalDate date;
+	@NotNull
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "DAY", nullable = false)
+	private DayOfWeek day;
+
+	@NotNull
+	@Enumerated(EnumType.ORDINAL)
+	@Column(name = "TYPE", nullable = false)
+	private HolidayType type;
 
 	@OneToMany(mappedBy = "holiday", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<HolidayLocation> locationOcassions = new ArrayList<>();

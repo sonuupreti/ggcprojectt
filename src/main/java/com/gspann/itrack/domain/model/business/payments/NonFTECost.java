@@ -31,11 +31,14 @@ import com.gspann.itrack.domain.common.DateRange;
 import com.gspann.itrack.domain.common.type.Versionable;
 import com.gspann.itrack.domain.model.staff.Resource;
 
+import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.experimental.Accessors;
 
 @Getter
+@Setter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
 @Table(name = "COST_DETAILS")
@@ -47,11 +50,13 @@ import lombok.experimental.Accessors;
 // to be specified in child classes - FTECost, NonFTECost
 public class NonFTECost implements Costing, Versionable<Long> {
 
+	@Setter(value = AccessLevel.NONE)
 	@Id
 	@GeneratedValue(generator = GLOBAL_SEQ_ID_GENERATOR)
 	@Column(name = "ID", nullable = false)
 	private Long id;
 
+	@Setter(value = AccessLevel.NONE)
 	@Version
 	@Access(AccessType.FIELD)
 	@Column(name = "VERSION", nullable = false)
@@ -67,7 +72,10 @@ public class NonFTECost implements Costing, Versionable<Long> {
 	@JoinColumn(name = "RESOURCE_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_COST_DETAILS_RESOURCE_CODE))
 	private Resource resource;
 
-	@NotNull
+
+	@Getter(value = AccessLevel.NONE)
+	@Setter(value = AccessLevel.NONE)
+//	@NotNull
 	@Enumerated(EnumType.STRING)
 	@Column(name = "COST_RATE_TYPE", nullable = false, insertable = false, updatable = false, length = 20)
 	// TODO: Apply formula to calculate on the basis of EmploymentStatus of
@@ -93,41 +101,41 @@ public class NonFTECost implements Costing, Versionable<Long> {
 		return null;
 	}
 	
-	public static PayRateBuilder of(final Resource resource) {
-		return new CostBuilder(resource);
+	public static NonFTEPayRateBuilder nonFTECostOf(final Resource resource) {
+		return new NonFTECostBuilder(resource);
 	}
 	
-	public interface PayRateBuilder {
-		public CostingStartDateBuilder atHourlyRate(final Money money);
+	public interface NonFTEPayRateBuilder {
+		public NonFTECostingStartDateBuilder atHourlyRate(final Money money);
 	}
 	
-	public interface CostingStartDateBuilder {
-		public CostingEndDateBuilder startingFrom(final LocalDate fromDate);
+	public interface NonFTECostingStartDateBuilder {
+		public NonFTECostingEndDateBuilder startingFrom(final LocalDate fromDate);
 
 		public NonFTECost startingIndefinatelyFrom(final LocalDate fromDate);
 	}
 
-	public interface CostingEndDateBuilder {
+	public interface NonFTECostingEndDateBuilder {
 		public NonFTECost till(final LocalDate tillDate);
 	}
 
-	public static class CostBuilder implements PayRateBuilder, CostingStartDateBuilder, CostingEndDateBuilder {
+	public static class NonFTECostBuilder implements NonFTEPayRateBuilder, NonFTECostingStartDateBuilder, NonFTECostingEndDateBuilder {
 		private NonFTECost cost;
 		private LocalDate costStartDate;
 		
-		CostBuilder(final Resource resource) {
+		NonFTECostBuilder(final Resource resource) {
 			this.cost = new NonFTECost();
 			this.cost.resource = resource;
 		}
 
 		@Override
-		public CostingStartDateBuilder atHourlyRate(Money money) {
+		public NonFTECostingStartDateBuilder atHourlyRate(Money money) {
 			this.cost.payment = Payment.of(PayRateUnit.HOURLY, money);
 			return this;
 		}
 
 		@Override
-		public CostingEndDateBuilder startingFrom(LocalDate fromDate) {
+		public NonFTECostingEndDateBuilder startingFrom(LocalDate fromDate) {
 			this.costStartDate = fromDate;
 			return this;
 		}

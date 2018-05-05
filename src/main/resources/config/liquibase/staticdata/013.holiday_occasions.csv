@@ -1,0 +1,24 @@
+id,name
+# Global Holiday Occasions
+1,New Year
+2,Christmas Day
+# USA National Holiday Occasions
+3,Memorial Day
+4,USA Independence Day
+5,Labor Day
+6,Thanksgiving Day - 1
+7,Thanksgiving Day - 2
+# India National Holiday Occasions
+8,Republic Day
+9,India Independence Day
+10,Gandhi Jayanti
+# India Eve Holiday Occasions
+11,Pongal
+12,Holi
+13,Diwali
+14,Ganesh Chaturthi
+15,Id-ul-Fitr / Ramzan
+# UK National Holiday Occasions
+16,Boxing Day
+17,Easter Monday
+18,Good Friday

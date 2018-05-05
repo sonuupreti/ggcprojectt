@@ -66,8 +66,6 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	private byte[] clientTimeSheetScreenShot;
 	
 	@Column(name = "MATCHING_CUSTOMER_TIME_SHEET", length = 1)
-	@org.hibernate.annotations.Type(type = "yes_no")
-	@org.hibernate.annotations.ColumnDefault("'N'")
 	private boolean isMatchingCustomerTimeSheet = false;
 
 	@NotNull
@@ -78,11 +76,9 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	private TimesheetStatus status;
 	
 	@Column(name = "USE_AS_TEMPLATE", length = 1)
-	@org.hibernate.annotations.Type(type = "yes_no")
-	@org.hibernate.annotations.ColumnDefault("'N'")
 	private boolean useAsTemplate = false;
 
-	public Map<DayOfWeek, DailyTimeSheet> dailyWiseTimeSheets() {
+	public Map<DayOfWeek, DailyTimeSheet> dayWiseDailyTimeSheets() {
 		return null;
 	}
 }

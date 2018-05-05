@@ -48,8 +48,6 @@ public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long
 	private DailyTimeSheet dailyTimeSheet;
 
 	@Column(name = "IS_APPROVED", length = 1)
-	@org.hibernate.annotations.Type(type = "yes_no")
-	@org.hibernate.annotations.ColumnDefault("'N'")
 	private boolean isApproved = false;
 
 }

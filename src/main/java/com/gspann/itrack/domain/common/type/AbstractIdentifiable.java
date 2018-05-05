@@ -27,7 +27,7 @@ public abstract class AbstractIdentifiable<IdType extends Number & Comparable<Id
 //@formatter:on
 
 	@Id
-	@GeneratedValue(generator = GLOBAL_SEQ_ID_GENERATOR)
+	@GeneratedValue(generator = iTrack_ID_GENERATOR)
 	@Column(name = "ID", nullable = false)
 	protected IdType id;
 

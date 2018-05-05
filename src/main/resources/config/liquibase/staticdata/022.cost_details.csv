@@ -1,0 +1,2 @@
+id,version,pay_rate_unit,pay_rate_currency,pay_rate_amount,from_date,till_date,resource_code,cost_rate_type
+1,0,0,INR,0,2018-05-05,NULL,20000,FTE_COST_RATE
