@@ -10,7 +10,7 @@ buildscript {
         // TODO To remove after final Spring Boot 2 release
         maven { url "https://repo.spring.io/milestone" }
         maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
-        maven { url "https://oss.sonatype.org/content/repositories/releases" }
+        //maven { url "https://oss.sonatype.org/content/repositories/releases" }
     }
     dependencies {
         classpath "org.springframework.boot:spring-boot-gradle-plugin:${spring_boot_version}"
@@ -208,7 +208,7 @@ dependencies {
     compile "org.mapstruct:mapstruct-jdk8:${mapstruct_version}"
     
     annotationProcessor "org.mapstruct:mapstruct-processor:${mapstruct_version}"
-    //annotationProcessor "org.hibernate:hibernate-jpamodelgen"
+    annotationProcessor "org.hibernate:hibernate-jpamodelgen"
     annotationProcessor ("org.springframework.boot:spring-boot-configuration-processor") {
         exclude group: 'com.vaadin.external.google', module: 'android-json'
     }

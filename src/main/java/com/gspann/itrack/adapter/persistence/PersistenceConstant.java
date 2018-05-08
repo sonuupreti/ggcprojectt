@@ -48,8 +48,6 @@ public class PersistenceConstant {
 		public static final String FK_RESOURCE_RESUME_MAP_RESOURCE_CODE = "fk_resource_resume_map_resource_code";
 		public static final String FK_RESOURCE_RESUME_MAP_RESUME_ID = "fk_resource_resume_map_resume_id";
 
-		public static final String FK_DAILY_TIME_SHEETS_WEEKLY_TIME_SHEET_ID = "fk_daily_time_sheets_weekly_time_sheet_id";
-
 		public static final String PK_COST_DETAILS_ID = "pk_cost_details_id";
 		public static final String FK_COST_DETAILS_RESOURCE_CODE = "fk_cost_details_resource_code";
 		public static final String PK_FTE_COST_DETAILS_ID = "pk_fte_cost_details_id";
@@ -58,6 +56,8 @@ public class PersistenceConstant {
 		public static final String FK_TIME_SHEET_ENTRIES_PROJECT_CODE = "fk_time_sheet_entries_project_code";
 		public static final String PK_WEEKLY_TIME_SHEET_ID = "pk_weekly_time_sheet_id";
 		public static final String FK_WEEKLY_TIME_SHEETS_RESOURCE_CODE = "fk_weekly_time_sheets_resource_code";
+		public static final String FK_DAILY_TIME_SHEETS_WEEKLY_TIME_SHEET_ID = "fk_daily_time_sheets_weekly_time_sheet_id";
+		public static final String FK_WEEKLY_TIME_SHEETS_CLIENT_TIMESHEET_SCREEN_SHOT_ID = "fk_weekly_time_sheets_client_timesheet_screen_shot_id";
 		public static final String IDX_WEEKLY_TIME_SHEETS_RESOURCE_CODE = "idx_weekly_time_sheets_resource_code";
 		public static final String PK_TIME_SHEET_ENTRY_ID = "pk_time_sheet_entry_id";
 		public static final String FK_TIME_SHEET_ENTRIES_DAILY_TIME_SHEET_ID = "fk_time_sheet_entries_daily_time_sheet_id";

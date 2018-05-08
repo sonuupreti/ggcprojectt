@@ -53,23 +53,35 @@ public class ProjectRepositoryTest {
 		Account internal = accountRepository.getOne("IN1000");
 
 		City gurgaon = locationRepository.findCityByName("Gurgaon").get();
-		Project paidLeave = Project.project().paidLeave().asInProgress().namedAs("Paid Leave").locatedAt(gurgaon)
-				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
-				.withTechnologies("None").atOffshoreManagedBy(admin).atOnshoreManagedBy(admin)
-				.atCustomerEndManagedBy("None").build();
-		systemUnderTest.saveAndFlush(paidLeave);
+//		Project paidLeave = Project.project().paidLeave().asInProgress().namedAs("Paid Leave").locatedAt(gurgaon)
+//				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
+//				.withTechnologies("None").atOffshoreManagedBy(admin).atOnshoreManagedBy(admin)
+//				.atCustomerEndManagedBy("None").build();
+//		systemUnderTest.saveAndFlush(paidLeave);
+//
+//		Project unpaidLeave = Project.project().unpaidLeave().asInProgress().namedAs("Unpaid Leave").locatedAt(gurgaon)
+//				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
+//				.withTechnologies("None").atOffshoreManagedBy(admin).atOnshoreManagedBy(admin)
+//				.atCustomerEndManagedBy("None").build();
+//		systemUnderTest.saveAndFlush(unpaidLeave);
+//		
+//
+//		Project bench = Project.project().bench().asInProgress().namedAs("Bench").locatedAt(gurgaon)
+//				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
+//				.withTechnologies("None").atOffshoreManagedBy(admin).atOnshoreManagedBy(admin)
+//				.atCustomerEndManagedBy("None").build();
+//		systemUnderTest.saveAndFlush(bench);
 
-		Project unpaidLeave = Project.project().unpaidLeave().asInProgress().namedAs("Unpaid Leave").locatedAt(gurgaon)
+		Resource manager = resourceRepository.getOne("20001");
+		Project iTrack = Project.project().investment().asInProgress().namedAs("iTrack").locatedAt(gurgaon)
 				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
-				.withTechnologies("None").atOffshoreManagedBy(admin).atOnshoreManagedBy(admin)
+				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
-		systemUnderTest.saveAndFlush(unpaidLeave);
-		
-
-		Project bench = Project.project().bench().asInProgress().namedAs("Bench").locatedAt(gurgaon)
+		systemUnderTest.saveAndFlush(iTrack);
+		Project finalSelect = Project.project().investment().asInProgress().namedAs("FinalSelect").locatedAt(gurgaon)
 				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
-				.withTechnologies("None").atOffshoreManagedBy(admin).atOnshoreManagedBy(admin)
+				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
-		systemUnderTest.saveAndFlush(bench);
+		systemUnderTest.saveAndFlush(finalSelect);
 	}
 }

@@ -134,7 +134,7 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 			if (rs.next()) {
 				String highEnd = rs.getString("HIGH_END");
 				long nextSeq = highEnd == null
-						? resource.employmentStatus().code().equalsIgnoreCase("FTE") ? FTE_SEQUENCE_START
+						? resource.isFTE() ? FTE_SEQUENCE_START
 								: NON_FTE_SEQUENCE_START
 						: Long.valueOf(highEnd) + 1;
 				return "" + nextSeq;

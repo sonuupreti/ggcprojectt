@@ -20,7 +20,9 @@ import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
 import com.gspann.itrack.domain.common.location.City;
+import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.Practice;
+import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 
 @RunWith(SpringRunner.class)
@@ -40,15 +42,52 @@ public class ResourceRepositoryTest {
 	@Autowired
 	private OrganisationRepository organisationRepository;
 
+	@Autowired
+	private ProjectRepository projectRepository;
+
 	@Test
-	public void testSave() {
+	public void testAddNewResource() {
 		City gurgaon = locationRepository.findCityByName("Gurgaon").get();
-		Resource admin = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
-				.withJustAnnualSalary(Money.zero(Monetary.getCurrency(CurrencyCode.INR.name()))).withName("Admin")
-				.male().onDesignation(organisationRepository.findDesignationById((short) 37).get())
-				.withEmail("admin@gspann.com").withPrimarySkills("administration").addPractice(Practice.adms())
+		
+//		Resource admin = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
+//				.withJustAnnualSalary(Money.zero(Monetary.getCurrency(CurrencyCode.INR.name()))).withName("Admin")
+//				.male().onDesignation(organisationRepository.findDesignationById((short) 37).get())
+//				.withEmail("admin@gspann.com").withPrimarySkills("administration").addPractice(Practice.adms())
+//				.deputeAtJoiningLocation().build();
+//		systemUnderTest.saveAndFlush(admin);
+		
+//		Project iTrack = projectRepository.getOne("");
+		Designation projectManager = organisationRepository.findDesignationById((short) 6).get();
+		Designation teamLead = organisationRepository.findDesignationById((short) 5).get();
+		Designation srSoftwareEngineer = organisationRepository.findDesignationById((short) 4).get();
+		Resource manoj = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
+				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName("Manoj Nautiyal")
+				.male().onDesignation(projectManager)
+				.withEmail("manoj.nautiyal@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
 				.deputeAtJoiningLocation().build();
-		systemUnderTest.saveAndFlush(admin);
+		systemUnderTest.saveAndFlush(manoj);
+//		admin.onboard(LocalDate.now(), iTrack);
+
+		Resource rajveer = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
+				.withJustAnnualSalary(Money.of(1000000, CurrencyCode.INR.name())).withName("Rajveer Singh")
+				.male().onDesignation(teamLead)
+				.withEmail("rajveer.singh@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
+				.deputeAtJoiningLocation().build();
+		systemUnderTest.saveAndFlush(rajveer);
+
+		Resource ankit = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
+				.withJustAnnualSalary(Money.of(1000000, CurrencyCode.INR.name())).withName("Ankit Bhardwaj")
+				.male().onDesignation(srSoftwareEngineer)
+				.withEmail("ankit.bhardwaj@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
+				.deputeAtJoiningLocation().build();
+		systemUnderTest.saveAndFlush(ankit);
 	}
 
+
+	@Test
+	public void testAllocateResourceToProject() {
+//		Resource manoj = systemUnderTest.getOne(id);
+//		Resource rajveer = systemUnderTest.getOne(id);
+//		Resource ankit = systemUnderTest.getOne(id);
+	}
 }

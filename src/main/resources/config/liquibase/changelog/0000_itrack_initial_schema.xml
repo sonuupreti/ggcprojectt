@@ -890,13 +890,18 @@
 			<column name="total_hours" type="varchar(5)">
 				<constraints nullable="false" />
 			</column>
-			<column name="matching_customer_time_sheet" type="boolean" defaultValueBoolean="false">
+			<column name="comments" type="varchar(255)">
 				<constraints nullable="true" />
 			</column>
-			<column name="client_timesheet_screen_shot" type="blob">
-				<constraints nullable="true" />
+<!-- 			<column name="matching_customer_time_sheet" type="boolean" defaultValueBoolean="false"> -->
+<!-- 				<constraints nullable="true" /> -->
+<!-- 			</column> -->
+			<column name="client_timesheet_screen_shot_id" type="bigint">
+				<constraints foreignKeyName="fk_weekly_time_sheets_client_timesheet_screen_shot_id"
+					referencedColumnNames="id" referencedTableName="documents"
+					nullable="true" />
 			</column>
-			<column name="approval_status" type="tinyint">
+			<column name="status" type="tinyint">
 				<constraints nullable="false" />
 			</column>
 			<column name="use_as_template" type="boolean" defaultValueBoolean="false">
@@ -943,7 +948,7 @@
 			<column name="hours" type="varchar(5)">
 				<constraints nullable="false" />
 			</column>
-			<column name="description" type="varchar(255)">
+			<column name="comments" type="varchar(255)">
 				<constraints nullable="true" />
 			</column>
 			<column name="project_code" type="varchar(20)">

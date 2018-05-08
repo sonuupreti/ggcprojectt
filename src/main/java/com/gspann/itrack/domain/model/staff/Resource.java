@@ -113,7 +113,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	private EmploymentType employmentType;
 
 	public boolean isFTE() {
-		return this.employmentType == EmploymentType.fullTimeEmployee();
+		return this.employmentType.equals(EmploymentType.fullTimeEmployee());
 	}
 
 	@NotNull
@@ -121,27 +121,28 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	@JoinColumn(name = "EMP_STATUS_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_EMP_STATUS_CODE))
 	private EmploymentStatus employmentStatus;
 
-	public void onboard(final LocalDate joiningDate, final Project project) {
-		this.actualJoiningDate = joiningDate;
-		this.employmentStatus = EmploymentStatus.active();
-		// TODO: Need to verify if need to put on bench, if no other project allocation
-		// is required or not?
-		// TODO: Allocate to supplied project
-		implicitlyAllocateToTimeOffProjects(joiningDate);
-	}
+//	public void onboard(final LocalDate joiningDate, final Project project) {
+//		this.actualJoiningDate = joiningDate;
+//		this.employmentStatus = EmploymentStatus.active();
+//		// TODO: Need to verify if need to put on bench, if no other project allocation
+//		// is required or not?
+//		// TODO: Allocate to supplied project
+//		implicitlyAllocateToTimeOffProjects(joiningDate);
+//	}
 
 	public void onBoardToBench(final LocalDate joiningDate) {
 		this.actualJoiningDate = joiningDate;
 		this.employmentStatus = EmploymentStatus.active();
 		// TODO: Allocate to bench project
-		implicitlyAllocateToTimeOffProjects(joiningDate);
+//		implicitlyAllocateToTimeOffProjects(joiningDate);
 	}
 
-	private void implicitlyAllocateToTimeOffProjects(final LocalDate joiningDate) {
-		// TODO: Allocate to paid leave and unpaid leave, projects, with 0% proportion,
-		// These two projects are of Time-Off type and needs to be handled slight
-		// differently while calculating profit and loss
-	}
+	// Instead do that in service class, bcz need to access repository to get time-off projects, which can not be done here
+//	private void implicitlyAllocateToTimeOffProjects(final LocalDate joiningDate) {
+//		// TODO: Allocate to paid leave and unpaid leave, projects, with 0% proportion,
+//		// These two projects are of Time-Off type and needs to be handled slight
+//		// differently while calculating profit and loss
+//	}
 
 	public void markDidNotJoin() {
 		this.employmentStatus = EmploymentStatus.didNotJoin();
@@ -268,7 +269,6 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		// TODO: Implement later
 	}
 
-	// @NotNull
 	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "IMAGE_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_IMAGE_ID))
 	private Document image;

@@ -39,8 +39,8 @@ public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long
 	@Column(name = "HOURS", nullable = false, length = 5)
 	public Duration hours;
 
-	@Column(name = "DESCRIPTION", nullable = true, length = 255)
-	private String description;
+	@Column(name = "COMMENTS", nullable = true, length = 255)
+	private String comments;
 
 	@NotNull
 	@ManyToOne

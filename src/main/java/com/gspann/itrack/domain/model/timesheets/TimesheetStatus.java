@@ -7,8 +7,18 @@ import com.gspann.itrack.common.enums.StringValuedEnum;
 @Immutable
 public enum TimesheetStatus implements StringValuedEnum {
 	
-	SAVED("SAVED"), APPROVED("APPROVED"), REJECTED("REJECTED"), PARTIALLY_APPROVED("PARTIALLY_APPROVED"); 
-
+	// @formatter:off
+	SAVED("SAVED"), 
+	SUBMITTED("SUBMITTED"), 
+	APPROVED("APPROVED"), 
+	REJECTED("REJECTED"), 
+	PARTIALLY_APPROVED("PARTIALLY_APPROVED"),
+//	ADJUSTMENTS_REQUESTED("ADJUSTMENTS_REQUESTED"),
+//	ADJUSTMENTS_REJECTED("ADJUSTMENTS_REJECTED"),
+//	CANCELLED("CANCELLED")
+	; 
+	// @formatter:on
+	
 	private String value;
 
 	private TimesheetStatus(final String value) {

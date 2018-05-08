@@ -33,7 +33,7 @@ public class Document extends BaseIdentifiableVersionableEntity<Long, Long> {
 //	@NotNull 
 	@Lob
 	@Column(name = "DATA", nullable = false)
-	private Byte[] data;
+	private byte[] data;
 
 	@NotNull
 	@Enumerated(EnumType.STRING)
@@ -45,7 +45,7 @@ public class Document extends BaseIdentifiableVersionableEntity<Long, Long> {
 	@org.hibernate.annotations.Generated(org.hibernate.annotations.GenerationTime.INSERT)
 	private LocalDate uploadDate;
 
-	public static Document of(final String filename, final Byte[] data, final TYPE type) {
+	public static Document of(final String filename, final byte[] data, final TYPE type) {
 		Document doc = new Document();
 		doc.filename = filename;
 		doc.data = data;
