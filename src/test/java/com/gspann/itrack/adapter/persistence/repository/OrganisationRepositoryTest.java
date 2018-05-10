@@ -3,6 +3,7 @@ package com.gspann.itrack.adapter.persistence.repository;
 import static org.junit.Assert.*;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.assertj.core.util.Sets;
 import org.junit.FixMethodOrder;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.domain.common.location.City;
+import com.gspann.itrack.domain.model.business.payments.BillabilityStatus;
 import com.gspann.itrack.domain.model.org.holidays.Occasion;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
@@ -26,8 +28,6 @@ import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.Practice;
-import com.gspann.itrack.domain.model.projects.ProjectStatus;
-import com.gspann.itrack.domain.model.projects.ProjectType;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
@@ -243,25 +243,6 @@ public class OrganisationRepositoryTest {
 	}
 
 	@Test
-	public void test20SaveProjectTypes() {
-		systemUnderTest.saveProjectType(ProjectType.fixBid());
-		systemUnderTest.saveProjectType(ProjectType.milestone());
-		systemUnderTest.saveProjectType(ProjectType.TnM());
-		systemUnderTest.saveProjectType(ProjectType.investment());
-		systemUnderTest.saveProjectType(ProjectType.bench());
-		systemUnderTest.saveProjectType(ProjectType.paidLeave());
-		systemUnderTest.saveProjectType(ProjectType.unpaidLeave());
-	}
-
-	@Test
-	public void test21SaveProjectStatuses() {
-		systemUnderTest.saveProjectStatus(ProjectStatus.pending());
-		systemUnderTest.saveProjectStatus(ProjectStatus.inProgress());
-		systemUnderTest.saveProjectStatus(ProjectStatus.onHold());
-		systemUnderTest.saveProjectStatus(ProjectStatus.closed());
-	}
-
-	@Test
 	public void test22SaveHolidayOccasions() {
 		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.GLOBAL_DAY_NEW_YEAR));
 		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.GLOBAL_EVE_CHRISTMAS));
@@ -281,6 +262,15 @@ public class OrganisationRepositoryTest {
 		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.UK_NH_BOXING_DAY));
 		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_EASTER_MONDAY));
 		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_GOOD_FRIDAY));
+
+	}
+	
+
+	@Test
+	public void test23SaveBillabilityStatus() {
+		systemUnderTest.saveBillabilityStatus(BillabilityStatus.ofBillable());
+		systemUnderTest.saveBillabilityStatus(BillabilityStatus.ofBuffer());
+		systemUnderTest.saveBillabilityStatus(BillabilityStatus.ofNonBillable());
 
 	}
 }

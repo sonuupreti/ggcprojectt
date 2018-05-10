@@ -2,6 +2,7 @@ package com.gspann.itrack.adapter.persistence.repository;
 
 import java.time.LocalDate;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import org.junit.FixMethodOrder;
@@ -21,6 +22,8 @@ import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
+import com.gspann.itrack.domain.model.projects.ProjectStatus;
+import com.gspann.itrack.domain.model.projects.ProjectType;
 import com.gspann.itrack.domain.model.staff.Resource;
 
 @RunWith(SpringRunner.class)
@@ -42,6 +45,26 @@ public class ProjectRepositoryTest {
 
 	@Autowired
 	private ProjectRepository systemUnderTest;
+	
+//	@Test
+	public void testSaveProjectTypes() {
+		systemUnderTest.saveProjectType(ProjectType.fixBid());
+		systemUnderTest.saveProjectType(ProjectType.milestone());
+		systemUnderTest.saveProjectType(ProjectType.TnM());
+		systemUnderTest.saveProjectType(ProjectType.investment());
+		systemUnderTest.saveProjectType(ProjectType.bench());
+		systemUnderTest.saveProjectType(ProjectType.paidLeave());
+		systemUnderTest.saveProjectType(ProjectType.unpaidLeave());
+	}
+
+//	@Test
+	public void testSaveProjectStatuses() {
+		systemUnderTest.saveProjectStatus(ProjectStatus.pending());
+		systemUnderTest.saveProjectStatus(ProjectStatus.inProgress());
+		systemUnderTest.saveProjectStatus(ProjectStatus.onHold());
+		systemUnderTest.saveProjectStatus(ProjectStatus.closed());
+	}
+
 
 	@Test
 	public void testSave() {
@@ -83,5 +106,23 @@ public class ProjectRepositoryTest {
 				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
 		systemUnderTest.saveAndFlush(finalSelect);
+	}
+
+	@Test
+	public void testfindByTypeCode() {
+		List<Project> invProjects = systemUnderTest.findByTypeCode(ProjectType.CODE.INVESTMENT.value());
+		System.out.println("Investment projects -->" + invProjects);
+	}
+
+	@Test
+	public void findAllBenchProjects() {
+		List<Project> benchProjects = systemUnderTest.findAllBenchProjects();
+		System.out.println("Investment projects -->" + benchProjects);
+	}
+
+	@Test
+	public void findAllLeaveProjects() {
+		List<Project> leaveProjects = systemUnderTest.findAllLeaveProjects();
+		System.out.println("Investment projects -->" + leaveProjects);
 	}
 }

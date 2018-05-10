@@ -163,21 +163,21 @@ public class Allocation extends BaseIdentifiableVersionableEntity<Long, Long> {
 
 		@Override
 		public CustomerTimeTrackingBuilder asBuffer() {
-			this.allocation.billings.add(Bill.billing().ofBuffer().startingFrom(this.allocation.dateRange.fromDate())
+			this.allocation.billings.add(Bill.billing().forAllocation(this.allocation).ofBuffer().startingFrom(this.allocation.dateRange.fromDate())
 					.tillDate(this.allocation.dateRange.tillDate()));
 			return this;
 		}
 
 		@Override
 		public CustomerTimeTrackingBuilder asNonBillable() {
-			this.allocation.billings.add(Bill.billing().ofNonBillable()
+			this.allocation.billings.add(Bill.billing().forAllocation(this.allocation).ofNonBillable()
 					.startingFrom(this.allocation.dateRange.fromDate()).tillDate(this.allocation.dateRange.tillDate()));
 			return this;
 		}
 
 		@Override
 		public CustomerTimeTrackingBuilder atHourlyRateOf(Money hourlyRate) {
-			this.allocation.billings.add(Bill.billing().atHourlyRateOf(hourlyRate)
+			this.allocation.billings.add(Bill.billing().forAllocation(this.allocation).atHourlyRateOf(hourlyRate)
 					.startingFrom(this.allocation.dateRange.fromDate()).tillDate(this.allocation.dateRange.tillDate()));
 			return this;
 		}

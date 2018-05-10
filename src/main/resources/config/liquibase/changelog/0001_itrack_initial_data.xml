@@ -90,7 +90,14 @@
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/013.holiday_occasions.csv"
+                  file="config/liquibase/staticdata/013.billability_statuses.csv"
+                  separator=","
+                  tableName="billability_statuses"
+                  commentLineStartsWith="#">
+        </loadData>
+
+        <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/014.holiday_occasions.csv"
                   separator=","
                   tableName="occasions"
                   commentLineStartsWith="#">

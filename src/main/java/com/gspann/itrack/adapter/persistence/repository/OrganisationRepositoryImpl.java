@@ -9,6 +9,7 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
+import com.gspann.itrack.domain.model.business.payments.BillabilityStatus;
 import com.gspann.itrack.domain.model.org.holidays.Occasion;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
@@ -16,8 +17,6 @@ import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.Practice;
-import com.gspann.itrack.domain.model.projects.ProjectStatus;
-import com.gspann.itrack.domain.model.projects.ProjectType;
 
 @Repository
 public class OrganisationRepositoryImpl implements OrganisationRepository {
@@ -229,45 +228,24 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	}
 
 	@Override
-	public ProjectType saveProjectType(final ProjectType projectType) {
-		Optional<ProjectType> existingProjectType = findProjectTypeByCode(projectType.code());
-		if (existingProjectType.isPresent()) {
-			return entityManager.merge(projectType);
+	public BillabilityStatus saveBillabilityStatus(final BillabilityStatus billabilityStatus) {
+		Optional<BillabilityStatus> existingBillabilityStatus = findBillabilityStatusByCode(billabilityStatus.code());
+		if (existingBillabilityStatus.isPresent()) {
+			return entityManager.merge(billabilityStatus);
 		} else {
-			entityManager.persist(projectType);
-			return projectType;
+			entityManager.persist(billabilityStatus);
+			return billabilityStatus;
 		}
 	}
 
 	@Override
-	public Optional<ProjectType> findProjectTypeByCode(final String projectTypeCode) {
-		return Optional.ofNullable(entityManager.find(ProjectType.class, projectTypeCode));
+	public Optional<BillabilityStatus> findBillabilityStatusByCode(final String billabilityStatusCode) {
+		return Optional.ofNullable(entityManager.find(BillabilityStatus.class, billabilityStatusCode));
 	}
 
 	@Override
-	public List<ProjectType> findAllProjectTypes() {
-		return entityManager.createQuery("from ProjectType p", ProjectType.class).getResultList();
-	}
-
-	@Override
-	public ProjectStatus saveProjectStatus(ProjectStatus projectStatus) {
-		Optional<ProjectStatus> existingProjectStatus = findProjectStatusByCode(projectStatus.code());
-		if (existingProjectStatus.isPresent()) {
-			return entityManager.merge(projectStatus);
-		} else {
-			entityManager.persist(projectStatus);
-			return projectStatus;
-		}
-	}
-
-	@Override
-	public Optional<ProjectStatus> findProjectStatusByCode(String projectStatusCode) {
-		return Optional.ofNullable(entityManager.find(ProjectStatus.class, projectStatusCode));
-	}
-
-	@Override
-	public List<ProjectStatus> findAllProjectStatuses() {
-		return entityManager.createQuery("from ProjectStatus p", ProjectStatus.class).getResultList();
+	public List<BillabilityStatus> findAllBillabilityStatuses() {
+		return entityManager.createQuery("from BillabilityStatus b", BillabilityStatus.class).getResultList();
 	}
 
 	@Override

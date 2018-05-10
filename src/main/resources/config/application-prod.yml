@@ -42,6 +42,8 @@ spring:
             hibernate.cache.use_query_cache: false
             hibernate.generate_statistics: false
             hibernate.cache.region.factory_class: io.github.jhipster.config.jcache.NoDefaultJCacheRegionFactory
+            # To disable checking global named queries at start up as the same has already been verified at development time
+            hibernate.query.startup_check: false 
     mail:
         host: localhost
         port: 25

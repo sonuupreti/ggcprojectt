@@ -3,6 +3,7 @@ package com.gspann.itrack.adapter.persistence.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.gspann.itrack.domain.model.business.payments.BillabilityStatus;
 import com.gspann.itrack.domain.model.org.holidays.Occasion;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
@@ -67,20 +68,11 @@ public interface OrganisationRepository {
 
 	List<EmploymentStatus> findAllEmploymentStatuses();
 	
+	public BillabilityStatus saveBillabilityStatus(final BillabilityStatus billabilityStatus);
 
-	ProjectType saveProjectType(final ProjectType projectType);
+	public Optional<BillabilityStatus> findBillabilityStatusByCode(final String billabilityStatusCode);
 
-	Optional<ProjectType> findProjectTypeByCode(final String projectTypeCode);
-
-	List<ProjectType> findAllProjectTypes();
-
-	
-	ProjectStatus saveProjectStatus(final ProjectStatus projectStatus);
-
-	Optional<ProjectStatus> findProjectStatusByCode(final String projectStatusCode);
-
-	List<ProjectStatus> findAllProjectStatuses();
-	
+	public List<BillabilityStatus> findAllBillabilityStatuses();
 	
 	Occasion saveOccasion(final Occasion occasion);
 	
@@ -89,6 +81,4 @@ public interface OrganisationRepository {
 	Optional<Occasion> findOccasionById(final short id);
 
 	List<Occasion> findAllOccasions();
-	
-
 }

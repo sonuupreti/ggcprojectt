@@ -121,21 +121,26 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	@JoinColumn(name = "EMP_STATUS_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_EMP_STATUS_CODE))
 	private EmploymentStatus employmentStatus;
 
-//	public void onboard(final LocalDate joiningDate, final Project project) {
-//		this.actualJoiningDate = joiningDate;
-//		this.employmentStatus = EmploymentStatus.active();
-//		// TODO: Need to verify if need to put on bench, if no other project allocation
-//		// is required or not?
-//		// TODO: Allocate to supplied project
-//		implicitlyAllocateToTimeOffProjects(joiningDate);
-//	}
-
-	public void onBoardToBench(final LocalDate joiningDate) {
+	public void onBoarded(final LocalDate joiningDate, final EmploymentStatus benchOrActive) {
 		this.actualJoiningDate = joiningDate;
-		this.employmentStatus = EmploymentStatus.active();
-		// TODO: Allocate to bench project
+		this.employmentStatus = benchOrActive;
+		// TODO: Need to verify if need to put on bench, if no other project allocation
+		// is required or not?
+		// TODO: Allocate to supplied project
 //		implicitlyAllocateToTimeOffProjects(joiningDate);
 	}
+	
+	public boolean isOnboarded() {
+		return this.employmentStatus.isOnboarded();
+	}
+
+	// Instead do that in service class, bcz need to access repository to get time-off projects, which can not be done here
+//	public void onBoardToBench(final LocalDate joiningDate) {
+//		this.actualJoiningDate = joiningDate;
+//		this.employmentStatus = EmploymentStatus.active();
+//		// TODO: Allocate to bench project
+////		implicitlyAllocateToTimeOffProjects(joiningDate);
+//	}
 
 	// Instead do that in service class, bcz need to access repository to get time-off projects, which can not be done here
 //	private void implicitlyAllocateToTimeOffProjects(final LocalDate joiningDate) {
@@ -143,6 +148,9 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 //		// These two projects are of Time-Off type and needs to be handled slight
 //		// differently while calculating profit and loss
 //	}
+	public void markActive() {
+		this.employmentStatus = EmploymentStatus.active();
+	}
 
 	public void markDidNotJoin() {
 		this.employmentStatus = EmploymentStatus.didNotJoin();
@@ -289,7 +297,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	// @NotEmpty(message = MESSAGE_ALLOCATION_MANDATORY)
-	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+	@OneToMany(mappedBy = "resource", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	@Getter(value = AccessLevel.NONE)
 	private List<Allocation> allocations = new ArrayList<>();
 
@@ -356,13 +364,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface ResourceAllocationBillabilityStatusBuilder {
-		public Allocation asBuffer();
+		public void asBuffer();
 
-		public Allocation asNonBillable();
+		public void asNonBillable();
 
-		public Allocation atHourlyRateOf(final Money hourlyRate);
+		public void atHourlyRateOf(final Money hourlyRate);
 
-		public Allocation withBilling(final Billing billing);
+		public void withBilling(final Billing billing);
 	}
 
 	public class ResourceAllocationBuilder implements ResourceAllocationProjectBuilder,
@@ -419,46 +427,43 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public Allocation asBuffer() {
+		public void asBuffer() {
+			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
+					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
+					clientTimeTracking == Toggle.YES ? true : false, billings);
 			this.billings.add(
-					Bill.billing().ofBuffer().startingFrom(this.allocationStartDate).tillDate(this.allocationEndDate));
+					Bill.billing().forAllocation(allocation).ofBuffer().startingFrom(this.allocationStartDate).tillDate(this.allocationEndDate));
+			Resource.this.allocations.add(allocation);
+		}
+
+		@Override
+		public void asNonBillable() {
 			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
 					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
 					clientTimeTracking == Toggle.YES ? true : false, billings);
 			Resource.this.allocations.add(allocation);
-			return allocation;
-		}
-
-		@Override
-		public Allocation asNonBillable() {
-			this.billings.add(Bill.billing().ofNonBillable().startingFrom(this.allocationStartDate)
+			this.billings.add(Bill.billing().forAllocation(allocation).ofNonBillable().startingFrom(this.allocationStartDate)
 					.tillDate(this.allocationEndDate));
-			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
-					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
-					clientTimeTracking == Toggle.YES ? true : false, billings);
-			Resource.this.allocations.add(allocation);
-			return allocation;
 		}
 
 		@Override
-		public Allocation atHourlyRateOf(Money hourlyRate) {
-			this.billings.add(Bill.billing().atHourlyRateOf(hourlyRate).startingFrom(this.allocationStartDate)
+		public void atHourlyRateOf(Money hourlyRate) {
+			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
+					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
+					clientTimeTracking == Toggle.YES ? true : false, billings);
+			this.billings.add(Bill.billing().forAllocation(allocation).atHourlyRateOf(hourlyRate).startingFrom(this.allocationStartDate)
 					.tillDate(this.allocationEndDate));
-			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
-					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
-					clientTimeTracking == Toggle.YES ? true : false, billings);
+			// If allocating fully, then end previous allocation
 			Resource.this.allocations.add(allocation);
-			return allocation;
 		}
 
 		@Override
-		public Allocation withBilling(Billing billing) {
+		public void withBilling(Billing billing) {
 			this.billings.add(billing);
 			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
 					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
 					clientTimeTracking == Toggle.YES ? true : false, billings);
 			Resource.this.allocations.add(allocation);
-			return allocation;
 		}
 	}
 

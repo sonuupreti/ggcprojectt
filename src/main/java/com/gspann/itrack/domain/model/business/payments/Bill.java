@@ -4,6 +4,7 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMet
 
 import java.time.LocalDate;
 
+import javax.money.Monetary;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 
 import org.javamoney.moneta.Money;
 
+import com.gspann.itrack.common.enums.standard.CurrencyCode;
 import com.gspann.itrack.domain.common.DateRange;
 import com.gspann.itrack.domain.common.type.BaseIdentifiableVersionableEntity;
 import com.gspann.itrack.domain.model.allocations.Allocation;
@@ -42,11 +44,15 @@ public class Bill extends BaseIdentifiableVersionableEntity<Long, Long> implemen
 	private BillabilityStatus billabilityStatus;
 
 	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ALLOCATION_ID", foreignKey = @ForeignKey(name = FK_BILLINGS_ALLOCATION_ID))
+	@JoinColumn(name = "ALLOCATION_ID", referencedColumnName = "ID", foreignKey = @ForeignKey(name = FK_BILLINGS_ALLOCATION_ID))
 	private Allocation allocation;
 
-	public static BillabilityStatusBuilder billing() {
+	public static BillingAllocationBuilder billing() {
 		return new BillingBuilder();
+	}
+	
+	public interface BillingAllocationBuilder {
+		public BillabilityStatusBuilder forAllocation(final Allocation allocation);
 	}
 
 	public interface BillabilityStatusBuilder {
@@ -83,25 +89,34 @@ public class Bill extends BaseIdentifiableVersionableEntity<Long, Long> implemen
 		return null;
 	}
 
-	public static class BillingBuilder implements BillabilityStatusBuilder, FromDateBuilder, EndDateBuilder {
+	public static class BillingBuilder implements BillingAllocationBuilder, BillabilityStatusBuilder, FromDateBuilder, EndDateBuilder {
 		private Bill billing = new Bill();
 		private LocalDate billingStartDate;
 
 		@Override
+		public BillabilityStatusBuilder forAllocation(final Allocation allocation) {
+			billing.allocation = allocation;
+			return this;
+		}
+
+		@Override
 		public FromDateBuilder ofBuffer() {
 			billing.billabilityStatus = BillabilityStatus.ofBuffer();
+			billing.payment = Payment.of(PayRateUnit.HOURLY, Money.zero(Monetary.getCurrency(CurrencyCode.INR.name())));
 			return this;
 		}
 
 		@Override
 		public FromDateBuilder ofNonBillable() {
 			billing.billabilityStatus = BillabilityStatus.ofNonBillable();
+			billing.payment = Payment.of(PayRateUnit.HOURLY, Money.zero(Monetary.getCurrency(CurrencyCode.INR.name())));
 			return this;
 		}
 
 		@Override
 		public FromDateBuilder atHourlyRateOf(Money money) {
 			billing.billabilityStatus = BillabilityStatus.ofBillable();
+			billing.payment = Payment.of(PayRateUnit.HOURLY, money);
 			return this;
 		}
 
