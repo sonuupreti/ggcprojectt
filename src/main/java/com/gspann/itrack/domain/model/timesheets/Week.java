@@ -21,17 +21,17 @@ public class Week {
 	@Transient
 	private Duration duration;
 
-	private Week(LocalDate startingFrom, int weekLength) {
+	private Week(final LocalDate startingFrom, final short weekLength) {
 		this.duration = Duration.ofDays(weekLength);
 		this.dateRange = DateRange.dateRange().startingOn(startingFrom).endingOn(startingFrom.plusDays(weekLength));
 	}
 
-	public static Week of(LocalDate startingFrom) {
-		Week week = new Week(startingFrom, 6);
+	public static Week of(final LocalDate startingFrom) {
+		Week week = new Week(startingFrom, (short)6);
 		return week;
 	}
 
-	public static Week of(LocalDate startingFrom, int weekLength) {
+	public static Week of(final LocalDate startingFrom, final short weekLength) {
 		Week week = new Week(startingFrom, weekLength);
 		return week;
 	}

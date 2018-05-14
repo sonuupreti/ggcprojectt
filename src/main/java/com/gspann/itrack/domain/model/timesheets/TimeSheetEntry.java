@@ -15,9 +15,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.gspann.itrack.domain.common.type.BaseIdentifiableVersionableEntity;
+import com.gspann.itrack.domain.common.type.Buildable;
 import com.gspann.itrack.domain.model.projects.Project;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -26,6 +28,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
+@EqualsAndHashCode(of = { "project", "dailyTimeSheet" }, callSuper = false)
 @Entity
 @Table(name = "TIME_SHEET_ENTRIES")
 public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long> {
@@ -44,10 +47,84 @@ public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long
 
 	@NotNull
 	@ManyToOne
-    @JoinColumn(name = "DAILY_TIME_SHEET_ID", updatable = false, insertable = false, foreignKey = @ForeignKey(name = FK_TIME_SHEET_ENTRIES_DAILY_TIME_SHEET_ID))
+	@JoinColumn(name = "DAILY_TIME_SHEET_ID", updatable = false, insertable = false, foreignKey = @ForeignKey(name = FK_TIME_SHEET_ENTRIES_DAILY_TIME_SHEET_ID))
 	private DailyTimeSheet dailyTimeSheet;
+
+	public TimeSheetEntry setDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
+		this.dailyTimeSheet = dailyTimeSheet;
+		return this;
+	}
 
 	@Column(name = "IS_APPROVED", length = 1)
 	private boolean isApproved = false;
 
+	public void approve() {
+		this.isApproved = true;
+	}
+
+	public void reject() {
+		this.isApproved = false;
+	}
+
+	public static TimeSheetEntry forHoliday(final Project project) {
+		TimeSheetEntry entry = new TimeSheetEntry();
+		entry.project = project;
+		entry.hours = Duration.ZERO;
+		return entry;
+	}
+
+	public static TimeSheetEntry forWeekEnd(final Project project) {
+		TimeSheetEntry entry = new TimeSheetEntry();
+		entry.project = project;
+		entry.hours = Duration.ZERO;
+		return entry;
+	}
+
+	public static TimeSheetEntryProjectBuilder forWorkingDay() {
+		return new TimeSheetEntryBuilder();
+	}
+
+	public interface TimeSheetEntryProjectBuilder {
+		public TimeSheetEntryDurationBuilder workedOn(final Project project);
+	}
+
+	public interface TimeSheetEntryDurationBuilder {
+		public TimeSheetEntryCommentsBuilder forDuration(final Duration hours);
+	}
+
+	public interface TimeSheetEntryCommentsBuilder extends Buildable<TimeSheetEntry> {
+		public Buildable<TimeSheetEntry> onTasks(final String comments);
+	}
+
+	public static class TimeSheetEntryBuilder
+			implements TimeSheetEntryProjectBuilder, TimeSheetEntryDurationBuilder, TimeSheetEntryCommentsBuilder {
+		private TimeSheetEntry entry;
+
+		public TimeSheetEntryBuilder() {
+			this.entry = new TimeSheetEntry();
+		}
+
+		@Override
+		public TimeSheetEntryDurationBuilder workedOn(Project project) {
+			this.entry.project = project;
+			return this;
+		}
+
+		@Override
+		public TimeSheetEntryCommentsBuilder forDuration(final Duration hours) {
+			this.entry.hours = hours;
+			return this;
+		}
+
+		@Override
+		public Buildable<TimeSheetEntry> onTasks(final String comments) {
+			this.entry.comments = comments;
+			return this;
+		}
+
+		@Override
+		public TimeSheetEntry build() {
+			return this.entry;
+		}
+	}
 }

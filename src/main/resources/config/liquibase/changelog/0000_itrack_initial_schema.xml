@@ -890,9 +890,9 @@
 			<column name="total_hours" type="varchar(5)">
 				<constraints nullable="false" />
 			</column>
-			<column name="comments" type="varchar(255)">
-				<constraints nullable="true" />
-			</column>
+<!-- 			<column name="comments" type="varchar(255)"> -->
+<!-- 				<constraints nullable="true" /> -->
+<!-- 			</column> -->
 <!-- 			<column name="matching_customer_time_sheet" type="boolean" defaultValueBoolean="false"> -->
 <!-- 				<constraints nullable="true" /> -->
 <!-- 			</column> -->
@@ -929,6 +929,12 @@
 			</column>
 			<column name="total_hours" type="varchar(5)">
 				<constraints nullable="false" />
+			</column>
+			<column name="day_type" type="tinyint">
+				<constraints nullable="false" />
+			</column>
+			<column name="comments" type="varchar(255)">
+				<constraints nullable="true" />
 			</column>
 			<column name="weekly_time_sheet_id" type="bigint">
 				<constraints foreignKeyName="fk_daily_time_sheets_weekly_time_sheet_id"
