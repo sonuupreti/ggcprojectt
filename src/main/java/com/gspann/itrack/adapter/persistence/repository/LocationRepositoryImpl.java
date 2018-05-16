@@ -141,7 +141,7 @@ public class LocationRepositoryImpl implements LocationRepository {
 	}
 
 	@Override
-	public Location findLocationByCityId(int cityId) {
+	public Optional<Location> findLocationByCityId(int cityId) {
 		// TODO Auto-generated method stub
 		return null;
 	}

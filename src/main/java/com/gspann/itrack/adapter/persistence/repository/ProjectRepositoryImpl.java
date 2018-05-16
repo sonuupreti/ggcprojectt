@@ -16,7 +16,7 @@ import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
 import com.gspann.itrack.domain.model.projects.ProjectType;
 import com.gspann.itrack.domain.model.projects.Project_;
-import com.gspann.itrack.domain.common.type.AbstractAssignable_;
+import com.gspann.itrack.domain.model.common.type.AbstractAssignable_;
 
 @Repository
 public class ProjectRepositoryImpl implements ProjectRepositorySpec {

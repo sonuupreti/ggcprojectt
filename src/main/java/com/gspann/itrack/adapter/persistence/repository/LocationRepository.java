@@ -42,5 +42,5 @@ public interface LocationRepository {
 
 	List<City> findAllCitiesByCountryCode(String countryCode);
 	
-	Location findLocationByCityId(final int cityId);
+	Optional<Location> findLocationByCityId(final int cityId);
 }
