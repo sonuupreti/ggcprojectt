@@ -11,6 +11,7 @@ import org.springframework.stereotype.Repository;
 
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.location.Country;
+import com.gspann.itrack.domain.common.location.Location;
 import com.gspann.itrack.domain.common.location.State;
 
 @Repository
@@ -137,5 +138,11 @@ public class LocationRepositoryImpl implements LocationRepository {
 	public List<City> findAllCitiesByCountryCode(String countryCode) {
 		return entityManager.createQuery("from City c where c.state.country.code = :countryCode", City.class)
 				.setParameter("countryCode", countryCode).getResultList();
+	}
+
+	@Override
+	public Location findLocationByCityId(int cityId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

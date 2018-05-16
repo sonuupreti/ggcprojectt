@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.common.location.Country;
+import com.gspann.itrack.domain.common.location.Location;
 import com.gspann.itrack.domain.common.location.State;
 
 public interface LocationRepository {
@@ -40,4 +41,6 @@ public interface LocationRepository {
 	List<City> findAllCitiesByStateName(String stateName);
 
 	List<City> findAllCitiesByCountryCode(String countryCode);
+	
+	Location findLocationByCityId(final int cityId);
 }
