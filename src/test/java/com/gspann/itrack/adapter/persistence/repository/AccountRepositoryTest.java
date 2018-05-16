@@ -40,6 +40,9 @@ public class AccountRepositoryTest {
 	@Autowired
 	private ResourceRepository resourceRepository;
 
+	@Autowired
+	private ProjectRepository projectRepository;
+
 	// static {
 	// TimeZone.setDefault(TimeZone.getTimeZone("GMT+2"));
 	// }
@@ -68,7 +71,7 @@ public class AccountRepositoryTest {
 //		Pair<String, String> codeAndName = resourceRepository.findCodeAndName("20002");
 //		System.out.println(codeAndName);
 		
-		System.out.println(resourceRepository.findAllCodeAndName());
+		System.out.println(projectRepository.findAllProjectTypeCodeAndDescription());
 	}
 
 	// @Test

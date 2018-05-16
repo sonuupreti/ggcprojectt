@@ -17,8 +17,14 @@ public interface ProjectRepository extends JpaRepository<Project, String>, Proje
 	public List<Project> findByTypeCode(String typeCode);
 	
 	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(p.code, p.name) FROM Project p where p.code = :code") 
-    Pair<String, String> findCodeAndName(@Param("code") String code);
+    Pair<String, String> findProjectCodeAndName(@Param("code") String code);
 	
 	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(p.code, p.name) FROM Project p") 
-    List<Pair<String, String>> findAllCodeAndName();
+    List<Pair<String, String>> findAllProjectCodeAndName();
+	
+	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(pt.code, pt.description) FROM ProjectType pt") 
+    List<Pair<String, String>> findAllProjectTypeCodeAndDescription();
+	
+	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(ps.code, ps.description) FROM ProjectStatus ps") 
+    List<Pair<String, String>> findAllProjectStatusCodeAndDescription();
 }

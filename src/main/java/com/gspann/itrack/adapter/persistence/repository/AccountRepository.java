@@ -14,9 +14,9 @@ import com.gspann.itrack.domain.model.common.dto.Pair;
  */
 public interface AccountRepository extends JpaRepository<Account, String> {
 	
-	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(a.code, a.name) FROM Account a where a.code = :code") 
+	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(a.code, a.customerName) FROM Account a where a.code = :code") 
     Pair<String, String> findCodeAndName(@Param("code") String code);
 	
-	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(a.code, a.name) FROM Account a") 
+	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(a.code, a.customerName) FROM Account a") 
     List<Pair<String, String>> findAllCodeAndName();
 }
