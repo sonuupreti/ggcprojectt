@@ -10,10 +10,10 @@ import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Getter
-@Setter
+//@Setter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor()
-@AllArgsConstructor(staticName = "of")
+@AllArgsConstructor
 @ToString()
 public class Location {
 
@@ -27,11 +27,11 @@ public class Location {
 	
 	private String cityName;
 	
-	public Location(final String countryName, final String stateName, String cityName) {
-		this.countryName = countryName;
-		this.stateName = stateName;
-		this.cityName = cityName;
-	}
+//	public Location(final String countryName, final String stateName, String cityName) {
+//		this.countryName = countryName;
+//		this.stateName = stateName;
+//		this.cityName = cityName;
+//	}
 
 	public String format() {
 		return String.format(DEFAULT_LOCATION_FORMAT.value(), cityName, stateName, countryName);

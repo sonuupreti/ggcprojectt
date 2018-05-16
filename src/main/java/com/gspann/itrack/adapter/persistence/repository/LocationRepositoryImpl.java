@@ -6,13 +6,20 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
 import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.location.City_;
 import com.gspann.itrack.domain.model.location.Country;
+import com.gspann.itrack.domain.model.location.Country_;
 import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.location.State;
+import com.gspann.itrack.domain.model.location.State_;
 
 @Repository
 public class LocationRepositoryImpl implements LocationRepository {
@@ -143,14 +150,60 @@ public class LocationRepositoryImpl implements LocationRepository {
 	@Override
 	public Optional<Location> findLocationByCityId(int cityId) {
 		Location location = null;
+		// try {
+		// location = entityManager.createQuery(
+		// "select new com.gspann.itrack.domain.model.location.Location(c.name,
+		// c.state.name, c.state.country.name) "
+		// + "from City c where id =:cityId",
+		// Location.class).setParameter("cityId", cityId).getSingleResult();
+		// // location.cityId(cityId);
+		// } catch (NoResultException e) {
+		// // No state with such name exists, so return null
+		// }
+		// return Optional.ofNullable(location);
+
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Location> query = criteriaBuilder.createQuery(Location.class);
+		Root<City> city = query.from(City.class);
+		Join<City, State> state = city.join(City_.state);
+		Join<State, Country> country = state.join(State_.country);
+		query.select(criteriaBuilder.construct(Location.class, city.get(City_.id.getName()),
+				country.get(Country_.name.getName()), state.get(State_.name.getName()),
+				city.get(City_.name.getName())));
+		query.where(criteriaBuilder.equal(criteriaBuilder.toInteger(state.get(State_.id.getName())), cityId));
 		try {
-			location = entityManager.createQuery("select new com.gspann.itrack.domain.model.location.Location(c.name, c.state.name, c.state.country.name) "
-					+ "from City c where id =:cityId", Location.class)
-					.setParameter("cityId", cityId).getSingleResult();
-			location.cityId(cityId);
+			location = entityManager.createQuery(query).getSingleResult();
 		} catch (NoResultException e) {
 			// No state with such name exists, so return null
 		}
 		return Optional.ofNullable(location);
+	}
+
+	@Override
+	public List<Location> findAllLocationsByStateId(int stateId) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Location> query = criteriaBuilder.createQuery(Location.class);
+		Root<City> city = query.from(City.class);
+		Join<City, State> state = city.join(City_.state);
+		Join<State, Country> country = state.join(State_.country);
+		query.select(criteriaBuilder.construct(Location.class, city.get(City_.id.getName()),
+				country.get(Country_.name.getName()), state.get(State_.name.getName()),
+				city.get(City_.name.getName())));
+		query.where(criteriaBuilder.equal(criteriaBuilder.toInteger(state.get(State_.id.getName())), stateId));
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	@Override
+	public List<Location> findAllLocationsByCountryCode(String countryCode) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Location> query = criteriaBuilder.createQuery(Location.class);
+		Root<City> city = query.from(City.class);
+		Join<City, State> state = city.join(City_.state);
+		Join<State, Country> country = state.join(State_.country);
+		query.select(criteriaBuilder.construct(Location.class, city.get(City_.id.getName()),
+				country.get(Country_.name.getName()), state.get(State_.name.getName()),
+				city.get(City_.name.getName())));
+		query.where(criteriaBuilder.equal(country.get(Country_.code.getName()), countryCode));
+		return entityManager.createQuery(query).getResultList();
 	}
 }
