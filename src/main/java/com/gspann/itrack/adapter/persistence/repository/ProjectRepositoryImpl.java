@@ -16,7 +16,6 @@ import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
 import com.gspann.itrack.domain.model.projects.ProjectType;
 import com.gspann.itrack.domain.model.projects.Project_;
-import com.gspann.itrack.domain.model.common.type.AbstractAssignable_;
 
 @Repository
 public class ProjectRepositoryImpl implements ProjectRepositorySpec {
@@ -84,7 +83,7 @@ public class ProjectRepositoryImpl implements ProjectRepositorySpec {
 		Root<Project> project = query.from(Project.class);
 		query.select(project);
 		query.where(
-				criteriaBuilder.equal(project.get(Project_.type.getName()).get(AbstractAssignable_.code.getName()),
+				criteriaBuilder.equal(project.get(Project_.type.getName()).get(Project_.code.getName()),
 						ProjectType.CODE.BENCH.value()));
 		return entityManager.createQuery(query).getResultList();
 	}
@@ -96,10 +95,10 @@ public class ProjectRepositoryImpl implements ProjectRepositorySpec {
 		Root<Project> project = query.from(Project.class);
 		query.select(project);
 		Predicate paidLeaveTypePredicate = criteriaBuilder.equal(
-				project.get(Project_.type.getName()).get(AbstractAssignable_.code.getName()),
+				project.get(Project_.type.getName()).get(Project_.code.getName()),
 				ProjectType.CODE.PAID_LEAVE.value());
 		Predicate unpaidLeaveTypePredicate = criteriaBuilder.equal(
-				project.get(Project_.type.getName()).get(AbstractAssignable_.code.getName()),
+				project.get(Project_.type.getName()).get(Project_.code.getName()),
 				ProjectType.CODE.UNPAID_LEAVE.value());
 		query.where(criteriaBuilder.or(paidLeaveTypePredicate, unpaidLeaveTypePredicate));
 		return entityManager.createQuery(query).getResultList();

@@ -43,4 +43,8 @@ public interface LocationRepository {
 	List<City> findAllCitiesByCountryCode(String countryCode);
 	
 	Optional<Location> findLocationByCityId(final int cityId);
+	
+	List<Location> findAllLocationsByStateId(final int stateId);
+	
+	List<Location> findAllLocationsByCountryCode(final String countryCode);
 }

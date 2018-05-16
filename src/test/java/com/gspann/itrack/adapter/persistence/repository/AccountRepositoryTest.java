@@ -1,5 +1,8 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -16,6 +19,7 @@ import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CountryCode;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.staff.Resource;
 
 @RunWith(SpringRunner.class)
@@ -49,14 +53,16 @@ public class AccountRepositoryTest {
 	}
 
 	@Test
-	public void test01Save() {
+	public void test01FindLocation() {
 		// Resource admin = resourceRepository.findById("20000").get();
-		// City gurgaon = locationRepository.findCityByName("Gurgaon").get();
-		Resource admin = resourceRepository.getOne("20000");
-		City gurgaon = locationRepository.findCityByName("Gurgaon").get();
-		Account account = Account.ofCustomer("Internal").reportingTo("Internal").withNoEntity()
-				.customerTimeTrackingNotAvailable().managedBy(admin).locatedAt(gurgaon).build();
-		systemUnderTest.saveAndFlush(account);
+		 Optional<Location> location = locationRepository.findLocationByCityId(8);
+		 System.out.println(location);
+//		 System.out.println("Start ------->");
+//		 List<Location> locations = locationRepository.findAllLocationsByStateId(4);
+//		 System.out.println(locations);
+//		 System.out.println("End ------->");
+//		 List<Location> locations = locationRepository.findAllLocationsByCountryCode("IN");
+//		 System.out.println(locations);
 	}
 
 	// @Test
