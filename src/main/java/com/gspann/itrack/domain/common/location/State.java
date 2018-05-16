@@ -1,12 +1,18 @@
 package com.gspann.itrack.domain.common.location;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -16,6 +22,7 @@ import org.hibernate.annotations.Immutable;
 import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -24,6 +31,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor()
 @AllArgsConstructor(staticName = "of")
+@EqualsAndHashCode(of = { "name", "country" }, callSuper = false)
 @Entity
 @Table(name = "STATES", uniqueConstraints = @UniqueConstraint(name = UNQ_STATE, columnNames = { "NAME",
 		"COUNTRY_CODE" }))
@@ -39,9 +47,8 @@ public class State extends AbstractIdentifiable<Integer> {
 	@JoinColumn(name = "COUNTRY_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_STATES_COUNTRY_CODE))
 	private Country country;
 
-	// @OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy =
-	// "state", fetch=FetchType.LAZY)
-	// private Set<City> cities = new HashSet<City>();
+	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "state", fetch = FetchType.LAZY)
+	private Set<City> cities = new HashSet<City>();
 
 	@Override
 	public String toString() {

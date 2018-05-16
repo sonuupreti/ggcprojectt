@@ -2,7 +2,6 @@ package com.gspann.itrack.domain.common.location;
 
 import com.gspann.itrack.domain.common.dto.Pair;
 
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

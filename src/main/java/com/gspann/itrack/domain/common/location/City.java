@@ -16,6 +16,7 @@ import org.hibernate.annotations.Immutable;
 import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
@@ -24,6 +25,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
+@EqualsAndHashCode(of = { "name", "state" }, callSuper = false)
 @Entity
 @Table(name = "CITIES", uniqueConstraints = @UniqueConstraint(name = UNQ_CITY, columnNames = { "NAME", "STATE_ID" }))
 @Immutable

@@ -1,8 +1,15 @@
 package com.gspann.itrack.domain.common.location;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -20,7 +27,7 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "COUNTRIES", uniqueConstraints = {@UniqueConstraint(name = UNQ_COUNTRY_NAME, columnNames = { "NAME" })})
+@Table(name = "COUNTRIES", uniqueConstraints = { @UniqueConstraint(name = UNQ_COUNTRY_NAME, columnNames = { "NAME" }) })
 @Immutable
 public class Country extends AbstractAssignable<String> {
 
@@ -28,10 +35,9 @@ public class Country extends AbstractAssignable<String> {
 	@Column(name = "NAME", nullable = false, length = 100)
 	private String name;
 
-	// @NotNull
-	// @OneToMany(cascade = CascadeType.ALL, mappedBy = "country",
-	// fetch=FetchType.LAZY)
-	// private Set<State> states = new HashSet<State>();
+	@NotNull
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.LAZY)
+	private Set<State> states = new HashSet<State>();
 
 	public static Country of(String alpha2, String name) {
 		Country country = new Country();
