@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common.location;
+package com.gspann.itrack.domain.model.location;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
@@ -17,7 +17,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Immutable;
 
 import com.gspann.itrack.common.enums.standard.CountryCode;
-import com.gspann.itrack.domain.common.type.AbstractAssignable;
+import com.gspann.itrack.domain.model.common.type.AbstractAssignable;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

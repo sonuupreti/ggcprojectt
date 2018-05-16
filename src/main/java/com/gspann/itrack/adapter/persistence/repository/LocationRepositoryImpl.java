@@ -9,10 +9,10 @@ import javax.persistence.PersistenceContext;
 
 import org.springframework.stereotype.Repository;
 
-import com.gspann.itrack.domain.common.location.City;
-import com.gspann.itrack.domain.common.location.Country;
-import com.gspann.itrack.domain.common.location.Location;
-import com.gspann.itrack.domain.common.location.State;
+import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.location.Country;
+import com.gspann.itrack.domain.model.location.Location;
+import com.gspann.itrack.domain.model.location.State;
 
 @Repository
 public class LocationRepositoryImpl implements LocationRepository {

@@ -9,4 +9,7 @@ public interface TimesheetManagementService {
 	public void approveTimesheet(String projectCode, final long timesheetId);
 	public void rejectTimesheet();
 	public void rejectTimesheet(String projectCode, final long timesheetId);
+	public void getTimeSheetsByApprover(final String approverCode);
+	public void getTimeSheetsPendingForApproval(final String approverCode);
+	public void getTimeSheetsWithPendingActions(final String approverCode);
 }

@@ -17,9 +17,9 @@ import javax.validation.constraints.NotNull;
 import org.javamoney.moneta.Money;
 
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
-import com.gspann.itrack.domain.common.DateRange;
-import com.gspann.itrack.domain.common.type.BaseIdentifiableVersionableEntity;
 import com.gspann.itrack.domain.model.allocations.Allocation;
+import com.gspann.itrack.domain.model.common.DateRange;
+import com.gspann.itrack.domain.model.common.type.BaseIdentifiableVersionableEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

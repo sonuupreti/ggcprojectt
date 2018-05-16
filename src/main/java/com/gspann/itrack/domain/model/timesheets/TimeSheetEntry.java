@@ -14,8 +14,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.type.BaseIdentifiableVersionableEntity;
-import com.gspann.itrack.domain.common.type.Buildable;
+import com.gspann.itrack.domain.model.common.type.BaseIdentifiableVersionableEntity;
+import com.gspann.itrack.domain.model.common.type.Buildable;
 import com.gspann.itrack.domain.model.projects.Project;
 
 import lombok.AllArgsConstructor;

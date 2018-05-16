@@ -1,6 +1,6 @@
-package com.gspann.itrack.domain.common.location;
+package com.gspann.itrack.domain.model.location;
 
-import com.gspann.itrack.domain.common.dto.Pair;
+import com.gspann.itrack.domain.model.common.dto.Pair;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

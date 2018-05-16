@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
-import com.gspann.itrack.domain.common.Toggle;
+import com.gspann.itrack.domain.model.common.Toggle;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)

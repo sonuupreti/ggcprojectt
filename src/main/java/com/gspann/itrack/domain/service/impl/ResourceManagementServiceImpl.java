@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.gspann.itrack.adapter.persistence.repository.ProjectRepository;
 import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
-import com.gspann.itrack.domain.common.Toggle;
+import com.gspann.itrack.domain.model.common.Toggle;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;

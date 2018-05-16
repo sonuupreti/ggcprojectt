@@ -13,7 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.type.Assignable;
+import com.gspann.itrack.domain.model.common.type.Assignable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

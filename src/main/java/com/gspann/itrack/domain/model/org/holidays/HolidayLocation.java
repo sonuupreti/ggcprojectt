@@ -8,7 +8,7 @@ import javax.persistence.MapsId;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.location.City;
+import com.gspann.itrack.domain.model.location.City;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

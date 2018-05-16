@@ -18,7 +18,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Columns;
 import org.javamoney.moneta.Money;
 
-import com.gspann.itrack.domain.common.type.AbstractVersionable;
+import com.gspann.itrack.domain.model.common.type.AbstractVersionable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

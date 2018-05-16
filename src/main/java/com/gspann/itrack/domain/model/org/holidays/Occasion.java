@@ -11,7 +11,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Immutable;
 
 import com.gspann.itrack.common.enums.StringValuedEnum;
-import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common.type;
+package com.gspann.itrack.domain.model.common.type;
 
 import java.io.Serializable;
 
@@ -16,9 +16,10 @@ import lombok.NoArgsConstructor;
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @NoArgsConstructor
 //@formatter:off
-public class BaseIdentifiableVersionableEntity<IdType extends Number & Comparable<IdType> & Serializable, 
+public class BaseAssignableVersionableEntity<CodeType extends Serializable & Comparable<CodeType> & CharSequence, 
 		VersionType extends Comparable<VersionType> & Serializable>
-		extends AbstractIdentifiable<IdType> implements Versionable<VersionType> {
+		extends AbstractAssignable<CodeType> implements
+		Versionable<VersionType> {
 //@formatter:on
 
 	@Version

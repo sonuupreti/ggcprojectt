@@ -4,7 +4,7 @@ import java.time.LocalDate;
 
 import org.javamoney.moneta.Money;
 
-import com.gspann.itrack.domain.common.Toggle;
+import com.gspann.itrack.domain.model.common.Toggle;
 
 public interface ResourceManagementService {
 

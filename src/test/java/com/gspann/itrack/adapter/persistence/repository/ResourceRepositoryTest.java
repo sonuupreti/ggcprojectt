@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
-import com.gspann.itrack.domain.common.location.City;
+import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;

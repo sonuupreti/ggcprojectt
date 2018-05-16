@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common.location;
+package com.gspann.itrack.domain.model.location;
 
 import org.hibernate.annotations.Immutable;
 

@@ -3,10 +3,10 @@ package com.gspann.itrack.adapter.persistence.repository;
 import java.util.List;
 import java.util.Optional;
 
-import com.gspann.itrack.domain.common.location.City;
-import com.gspann.itrack.domain.common.location.Country;
-import com.gspann.itrack.domain.common.location.Location;
-import com.gspann.itrack.domain.common.location.State;
+import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.location.Country;
+import com.gspann.itrack.domain.model.location.Location;
+import com.gspann.itrack.domain.model.location.State;
 
 public interface LocationRepository {
 

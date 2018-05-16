@@ -10,7 +10,7 @@ import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 
-import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

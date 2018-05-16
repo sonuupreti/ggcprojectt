@@ -25,15 +25,15 @@ import javax.validation.constraints.NotNull;
 
 import org.javamoney.moneta.Money;
 
-import com.gspann.itrack.domain.common.DateRange;
-import com.gspann.itrack.domain.common.Toggle;
-import com.gspann.itrack.domain.common.location.City;
-import com.gspann.itrack.domain.common.type.BaseAutoAssignableVersionableEntity;
-import com.gspann.itrack.domain.common.type.Buildable;
 import com.gspann.itrack.domain.model.allocations.Allocation;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.business.SOW;
 import com.gspann.itrack.domain.model.business.payments.Billing;
+import com.gspann.itrack.domain.model.common.DateRange;
+import com.gspann.itrack.domain.model.common.Toggle;
+import com.gspann.itrack.domain.model.common.type.BaseAutoAssignableVersionableEntity;
+import com.gspann.itrack.domain.model.common.type.Buildable;
+import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.staff.Resource;
 

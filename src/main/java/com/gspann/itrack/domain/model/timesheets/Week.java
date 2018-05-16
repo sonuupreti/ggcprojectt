@@ -7,7 +7,7 @@ import javax.persistence.Embeddable;
 import javax.persistence.Transient;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.DateRange;
+import com.gspann.itrack.domain.model.common.DateRange;
 
 import lombok.NoArgsConstructor;
 

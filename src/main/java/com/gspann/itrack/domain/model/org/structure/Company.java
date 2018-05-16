@@ -18,8 +18,8 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Immutable;
 
-import com.gspann.itrack.domain.common.location.City;
-import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.location.City;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;

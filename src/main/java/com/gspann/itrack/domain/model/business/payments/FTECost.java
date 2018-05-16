@@ -14,8 +14,8 @@ import org.hibernate.annotations.Columns;
 import org.javamoney.moneta.Money;
 
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
-import com.gspann.itrack.domain.common.DateRange;
-import com.gspann.itrack.domain.common.type.Buildable;
+import com.gspann.itrack.domain.model.common.DateRange;
+import com.gspann.itrack.domain.model.common.type.Buildable;
 import com.gspann.itrack.domain.model.staff.Resource;
 
 import lombok.AllArgsConstructor;

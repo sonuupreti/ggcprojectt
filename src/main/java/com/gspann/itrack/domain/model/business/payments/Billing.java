@@ -2,7 +2,7 @@ package com.gspann.itrack.domain.model.business.payments;
 
 import org.javamoney.moneta.Money;
 
-import com.gspann.itrack.domain.common.DateRange;
+import com.gspann.itrack.domain.model.common.DateRange;
 
 public interface Billing {
 

@@ -2,8 +2,8 @@ package com.example.itracktest;
 
 import java.util.regex.Pattern;
 
-import com.gspann.itrack.domain.common.location.Location;
-import com.gspann.itrack.domain.common.location.LocationFormat;
+import com.gspann.itrack.domain.model.location.Location;
+import com.gspann.itrack.domain.model.location.LocationFormat;
 
 public class Test {
 	

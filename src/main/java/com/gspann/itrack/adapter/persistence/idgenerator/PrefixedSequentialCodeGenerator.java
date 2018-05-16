@@ -11,8 +11,8 @@ import org.hibernate.engine.spi.SharedSessionContractImplementor;
 import org.hibernate.id.IdentifierGenerator;
 
 import com.gspann.itrack.adapter.persistence.exception.IdGenerationException;
-import com.gspann.itrack.domain.common.type.AbstractAssignable;
 import com.gspann.itrack.domain.model.business.Account;
+import com.gspann.itrack.domain.model.common.type.AbstractAssignable;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 

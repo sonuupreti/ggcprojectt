@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common.dto;
+package com.gspann.itrack.domain.model.common.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

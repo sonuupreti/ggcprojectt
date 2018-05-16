@@ -14,8 +14,8 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CountryCode;
-import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.model.business.Account;
+import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.staff.Resource;
 
 @RunWith(SpringRunner.class)

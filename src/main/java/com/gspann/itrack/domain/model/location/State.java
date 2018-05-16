@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common.location;
+package com.gspann.itrack.domain.model.location;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
@@ -19,7 +19,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Immutable;
 
-import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -43,12 +43,19 @@ public class State extends AbstractIdentifiable<Integer> {
 	private String name;
 
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.common.location.Country.class, fetch = FetchType.EAGER)
+	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.location.Country.class, fetch = FetchType.EAGER)
 	@JoinColumn(name = "COUNTRY_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_STATES_COUNTRY_CODE))
 	private Country country;
 
 	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "state", fetch = FetchType.LAZY)
 	private Set<City> cities = new HashSet<City>();
+	
+	public static State of(final String name, final Country country) {
+		State state = new State();
+		state.name = name;
+		state.country = country;
+		return state;
+	}
 
 	@Override
 	public String toString() {

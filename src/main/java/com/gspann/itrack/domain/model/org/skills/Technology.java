@@ -6,7 +6,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

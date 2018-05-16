@@ -2,8 +2,8 @@ package com.gspann.itrack.domain.model.business.payments;
 
 import org.javamoney.moneta.Money;
 
-import com.gspann.itrack.domain.common.DateRange;
-import com.gspann.itrack.domain.common.type.Identifiable;
+import com.gspann.itrack.domain.model.common.DateRange;
+import com.gspann.itrack.domain.model.common.type.Identifiable;
 
 public interface Costing extends Identifiable<Long> {
 

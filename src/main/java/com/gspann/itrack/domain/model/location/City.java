@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common.location;
+package com.gspann.itrack.domain.model.location;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 import javax.persistence.Column;
@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.Immutable;
 
-import com.gspann.itrack.domain.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -36,7 +36,7 @@ public class City extends AbstractIdentifiable<Integer> {
 	private String name;
 
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.common.location.State.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.location.State.class, fetch = FetchType.LAZY)
 	@JoinColumn(name = "STATE_ID", nullable = false, foreignKey = @ForeignKey(name = FK_CITIES_STATE_ID))
 	private State state;
 

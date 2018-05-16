@@ -19,8 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
-import com.gspann.itrack.domain.common.location.City;
 import com.gspann.itrack.domain.model.business.payments.BillabilityStatus;
+import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.org.holidays.Occasion;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;

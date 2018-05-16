@@ -21,11 +21,11 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.validator.constraints.Range;
 import org.javamoney.moneta.Money;
 
-import com.gspann.itrack.domain.common.DateRange;
-import com.gspann.itrack.domain.common.Toggle;
-import com.gspann.itrack.domain.common.type.BaseIdentifiableVersionableEntity;
 import com.gspann.itrack.domain.model.business.payments.Bill;
 import com.gspann.itrack.domain.model.business.payments.Billing;
+import com.gspann.itrack.domain.model.common.DateRange;
+import com.gspann.itrack.domain.model.common.Toggle;
+import com.gspann.itrack.domain.model.common.type.BaseIdentifiableVersionableEntity;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 

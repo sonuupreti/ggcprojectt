@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common;
+package com.gspann.itrack.domain.model.common;
 
 import java.time.LocalDate;
 

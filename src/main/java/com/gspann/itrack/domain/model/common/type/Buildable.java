@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.common.type;
+package com.gspann.itrack.domain.model.common.type;
 
 public interface Buildable<T> {
 

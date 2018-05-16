@@ -18,9 +18,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
-import com.gspann.itrack.domain.common.location.City;
-import com.gspann.itrack.domain.common.location.Country;
-import com.gspann.itrack.domain.common.location.State;
+import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.location.Country;
+import com.gspann.itrack.domain.model.location.State;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)

@@ -22,9 +22,9 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.location.City;
-import com.gspann.itrack.domain.common.type.BaseAutoAssignableVersionableEntity;
-import com.gspann.itrack.domain.common.type.Buildable;
+import com.gspann.itrack.domain.model.common.type.BaseAutoAssignableVersionableEntity;
+import com.gspann.itrack.domain.model.common.type.Buildable;
+import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 

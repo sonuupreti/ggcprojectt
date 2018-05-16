@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
-import com.gspann.itrack.domain.common.type.BaseIdentifiableVersionableEntity;
+import com.gspann.itrack.domain.model.common.type.BaseIdentifiableVersionableEntity;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
