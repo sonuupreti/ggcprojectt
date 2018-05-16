@@ -142,7 +142,15 @@ public class LocationRepositoryImpl implements LocationRepository {
 
 	@Override
 	public Optional<Location> findLocationByCityId(int cityId) {
-		// TODO Auto-generated method stub
-		return null;
+		Location location = null;
+		try {
+			location = entityManager.createQuery("select new com.gspann.itrack.domain.model.location.Location(c.name, c.state.name, c.state.country.name) "
+					+ "from City c where id =:cityId", Location.class)
+					.setParameter("cityId", cityId).getSingleResult();
+			location.cityId(cityId);
+		} catch (NoResultException e) {
+			// No state with such name exists, so return null
+		}
+		return Optional.ofNullable(location);
 	}
 }

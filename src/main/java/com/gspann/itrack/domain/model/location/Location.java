@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Getter
@@ -13,7 +14,10 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor()
 @AllArgsConstructor(staticName = "of")
+@ToString()
 public class Location {
+
+	private int cityId;
 	
 	public static final LocationFormat DEFAULT_LOCATION_FORMAT = LocationFormat.CITY_STATE_COUNTRY_NAMES_HYPHEN_SEPERATED;
 
@@ -22,8 +26,6 @@ public class Location {
 	private String stateName;
 	
 	private String cityName;
-	
-	private int cityId;
 	
 	public Location(final String countryName, final String stateName, String cityName) {
 		this.countryName = countryName;
