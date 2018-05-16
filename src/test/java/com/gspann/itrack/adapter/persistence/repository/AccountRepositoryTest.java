@@ -18,6 +18,7 @@ import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CountryCode;
 import com.gspann.itrack.domain.model.business.Account;
+import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.staff.Resource;
@@ -55,14 +56,19 @@ public class AccountRepositoryTest {
 	@Test
 	public void test01FindLocation() {
 		// Resource admin = resourceRepository.findById("20000").get();
-		 Optional<Location> location = locationRepository.findLocationByCityId(8);
-		 System.out.println(location);
+//		 Optional<Location> location = locationRepository.findLocationByCityId(8);
+//		 System.out.println(location);
 //		 System.out.println("Start ------->");
 //		 List<Location> locations = locationRepository.findAllLocationsByStateId(4);
 //		 System.out.println(locations);
 //		 System.out.println("End ------->");
 //		 List<Location> locations = locationRepository.findAllLocationsByCountryCode("IN");
 //		 System.out.println(locations);
+		
+//		Pair<String, String> codeAndName = resourceRepository.findCodeAndName("20002");
+//		System.out.println(codeAndName);
+		
+		System.out.println(resourceRepository.findAllCodeAndName());
 	}
 
 	// @Test

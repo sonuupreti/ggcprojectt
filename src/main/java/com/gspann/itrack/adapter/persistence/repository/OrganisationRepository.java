@@ -8,11 +8,9 @@ import com.gspann.itrack.domain.model.org.holidays.Occasion;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
+import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.Practice;
-import com.gspann.itrack.domain.model.projects.ProjectStatus;
-import com.gspann.itrack.domain.model.projects.ProjectType;
-import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 
 public interface OrganisationRepository {
 
