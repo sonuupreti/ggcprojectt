@@ -14,6 +14,9 @@ public interface ResourceManagementService {
 
 	public void onBoardToProject(final String resourceCode, final String projectCode, final Money hourlyRate,
 			final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem);
+	
+	public void onBoardToProjectPartially(final String resourceCode, final String projectCode, final short percentage, final Money hourlyRate,
+			final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem);
 
 	public void allocate(final String resourceCode, final String projectCode, final Money hourlyRate,
 			final LocalDate fromDate, final LocalDate tillDate, final Toggle onboardedToClientTimeTrackingsystem);

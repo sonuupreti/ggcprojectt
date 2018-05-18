@@ -39,7 +39,8 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		Resource resource = resourceRepository.findById(resourceCode).get();
 		resource.allocate().in(benches.get(0)).fully().onboardedToClientTimeTrackingSystem(Toggle.NO)
 				.startingIndefinatelyFrom(joiningDate).asNonBillable();
-		resource.onBoarded(joiningDate, EmploymentStatus.active());
+		
+		resource.onBoarded(joiningDate, EmploymentStatus.onBench());
 
 		allocateResourceToLeaveProjectsImplicitly(resourceCode, joiningDate);
 	}
@@ -52,6 +53,22 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		resource.allocate().in(projectRepository.getOne(projectCode)).fully()
 				.onboardedToClientTimeTrackingSystem(onboardedToClientTimeTrackingsystem)
 				.startingIndefinatelyFrom(joiningDate).asNonBillable();
+		
+		resource.onBoarded(joiningDate, EmploymentStatus.active());
+
+		allocateResourceToLeaveProjectsImplicitly(resourceCode, joiningDate);
+	}
+
+	@Override
+	public void onBoardToProjectPartially(final String resourceCode, final String projectCode, final short percentage, final Money hourlyRate,
+			final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem) {
+
+		Resource resource = resourceRepository.findById(resourceCode).get();
+		
+		resource.allocate().in(projectRepository.getOne(projectCode)).partially(percentage)
+				.onboardedToClientTimeTrackingSystem(onboardedToClientTimeTrackingsystem)
+				.startingIndefinatelyFrom(joiningDate).asNonBillable();
+		
 		resource.onBoarded(joiningDate, EmploymentStatus.active());
 
 		allocateResourceToLeaveProjectsImplicitly(resourceCode, joiningDate);
@@ -62,11 +79,12 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 			final LocalDate fromDate, final LocalDate tillDate, final Toggle onboardedToClientTimeTrackingsystem) {
 
 		Resource resource = resourceRepository.findById(resourceCode).get();
+		
 		resource.allocate().in(projectRepository.getOne(projectCode)).fully()
 				.onboardedToClientTimeTrackingSystem(onboardedToClientTimeTrackingsystem)
 				.startingFrom(fromDate).till(tillDate).atHourlyRateOf(hourlyRate);
 		
-		resource.markActive();
+//		resource.markActive();
 	}
 	
 	@Override
@@ -78,7 +96,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 				.onboardedToClientTimeTrackingSystem(onboardedToClientTimeTrackingsystem)
 				.startingFrom(fromDate).till(tillDate).atHourlyRateOf(hourlyRate);
 		
-		resource.markActive();
+//		resource.markActive();
 
 	}
 	
@@ -86,6 +104,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		List<Project> leaveProjects = projectRepository.findAllLeaveProjects();
 
 		Resource resource = resourceRepository.findById(resourceCode).get();
+		
 		for (var leave : leaveProjects) {
 			resource.allocate().in(leave).fully().onboardedToClientTimeTrackingSystem(Toggle.NO)
 					.startingIndefinatelyFrom(joiningDate).asNonBillable();

@@ -17,7 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.common.ApplicationConstant;
+import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Country;
 import com.gspann.itrack.domain.model.location.State;

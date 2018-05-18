@@ -24,7 +24,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.common.ApplicationConstant;
+import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.domain.PersistentAuditEvent;
 import com.gspann.itrack.infra.audit.AuditEventConverter;
 import com.gspann.itrack.infra.config.Constants;

@@ -15,7 +15,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
-import com.gspann.itrack.common.ApplicationConstant;
+import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
 import com.gspann.itrack.domain.model.common.Toggle;
 
@@ -50,14 +50,28 @@ public class ResourceManagementServiceTest {
 		String iTrackPrjCode = "INV0000004";
 		String finalSelectPrjCode = "INV0000005";
 
-		systemUnderTest.allocate(rajveerResCode, iTrackPrjCode, Money.of(10, CurrencyCode.USD.name()), LocalDate.now(),
-				null, Toggle.YES);
-		systemUnderTest.allocate(ankitResCode, iTrackPrjCode, Money.of(10, CurrencyCode.USD.name()), LocalDate.now(),
-				null, Toggle.NO);
+		// systemUnderTest.allocate(rajveerResCode, iTrackPrjCode, Money.of(10,
+		// CurrencyCode.USD.name()), LocalDate.now(),
+		// null, Toggle.YES);
+		// systemUnderTest.allocate(ankitResCode, iTrackPrjCode, Money.of(10,
+		// CurrencyCode.USD.name()), LocalDate.now(),
+		// null, Toggle.NO);
+		//
+		// systemUnderTest.allocatePartially(manojResCode, iTrackPrjCode, (short) 50,
+		// Money.of(20, CurrencyCode.USD.name()), LocalDate.now(), null, Toggle.NO);
+		// systemUnderTest.allocatePartially(manojResCode, finalSelectPrjCode, (short)
+		// 50,
+		// Money.of(20, CurrencyCode.USD.name()), LocalDate.now(), null, Toggle.YES);
 
-		systemUnderTest.allocatePartially(manojResCode, iTrackPrjCode, (short) 50,
-				Money.of(20, CurrencyCode.USD.name()), LocalDate.now(), null, Toggle.NO);
+		systemUnderTest.onBoardToProject(rajveerResCode, iTrackPrjCode, Money.of(10, CurrencyCode.USD.name()),
+				LocalDate.now(), Toggle.YES);
+		
+		systemUnderTest.onBoardToProject(ankitResCode, iTrackPrjCode, Money.of(10, CurrencyCode.USD.name()),
+				LocalDate.now(), Toggle.NO);
+		
+		systemUnderTest.onBoardToProjectPartially(manojResCode, iTrackPrjCode, (short) 50,
+				Money.of(20, CurrencyCode.USD.name()), LocalDate.now(), Toggle.NO);
 		systemUnderTest.allocatePartially(manojResCode, finalSelectPrjCode, (short) 50,
-				Money.of(20, CurrencyCode.USD.name()), LocalDate.now(), null, Toggle.YES);
+				Money.of(10, CurrencyCode.USD.name()), LocalDate.now(), null, Toggle.YES);
 	}
 }
