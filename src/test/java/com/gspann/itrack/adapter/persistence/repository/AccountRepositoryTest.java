@@ -1,5 +1,8 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
+import java.util.Collection;
+import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +25,8 @@ import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.staff.Resource;
+
+import lombok.experimental.var;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
@@ -71,7 +76,17 @@ public class AccountRepositoryTest {
 //		Pair<String, String> codeAndName = resourceRepository.findCodeAndName("20002");
 //		System.out.println(codeAndName);
 		
-		System.out.println(projectRepository.findAllProjectTypeCodeAndDescription());
+//		System.out.println(projectRepository.findAllProjectTypeCodeAndDescription());
+		
+		List<Location> locations = locationRepository.findAllLocations();
+		Collections.sort(locations);
+//		System.out.println(locations);
+		List<Pair<Integer, String>> locationPairs = new LinkedList<>();
+		for(var location: locations) {
+			Pair<Integer, String> loc = new Pair<Integer, String>(location.cityId(), location.format());
+			System.out.println(loc);
+			locationPairs.add(loc);
+		}
 	}
 
 	// @Test

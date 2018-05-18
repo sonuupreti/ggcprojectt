@@ -129,7 +129,12 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 		public AccountManagerBuilder customerTimeTrackingAvailable();
 
 		public AccountManagerBuilder customerTimeTrackingNotAvailable();
+		public AccountManagerBuilder isCustomerTimeTrackingAvailable(final boolean trueOrFalse);
 	}
+	
+	/*public interface CustomerTimeTrackingBuilder {
+		public AccountManagerBuilder isCustomerTimeTrackingAvailable(final boolean trueOrFalse);
+	}*/
 
 	public interface AccountManagerBuilder {
 		public AccountLocationBuilder managedBy(final Resource accountManager);
@@ -186,6 +191,12 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 			this.account.customerTimeTracking = false;
 			return this;
 		}
+		
+		@Override
+		public AccountManagerBuilder isCustomerTimeTrackingAvailable(final boolean trueOrFalse) {
+			this.account.customerTimeTracking = trueOrFalse;
+			return this;
+		}
 
 		@Override
 		public AccountLocationBuilder managedBy(Resource accountManager) {
@@ -215,5 +226,33 @@ public class Account extends BaseAutoAssignableVersionableEntity<String, Long> {
 		public Account build() {
 			return this.account;
 		}
+		
+		
+	}
+	
+	public void updateCustomerName(String customerName) {
+		this.customerName=customerName;
+	}
+	
+	public void updateCustomerEntity(String customerEntity) {
+		this.customerEntity=customerEntity;
+	}
+	
+	public void updatecustomerReportingManager(String customerReportingManager) {
+		this.customerReportingManager=customerReportingManager;
+	}
+	
+	public void updatecustomerTimeTracking(boolean customerTimeTracking) {
+		this.customerTimeTracking=customerTimeTracking;
+	}
+	
+	public void assignAccountManager(Resource accountManager) {
+		
+		this.accountManager=accountManager;
+	}
+	
+	public void updateLocation(City location) {
+		
+		this.location=location;
 	}
 }

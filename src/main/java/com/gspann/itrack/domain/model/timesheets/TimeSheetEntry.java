@@ -80,6 +80,14 @@ public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long
 		return entry;
 	}
 
+	public static TimeSheetEntryProjectBuilder forWorkingHoliday() {
+		return new TimeSheetEntryBuilder();
+	}
+
+	public static TimeSheetEntryProjectBuilder forWorkingWeekend() {
+		return new TimeSheetEntryBuilder();
+	}
+
 	public static TimeSheetEntryProjectBuilder forWorkingDay() {
 		return new TimeSheetEntryBuilder();
 	}

@@ -6,7 +6,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 @Getter
 @Setter
@@ -15,7 +14,7 @@ import lombok.experimental.Accessors;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "project")
-public class ProjectAllocationSummary {
+public class ProjectSummary {
 	
 	private Pair<String, String> project;
 	
@@ -23,8 +22,8 @@ public class ProjectAllocationSummary {
 
 	private short proportion;
 	
-	public static ProjectAllocationSummary of(final String projectCode, final String projectName, final String projectTypeCode, final String projectTypeName, final short proportion) {
-		ProjectAllocationSummary summary = new ProjectAllocationSummary();
+	public static ProjectSummary of(final String projectCode, final String projectName, final String projectTypeCode, final String projectTypeName, final short proportion) {
+		ProjectSummary summary = new ProjectSummary();
 		summary.project = new Pair<String, String>(projectCode, projectName);
 		summary.projectType = new Pair<String, String>(projectTypeCode, projectTypeName);
 		summary.proportion = proportion;

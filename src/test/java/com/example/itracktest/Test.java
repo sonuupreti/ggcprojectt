@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.gspann.itrack.common.constants.ApplicationConstant;
-import com.gspann.itrack.domain.model.common.dto.DayDTO;
+import com.gspann.itrack.domain.model.common.dto.DayVM;
 import com.gspann.itrack.domain.model.common.dto.Triple;
-import com.gspann.itrack.domain.model.common.dto.WeekDTO;
+import com.gspann.itrack.domain.model.common.dto.WeekVM;
 
 public class Test {
 	
@@ -23,7 +23,7 @@ public class Test {
 //		System.out.println(Pattern.matches(pattern, "rajveer.singh"));
 		
 
-		WeekDTO weekDTO = WeekDTO.current(ApplicationConstant.WEEKLY_STANDARD_HOURS, ApplicationConstant.DAILY_STANDARD_HOURS);
+		WeekVM weekDTO = WeekVM.current(ApplicationConstant.WEEKLY_STANDARD_HOURS, ApplicationConstant.DAILY_STANDARD_HOURS);
 		
 		LocalDate now = LocalDate.now();
 	    LocalDate startDate = now.with(TemporalAdjusters.previousOrSame(ApplicationConstant.WEEK_START_DAY));
@@ -34,12 +34,12 @@ public class Test {
 		
 		while(!startDate.isEqual(endDate)) {
 			if(holidays.contains(startDate)) {
-				weekDTO.addDailyDTO(DayDTO.ofHoliday(startDate, "Diwali"));
+				weekDTO.addDayVM(DayVM.ofHoliday(startDate, "Diwali"));
 			} else if(startDate.getDayOfWeek() == ApplicationConstant.WEEK_END_FIRST
 					|| startDate.getDayOfWeek() == ApplicationConstant.WEEK_END_SECOND) {
-				weekDTO.addDailyDTO(DayDTO.ofWeekend(startDate));
+				weekDTO.addDayVM(DayVM.ofWeekend(startDate));
 			} else {
-				weekDTO.addDailyDTO(DayDTO.ofWorkingDay(startDate));
+				weekDTO.addDayVM(DayVM.ofWorkingDay(startDate));
 			}
 			startDate = startDate.plusDays(1);
 		}

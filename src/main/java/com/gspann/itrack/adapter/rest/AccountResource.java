@@ -1,8 +1,11 @@
 package com.gspann.itrack.adapter.rest;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.security.Principal;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,12 +14,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
+import com.gspann.itrack.adapter.rest.error.BadRequestAlertException;
 import com.gspann.itrack.adapter.rest.error.InternalServerErrorException;
+import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.application.service.UserService;
+import com.gspann.itrack.domain.model.common.dto.AccountDTO;
+import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
 import com.gspann.itrack.domain.model.common.dto.TimeSheetSubmissionPageVM;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
 import com.gspann.itrack.service.dto.UserDTO;
@@ -51,20 +60,7 @@ public class AccountResource {
         log.debug("REST request to check if the current user is authenticated");
         return request.getRemoteUser();
     }
-    
-    @GetMapping("/getTimeSheetSubmissionPageVM")
-    @Timed
-    public TimeSheetSubmissionPageVM getTimeSheetSubmissionPageVM(HttpServletRequest request) {
-        log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
-		String manojResCode = "20001";
-        return timesheetManagementService.getTimeSheetSubmissionPageVM(manojResCode);
-    }
-    /*public ResponseEntity<TimeSheetSubmissionPageVM> getTimeSheetSubmissionPageVM(HttpServletRequest request) {
-        log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
-		String manojResCode = "20001";
-        return new ResponseEntity<TimeSheetSubmissionPageVM>(timesheetManagementService.getTimeSheetSubmissionPageVM(manojResCode), HttpStatus.OK);
-    }*/
-
+ 
     /**
      * GET  /account : get the current user.
      *

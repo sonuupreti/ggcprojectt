@@ -3,19 +3,19 @@ package com.gspann.itrack.domain.model.location;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Getter
-//@Setter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor()
 @AllArgsConstructor
 @ToString()
-public class Location {
+@EqualsAndHashCode(of = "cityId")
+public class Location implements Comparable<Location> {
 
 	private int cityId;
 	
@@ -47,5 +47,20 @@ public class Location {
 	
 	public Pair<Integer, String> listItem(final LocationFormat locationFormat) {
 		return new Pair<Integer, String>(this.cityId, format(locationFormat));
+	}
+
+	@Override
+	public int compareTo(Location other) {
+	    if(this.cityId == other.cityId) return 0;
+	    
+	    if(this.countryName.compareTo(other.countryName) == 0) {
+	    	if(this.stateName.compareTo(other.stateName) == 0) {
+	    		return this.cityName.compareTo(other.cityName);
+	    	} else {
+	    		return this.stateName.compareTo(other.stateName);
+	    	}
+	    } else {
+	    	return this.countryName.compareTo(other.countryName);
+	    }
 	}
 }

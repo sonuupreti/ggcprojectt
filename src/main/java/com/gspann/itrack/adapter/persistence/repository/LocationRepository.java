@@ -32,6 +32,8 @@ public interface LocationRepository {
 
 	Optional<City> findCityById(Integer cityId);
 
+	City loadCity(final int cityId);
+
 	Optional<City> findCityByName(String cityName);
 
 	List<City> findAllCities();
@@ -47,4 +49,6 @@ public interface LocationRepository {
 	List<Location> findAllLocationsByStateId(final int stateId);
 	
 	List<Location> findAllLocationsByCountryCode(final String countryCode);
+	
+	List<Location> findAllLocations();
 }

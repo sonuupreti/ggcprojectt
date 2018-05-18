@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import lombok.experimental.Accessors;
 
 @Getter
 @Setter
@@ -22,7 +21,7 @@ public class ResourceAllocationSummary {
 
 	private Pair<String, String> resource;
 
-	private Set<ProjectAllocationSummary> projects = new LinkedHashSet<>(5);
+	private Set<ProjectSummary> projects = new LinkedHashSet<>(5);
 	
 	public static ResourceAllocationSummary of(final String resourceCode, final String resourceName) {
 		ResourceAllocationSummary summary = new ResourceAllocationSummary();
@@ -30,8 +29,8 @@ public class ResourceAllocationSummary {
 		return summary;
 	}
 	
-	public ResourceAllocationSummary addProjectAllocation(final ProjectAllocationSummary projectAllocationSummary) {
-		this.projects.add(projectAllocationSummary);
+	public ResourceAllocationSummary addProjectAllocation(final ProjectSummary projectSummary) {
+		this.projects.add(projectSummary);
 		return this;
 	}
 }

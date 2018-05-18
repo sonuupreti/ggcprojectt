@@ -205,6 +205,9 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 		@Override
 		public ScreenShotBuilder withDailyTimeSheets(Set<DailyTimeSheet> dailyTimeSheets) {
 			this.weeklyTimeSheet.dailyTimeSheets = dailyTimeSheets;
+			for(var dailyTimesheet: dailyTimeSheets) {
+				dailyTimesheet.setWeeklyTimeSheet(this.weeklyTimeSheet);
+			}
 			return this;
 		}
 

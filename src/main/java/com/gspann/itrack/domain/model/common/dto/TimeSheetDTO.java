@@ -1,7 +1,6 @@
 package com.gspann.itrack.domain.model.common.dto;
 
 import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,12 +11,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-@EqualsAndHashCode
-public class Triple<T, S, U> {
+public class TimeSheetDTO {
 
-	private T valueOne;
+	private String resourceCode;
 	
-	private S valueTwo;
+	private String action;
 	
-	private U valueThree;
+	private WeekDTO week;
 }

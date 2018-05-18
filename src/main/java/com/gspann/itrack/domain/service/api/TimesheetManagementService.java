@@ -1,7 +1,12 @@
 package com.gspann.itrack.domain.service.api;
 
+import java.time.LocalDate;
+import java.util.Optional;
+
+import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
 import com.gspann.itrack.domain.model.common.dto.TimeSheetSubmissionPageVM;
-import com.gspann.itrack.domain.model.timesheets.Week;
+import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
+import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 
 public interface TimesheetManagementService {
 
@@ -17,4 +22,12 @@ public interface TimesheetManagementService {
 //	public void getTimeSheetsWithPendingActions(final String approverCode, final Week week);
 	
 	public TimeSheetSubmissionPageVM getTimeSheetSubmissionPageVM(final String resourceCode);
+	
+	public Optional<WeeklyTimeSheet> createTimeSheet(final TimeSheetDTO timesheet);
+
+	public Optional<WeeklyTimeSheet> findTimeSheetById(final long id);
+	
+	public Optional<WeeklyTimeSheet> findTimeSheetByResourceCodeAndDate(final String resourceCode, final LocalDate date);
+
+	public Optional<WeeklyTimeSheet> findTimeSheetByResourceCodeAndStatus(final String resourceCode, final TimesheetStatus status);
 }

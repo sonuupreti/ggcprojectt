@@ -116,6 +116,11 @@ public class LocationRepositoryImpl implements LocationRepository {
 	}
 
 	@Override
+	public City loadCity(int cityId) {
+		return entityManager.getReference(City.class, cityId);
+	}
+	
+	@Override
 	public Optional<City> findCityByName(String cityName) {
 		City city = null;
 		try {
@@ -192,6 +197,19 @@ public class LocationRepositoryImpl implements LocationRepository {
 				country.get(Country_.name.getName()), state.get(State_.name.getName()),
 				city.get(City_.name.getName())));
 		query.where(criteriaBuilder.equal(country.get(Country_.code.getName()), countryCode));
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	@Override
+	public List<Location> findAllLocations() {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Location> query = criteriaBuilder.createQuery(Location.class);
+		Root<City> city = query.from(City.class);
+		Join<City, State> state = city.join(City_.state);
+		Join<State, Country> country = state.join(State_.country);
+		query.select(criteriaBuilder.construct(Location.class, city.get(City_.id.getName()),
+				country.get(Country_.name.getName()), state.get(State_.name.getName()),
+				city.get(City_.name.getName())));
 		return entityManager.createQuery(query).getResultList();
 	}
 }
