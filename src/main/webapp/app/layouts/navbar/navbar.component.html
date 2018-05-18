@@ -4,8 +4,8 @@
             <i class="fa fa-bars"></i>
         </a>
         <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
-            <span class="logo-img"></span>
-            <span class="navbar-title">Itrack2</span> <span class="navbar-version">{{version}}</span>
+            <!-- <span class="logo-img"></span> -->
+            <span class="navbar-title">iTrack</span> <span class="navbar-version"></span>
         </a>
     </div>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
@@ -18,6 +18,27 @@
                     </span>
                 </a>
             </li>
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link" routerLink="/listaccounts" (click)="collapseNavbar()">
+                        <span>
+                            <span>Accounts</span>
+                        </span>
+                    </a>
+                </li>
+                 <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link" routerLink="/timesheet-view" (click)="collapseNavbar()">
+                        <span>
+                            <span>Time Sheet</span>
+                        </span>
+                    </a>
+                </li>
+                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link" routerLink="/projects/list-projects" (click)="collapseNavbar()">
+                        <span>
+                            <span>Projects</span>
+                        </span>
+                    </a>
+                </li>
             <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
             <li *ngSwitchCase="true" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">

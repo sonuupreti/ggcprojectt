@@ -1,0 +1,63 @@
+#button-container{
+	text-align:right;
+}
+i{
+	font-size: 16px;
+}
+#main-container{
+	margin:20px auto;
+	width:95%;
+}
+.project-row td.first-child{
+	width:18%;
+}
+.project-row td{
+	color: #666;
+    text-align: center;
+    width: 9%;
+}
+.project-row td:nth-child(7), .project-row td:nth-child(8){
+    background: #F8FBF2;
+}
+#save-button{
+	background-color: #0EB3F7;
+    color: white;
+    margin-right:20px;
+    margin-top: 20px;
+}
+#status{
+	float:right;
+}
+
+#submit-button{
+	background-color: #62B948;
+    color: white;
+    margin-top: 20px;
+}
+table{
+    border-collapse: collapse;
+ }
+ td{
+    border: 1px solid lightgray;
+    color: #666;
+    text-align: center;
+    width: 9%;
+ }
+td input{
+    background-color: inherit;
+    height: 30px;
+    width: 95%;
+    border: white;
+    text-align:center;
+  }
+.total-row,.weekdays {
+	background-color: #F4F6F9;
+}
+.weekdays td{
+	padding:5px;
+	border:none;
+}	
+.weekdays td:nth-child(7), .weekdays td:nth-child(8){
+    background: #EBF3DB ;
+}
+	

@@ -1,0 +1,53 @@
+<div class="list-account">
+  <div class="container"
+  fxLayout
+  fxLayout.xs="column"
+  fxLayoutAlign="center"
+  fxLayoutGap="10px"
+  fxLayoutGap.xs="0">
+<div fxFlex="50%">
+      <h2>Projects</h2>
+      <mat-form-field style="width:65%;">
+        <input matInput placeholder="Search project (type project name, project id, account name)">
+      </mat-form-field>
+</div>
+<div fxFlex="50%" style="padding-top: 15px;">
+  
+  <a mat-raised-button routerLink="/projects/add-project" color="primary"><mat-icon>add</mat-icon>Add Project</a>
+</div>
+</div>
+<mat-table  [dataSource]="dataSource" class="mat-elevation-z8">
+  <ng-container matColumnDef="accountCode">
+    <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Account Code</mat-header-cell>
+    <mat-cell *matCellDef="let element"><a routerLink="/view-account/{{element.accountCode}}"> {{element.accountCode}} </a></mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="customerName">
+    <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Customer Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.customerName}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="location">
+    <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header> Location </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.location}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="customerReportingManager">
+    <mat-header-cell mat-header-cell *matHeaderCellDef> Customer Reporting Manager </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.customerReportingManager}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="accountManagerName">
+    <mat-header-cell mat-header-cell *matHeaderCellDef> Account Manager Name </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.accountManagerName}} </mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="customerTimeTracking">
+    <mat-header-cell mat-header-cell *matHeaderCellDef> Customer Time Tracking </mat-header-cell>
+    <mat-cell *matCellDef="let element"> {{element.customerTimeTracking === false ? 'No' : 'Yes'}} </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+</mat-table>
+

@@ -1,0 +1,23 @@
+.view-account .mat-form-field{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.view-account .time-tracking-label{
+    display: block;
+    margin-bottom: 10px;
+}
+.view-account mat-radio-button:not(:first-child){
+    margin-left: 20px;
+}
+.container{
+    width: 100%;
+    margin: 0;
+}
+.view-account .quick-actions button{
+    width: 140px;
+}
+
+.mat-select-disabled .mat-select-arrow-wrapper{
+    display: none;
+}

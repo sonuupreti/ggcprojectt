@@ -1,0 +1,12 @@
+.add-account .mat-form-field{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.add-account .time-tracking-label{
+    display: block;
+    margin-bottom: 10px;
+}
+.add-account mat-radio-button:not(:first-child){
+    margin-left: 20px;
+}

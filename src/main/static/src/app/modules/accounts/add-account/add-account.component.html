@@ -1,0 +1,74 @@
+
+
+<div class="add-account">
+  <h2>Add New Account</h2>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title><b>Please enter the details below</b></mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <div class="container"
+		     fxLayout
+		     fxLayout.xs="column"
+		     fxLayoutAlign="center"
+		     fxLayoutGap="10px"
+		     fxLayoutGap.xs="0">
+		  <div fxFlex="45%">
+          <p>
+          <mat-form-field>
+              <input matInput placeholder="Account Code">
+              <mat-hint>(This will be auto generated)</mat-hint>
+            </mat-form-field>
+            
+          </p>
+        <p>
+            <mat-form-field>
+                <input matInput placeholder="Customer Name">
+              </mat-form-field>
+</p>  
+<p>
+            <mat-form-field>
+                <input matInput placeholder="Customer Entity">
+              </mat-form-field>
+            </p>
+            
+            
+            <p>
+                <mat-form-field>
+                    <mat-select placeholder="Account Manager" [(ngModel)]="selectedLocation">
+                      <mat-option *ngFor="let location of locations" [value]="location.value">
+                        {{location.value}}
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+            </p>
+      </div>
+      <div fxFlex="10%">
+
+      </div>
+		  <div fxFlex="45%">
+        <p>
+		  	 <mat-form-field>
+                <mat-select placeholder="Location" [(ngModel)]="selectedLocation">
+                  <mat-option *ngFor="let location of locations" [value]="location.value">
+                    {{location.value}}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </p>
+            <p>
+                <label class="time-tracking-label">Time Tracking System Available</label>
+                <mat-radio-group>
+                    <mat-radio-button value="1">Yes</mat-radio-button>
+                    <mat-radio-button value="2">NO</mat-radio-button>
+                  </mat-radio-group>
+                </p>
+		  </div>
+		</div>
+    </mat-card-content>
+    <mat-card-actions>
+        <button mat-raised-button  color="primary">Create Account</button>
+        <button mat-raised-button color="primary">Reset All</button>
+    </mat-card-actions>
+  </mat-card>
+</div>

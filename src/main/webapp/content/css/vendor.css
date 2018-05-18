@@ -1,4 +1,33 @@
 /* after changing this file run 'yarn run webpack:build' */
 @import '~bootstrap/dist/css/bootstrap.min.css';
 @import '~font-awesome/css/font-awesome.css';
+@import '~@angular/material/prebuilt-themes/indigo-pink.css';
+
+body{
+    height: 100%;
+    background: #F4F6F9;
+    margin: 0;
+    padding: 0;
+    font-size: 14px;
+}
+
+.card{
+    background-color: inherit;
+    border: 0;
+}
+jhi-page-ribbon{
+    display: none;
+}
+.view-account .mat-select-disabled .mat-select-arrow-wrapper{
+    visibility: hidden;
+}
+
+.view-account .mat-form-field-disabled .mat-form-field-underline{
+    visibility: hidden;
+}
+
+.view-account .mat-form-field-disabled .mat-input-element, .view-account .mat-form-field-disabled .mat-select-value-text{
+    font-weight: bold;
+    color: #333;
+}
 
