@@ -3,9 +3,14 @@ package com.example.itracktest;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.temporal.TemporalAdjusters;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.regex.Pattern;
 
+import com.gspann.itrack.common.constants.ApplicationConstant;
+import com.gspann.itrack.domain.model.common.dto.DayDTO;
 import com.gspann.itrack.domain.model.common.dto.Triple;
+import com.gspann.itrack.domain.model.common.dto.WeekDTO;
 
 public class Test {
 	
@@ -17,16 +22,28 @@ public class Test {
 		
 //		System.out.println(Pattern.matches(pattern, "rajveer.singh"));
 		
-		LocalDate today = LocalDate.now();
 
-	    
-	    DayOfWeek weekStart = DayOfWeek.WEDNESDAY;
-	    
-	    LocalDate weekStartDate = today.with(TemporalAdjusters.previousOrSame(weekStart));
-	    LocalDate weekEndDate = today.with(TemporalAdjusters.nextOrSame(weekStart)).minusDays(1);
-	    
-	    System.out.println("Week Start >>> date ->>" + weekStartDate + ", day ->>" + weekStartDate.getDayOfWeek());
-	    System.out.println("Week Etart >>> date ->>" + weekEndDate + ", day ->>" + weekEndDate.getDayOfWeek());
+		WeekDTO weekDTO = WeekDTO.current(ApplicationConstant.WEEKLY_STANDARD_HOURS, ApplicationConstant.DAILY_STANDARD_HOURS);
+		
+		LocalDate now = LocalDate.now();
+	    LocalDate startDate = now.with(TemporalAdjusters.previousOrSame(ApplicationConstant.WEEK_START_DAY));
+	    LocalDate endDate = now.with(TemporalAdjusters.nextOrSame(ApplicationConstant.WEEK_START_DAY));
+
+		Set<LocalDate> holidays = new HashSet<LocalDate>();
+		holidays.add(startDate.plusDays(3));
+		
+		while(!startDate.isEqual(endDate)) {
+			if(holidays.contains(startDate)) {
+				weekDTO.addDailyDTO(DayDTO.ofHoliday(startDate, "Diwali"));
+			} else if(startDate.getDayOfWeek() == ApplicationConstant.WEEK_END_FIRST
+					|| startDate.getDayOfWeek() == ApplicationConstant.WEEK_END_SECOND) {
+				weekDTO.addDailyDTO(DayDTO.ofWeekend(startDate));
+			} else {
+				weekDTO.addDailyDTO(DayDTO.ofWorkingDay(startDate));
+			}
+			startDate = startDate.plusDays(1);
+		}
+		System.out.println(weekDTO);
 	}
 
 }

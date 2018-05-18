@@ -5,7 +5,6 @@ import java.time.LocalDate;
 
 import com.gspann.itrack.domain.model.timesheets.DayType;
 
-import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,10 +14,10 @@ import lombok.experimental.Accessors;
 
 @Getter
 @Setter
-@Accessors(chain = true, fluent = true)
+//@Accessors(chain = true, fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor(staticName = "of")
 @ToString
+@EqualsAndHashCode(of = "date")
 public class DayDTO {
 
 	private LocalDate date;

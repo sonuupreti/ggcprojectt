@@ -2,9 +2,11 @@ package com.gspann.itrack.domain.model.timesheets;
 
 import org.hibernate.annotations.Immutable;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.gspann.itrack.common.enums.StringValuedEnum;
 
 @Immutable
+@JsonFormat(shape = JsonFormat.Shape.OBJECT)
 public enum DayType implements StringValuedEnum {
 	
 	// @formatter:off
@@ -22,8 +24,12 @@ public enum DayType implements StringValuedEnum {
 		this.value = value;
 	}
 	
-	public String code() {
+	public String getCode() {
 		return this.code;
+	}
+	
+	public String getValue() {
+		return this.value;
 	}
 	
 	@Override
@@ -41,7 +47,7 @@ public enum DayType implements StringValuedEnum {
 
 	public StringValuedEnum enumByCode(String code) {
 		for (DayType e : values())
-			if (e.code().equals(code))
+			if (e.getCode().equals(code))
 				return e;
 		throw new IllegalArgumentException();
 	}
