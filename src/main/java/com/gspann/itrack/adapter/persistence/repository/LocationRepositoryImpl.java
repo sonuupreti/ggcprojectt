@@ -116,6 +116,11 @@ public class LocationRepositoryImpl implements LocationRepository {
 	}
 
 	@Override
+	public City loadCity(int cityId) {
+		return entityManager.getReference(City.class, cityId);
+	}
+	
+	@Override
 	public Optional<City> findCityByName(String cityName) {
 		City city = null;
 		try {
