@@ -2,6 +2,9 @@ package com.gspann.itrack.domain.service.impl;
 
 
 
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Optional;
 
 import javax.validation.Valid;
@@ -19,7 +22,12 @@ import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
 import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
+import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
+import com.gspann.itrack.domain.model.common.dto.Pair;
+import com.gspann.itrack.domain.model.common.dto.TimeSheetSubmissionPageVM;
+import com.gspann.itrack.domain.model.common.dto.TimesheetActionType;
 import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.staff.Resource;
 import com.gspann.itrack.domain.service.api.AccountManagementService;
 
@@ -49,7 +57,7 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 	 * @param accountDTO
 	 *            the entity to save
 	 * @return the persisted entity
-	 */
+	 
 	@Override
 	public AccountDTO addAccount(final String customerName, final String customerEntity, final String customerReportingManager, String accountManagerCode, final int cityId, final boolean customerTimeTracking) {
 //		log.debug("Request to save Accounts : {}", accountDTO);
@@ -65,6 +73,21 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		 return BeanConverterUtil.accountEntitytoDto(account);
 		 
 		
+	}*/
+	
+	public AccountDTO addAccount(AccountDTO accountDTO) {
+//		log.debug("Request to save Accounts : {}", accountDTO);
+		
+		Resource accountManager = resourceRepository.getOne(accountDTO.getAccountManagerCode());
+		
+		City location = locationRepository.loadCity(accountDTO.getCityId());
+		
+		Account account= accountRepository.save(Account.ofCustomer(accountDTO.getCustomerName()).reportingTo(accountDTO.getCustomerReportingManager()).
+											withEntity(accountDTO.getCustomerEntity()).isCustomerTimeTrackingAvailable(accountDTO.getCustomerTimeTracking()).
+											managedBy(accountManager).locatedAt(location).build());
+	
+		 return BeanConverterUtil.accountEntitytoDto(account);
+	
 	}
 	/**
 	 * Get all the accounts.
@@ -126,8 +149,19 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		return BeanConverterUtil.accountEntitytoDto(account1);
 		
 	}
+	@Override
+	public AddAccountPageVM getAddAccountPageVM() {
 	
+		List<Location> locations = locationRepository.findAllLocations();
+        Collections.sort(locations);
+        List<Pair<Integer, String>> locationPairs = new LinkedList<>();
+        for(Location location: locations) {
+               Pair<Integer, String> loc = new Pair<Integer, String>(location.cityId(), location.format());
+               locationPairs.add(loc);	
+	}
+        List<Pair<String, String>> resourceList = resourceRepository.findAllCodeAndName();
+        return AddAccountPageVM.of(resourceList, locationPairs);
 	
-	
+	}
 	
 }

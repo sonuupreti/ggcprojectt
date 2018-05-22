@@ -5,10 +5,9 @@ import javax.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import com.gspann.itrack.domain.model.business.Account;
+
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
-
-
+import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
 
 
 
@@ -20,8 +19,11 @@ public interface AccountManagementService {
      * @param accountDTO the entity to save
      * @return the persisted entity
      */
-	public AccountDTO addAccount(final String customerName, final String customerEntity, final String customerReportingManager, String accountManagerCode, final int cityId, final boolean customerTimeTracking);
+	//public AccountDTO addAccount(final String customerName, final String customerEntity, final String customerReportingManager, String accountManagerCode, final int cityId, final boolean customerTimeTracking);
 
+	public AccountDTO addAccount(AccountDTO accountDTO);
+
+	
     /**
      * Get all the accounts.
      *
@@ -46,6 +48,9 @@ public interface AccountManagementService {
     void delete(String id);
 
 	public AccountDTO updateAccount(@Valid AccountDTO accountDTO);
+
+
+	public AddAccountPageVM getAddAccountPageVM();
 	
 
 }

@@ -2,6 +2,7 @@ package com.gspann.itrack.adapter.rest;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,11 +26,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.gspann.itrack.adapter.rest.error.BadRequestAlertException;
-import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.adapter.rest.util.PaginationUtil;
-import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
+import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
+import com.gspann.itrack.domain.model.common.dto.TimeSheetSubmissionPageVM;
 import com.gspann.itrack.domain.service.api.AccountManagementService;
 
 
@@ -56,6 +57,20 @@ public class AccountsResource {
         this.accountsManagementService = accountsManagementService;
     }
 
+    
+    @GetMapping("/initAddAccount")
+    @Timed
+    public AddAccountPageVM initAddAccountPage(final Principal principal) {
+        log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
+		//String manojResCode = "20001";
+        return accountsManagementService.getAddAccountPageVM();
+        
+        
+        
+    }
+    
+    
+    
     /**
      * POST  /accounts : Create a new accounts.
      *
@@ -70,7 +85,7 @@ public class AccountsResource {
         if (accountDTO.getAccountCode() != null) {
             throw new BadRequestAlertException("A new accounts cannot already have an ID", ENTITY_NAME, "idexists");
         }
-        AccountDTO accountDTO1 = accountsManagementService.addAccount(accountDTO.getCustomerName(),accountDTO.getCustomerEntity(), accountDTO.getCustomerReportingManager(), accountDTO.getAccountManagerCode(), accountDTO.getCityId(),accountDTO.getCustomerTimeTracking());
+        AccountDTO accountDTO1 = accountsManagementService.addAccount(accountDTO);
        
         
         return ResponseEntity.created(new URI("/api/accounts/" + accountDTO1.getAccountCode()))

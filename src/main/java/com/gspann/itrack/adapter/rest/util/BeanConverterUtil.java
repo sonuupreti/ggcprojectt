@@ -26,6 +26,7 @@ public class BeanConverterUtil {
 		
 		accountDTO.setAccountCode(account.code());
 		accountDTO.setCustomerName(account.customerName());
+		accountDTO.setCustomerEntity(account.customerEntity());
 		accountDTO.setCustomerReportingManager(account.customerReportingManager());
 		accountDTO.setCustomerTimeTracking(account.customerTimeTracking());
 		accountDTO.setLocation(account.location().name());
