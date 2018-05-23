@@ -35,6 +35,8 @@ public class AccountDTO  {
 
     private String accountManagerCode;
     
+    private String accountManagerName;
+    
     private int cityId;
 
     private String location;

@@ -31,6 +31,7 @@ public class BeanConverterUtil {
 		accountDTO.setCustomerTimeTracking(account.customerTimeTracking());
 		accountDTO.setLocation(account.location().name());
 		accountDTO.setAccountManagerCode(account.accountManager().code());
+		accountDTO.setAccountManagerName(account.accountManager().name());
 		return accountDTO;
 	}
 
