@@ -32,6 +32,7 @@ public class BeanConverterUtil {
 		accountDTO.setLocation(account.location().name());
 		accountDTO.setAccountManagerCode(account.accountManager().code());
 		accountDTO.setAccountManagerName(account.accountManager().name());
+		accountDTO.setCityId(account.location().id());
 		return accountDTO;
 	}
 
