@@ -890,12 +890,6 @@
 			<column name="total_hours" type="varchar(5)">
 				<constraints nullable="false" />
 			</column>
-<!-- 			<column name="comments" type="varchar(255)"> -->
-<!-- 				<constraints nullable="true" /> -->
-<!-- 			</column> -->
-<!-- 			<column name="matching_customer_time_sheet" type="boolean" defaultValueBoolean="false"> -->
-<!-- 				<constraints nullable="true" /> -->
-<!-- 			</column> -->
 			<column name="client_timesheet_screen_shot_id" type="bigint">
 				<constraints foreignKeyName="fk_weekly_time_sheets_client_timesheet_screen_shot_id"
 					referencedColumnNames="id" referencedTableName="documents"
@@ -905,6 +899,9 @@
 				<constraints nullable="false" />
 			</column>
 			<column name="use_as_template" type="boolean" defaultValueBoolean="false">
+				<constraints nullable="true" />
+			</column>
+			<column name="APPROVER_COMMENTS" type="varchar(255)">
 				<constraints nullable="true" />
 			</column>
 		</createTable>
@@ -919,6 +916,9 @@
 					primaryKey="true" nullable="false" />
 			</column>
 			<column name="version" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="date" type="date">
 				<constraints nullable="false" />
 			</column>
 			<column name="day_of_week" type="tinyint">
@@ -942,6 +942,8 @@
 					nullable="false" />
 			</column>
 		</createTable>
+		<addUniqueConstraint constraintName="unq_daily_time_sheets_date_entry"
+			columnNames="date, weekly_time_sheet_id" tableName="daily_time_sheets" />
 
 		<createTable tableName="time_sheet_entries">
 			<column name="id" type="bigint">
@@ -971,6 +973,8 @@
 				<constraints nullable="true" />
 			</column>
 		</createTable>
+		<addUniqueConstraint constraintName="unq_time_sheet_entries_project_entry"
+			columnNames="project_code, daily_time_sheet_id" tableName="time_sheet_entries" />
 
 	</changeSet>
 

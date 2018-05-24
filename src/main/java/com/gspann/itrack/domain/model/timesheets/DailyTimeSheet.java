@@ -4,6 +4,7 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMet
 
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -40,6 +41,10 @@ import lombok.experimental.var;
 @Entity
 @Table(name = "DAILY_TIME_SHEETS")
 public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long> {
+	
+	@NotNull
+	@Column(name = "DATE", nullable = false)
+	private LocalDate date;
 
 	@NotNull
 	@Enumerated(EnumType.ORDINAL)
@@ -83,14 +88,18 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 		return null;
 	}
 
-	public static DailyTimeSheetDayBuilder withStandardHours(final Duration dailyStandardHours) {
+	public static DailyTimeSheetDateBuilder withStandardHours(final Duration dailyStandardHours) {
 		return new DailyTimeSheetBuilder(dailyStandardHours);
 	}
 
-	public static DailyTimeSheetDayTypeBuilder withDefaultStandardHours() {
+	public static DailyTimeSheetDateBuilder withDefaultStandardHours() {
 		return new DailyTimeSheetBuilder(Duration.ofHours(8));
 	}
 
+	public interface DailyTimeSheetDateBuilder {
+		public DailyTimeSheetDayTypeBuilder forDate(final LocalDate date);
+	}
+	
 	public interface DailyTimeSheetDayTypeBuilder {
 		public Buildable<DailyTimeSheet> forHoliday(final DayOfWeek dow, final Project... projects);
 
@@ -100,42 +109,21 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 
 		public Buildable<DailyTimeSheet> forWeekendSunday(final Project... projects);
 
-		public DailyTimeSheetDayBuilder forWorkingDay();
+		public DailyTimeSheetEntryBuilder forWorkingDay();
 
-		public DailyTimeSheetDayBuilder withDaytype(final DayType dayType);
-	}
-
-	public interface DailyTimeSheetDayBuilder {
-
-		public DailyTimeSheetEntryBuilder forDayOfWeek(final DayOfWeek dow);
-
-		public DailyTimeSheetProjectBuilder onMonday();
-
-		public DailyTimeSheetProjectBuilder onTuesday();
-
-		public DailyTimeSheetProjectBuilder onWednesday();
-
-		public DailyTimeSheetProjectBuilder onThursday();
-
-		public DailyTimeSheetProjectBuilder onFriday();
-
-		public DailyTimeSheetProjectBuilder onSaturday();
-
-		public DailyTimeSheetProjectBuilder onSunday();
+		public DailyTimeSheetEntryBuilder withDaytype(final DayType dayType);
 	}
 
 	public interface DailyTimeSheetEntryBuilder {
 		public DailyTimeSheetDailyEntryCommentsBuilder withEntry(final TimeSheetEntry timeEntry);
 
 		public DailyTimeSheetDailyEntryCommentsBuilder withEntries(final Set<TimeSheetEntry> timeEntries);
+
+		public DailyTimeSheetEntryDurationBuilder workedOn(final Project project);
 	}
 
 	public interface DailyTimeSheetDailyEntryCommentsBuilder extends Buildable<DailyTimeSheet> {
 		public Buildable<DailyTimeSheet> withDailyComments(final String dailyComments);
-	}
-
-	public interface DailyTimeSheetProjectBuilder {
-		public DailyTimeSheetEntryDurationBuilder workedOn(final Project project);
 	}
 
 	public interface DailyTimeSheetEntryDurationBuilder {
@@ -153,11 +141,11 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 	}
 
 	public interface DailyTimeSheetMoreEntryBuilder extends Buildable<DailyTimeSheet> {
-		public DailyTimeSheetProjectBuilder and();
+		public DailyTimeSheetEntryBuilder and();
 	}
 
-	public static class DailyTimeSheetBuilder implements DailyTimeSheetDayTypeBuilder, DailyTimeSheetDayBuilder,
-			DailyTimeSheetEntryBuilder, DailyTimeSheetEntryCommentsBuilder, DailyTimeSheetProjectBuilder,
+	public static class DailyTimeSheetBuilder implements DailyTimeSheetDateBuilder, DailyTimeSheetDayTypeBuilder,
+			DailyTimeSheetEntryBuilder, DailyTimeSheetEntryCommentsBuilder, 
 			DailyTimeSheetEntryDurationBuilder, DailyTimeSheetDailyCommentsBuilder, DailyTimeSheetMoreEntryBuilder,
 			DailyTimeSheetDailyEntryCommentsBuilder, Buildable<DailyTimeSheet> {
 
@@ -173,6 +161,13 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 			this.dailyTimeSheet.standardHours = dailyStandardHours;
 		}
 
+		@Override
+		public DailyTimeSheetDayTypeBuilder forDate(final LocalDate date) {
+			this.dailyTimeSheet.date = date;
+			this.dailyTimeSheet.day = date.getDayOfWeek();
+			return this;
+		}
+		
 		@Override
 		public Buildable<DailyTimeSheet> forHoliday(final DayOfWeek dow, final Project... projects) {
 			this.dailyTimeSheet.day = dow;
@@ -222,20 +217,14 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 		}
 
 		@Override
-		public DailyTimeSheetDayBuilder withDaytype(DayType dayType) {
+		public DailyTimeSheetEntryBuilder withDaytype(DayType dayType) {
 			this.dailyTimeSheet.dayType = dayType;
 			return this;
 		}
 
 		@Override
-		public DailyTimeSheetDayBuilder forWorkingDay() {
+		public DailyTimeSheetEntryBuilder forWorkingDay() {
 			this.dailyTimeSheet.dayType = DayType.WORKING_DAY;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetEntryBuilder forDayOfWeek(DayOfWeek dow) {
-			this.dailyTimeSheet.day = dow;
 			return this;
 		}
 
@@ -259,48 +248,6 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 		@Override
 		public Buildable<DailyTimeSheet> withDailyComments(String dailyComments) {
 			this.dailyTimeSheet.dailyComments = dailyComments;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetProjectBuilder onMonday() {
-			this.dailyTimeSheet.day = DayOfWeek.MONDAY;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetProjectBuilder onTuesday() {
-			this.dailyTimeSheet.day = DayOfWeek.TUESDAY;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetProjectBuilder onWednesday() {
-			this.dailyTimeSheet.day = DayOfWeek.WEDNESDAY;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetProjectBuilder onThursday() {
-			this.dailyTimeSheet.day = DayOfWeek.THURSDAY;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetProjectBuilder onFriday() {
-			this.dailyTimeSheet.day = DayOfWeek.FRIDAY;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetProjectBuilder onSaturday() {
-			this.dailyTimeSheet.day = DayOfWeek.SATURDAY;
-			return this;
-		}
-
-		@Override
-		public DailyTimeSheetProjectBuilder onSunday() {
-			this.dailyTimeSheet.day = DayOfWeek.SUNDAY;
 			return this;
 		}
 
@@ -329,7 +276,7 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 		}
 
 		@Override
-		public DailyTimeSheetProjectBuilder and() {
+		public DailyTimeSheetEntryBuilder and() {
 			this.dailyTimeSheet.entries.add(TimeSheetEntry.forWorkingDay().workedOn(this.project)
 					.forDuration(this.hours).onTasks(this.comments).build().setDailyTimeSheet(this.dailyTimeSheet));
 			return this;

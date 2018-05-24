@@ -19,7 +19,6 @@ import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 import com.gspann.itrack.domain.model.timesheets.DailyTimeSheet;
-import com.gspann.itrack.domain.model.timesheets.TimeSheetEntry;
 import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 
@@ -70,25 +69,25 @@ public class TimeSheetRepositoryTest {
 		// .build();
 		//
 		// systemUnderTest.save(rajveerWeeklyTimeSheet);
-
-		WeeklyTimeSheet manojWeeklyTimeSheet = WeeklyTimeSheet.of(manoj).forWeekOf(Week.of(LocalDate.of(2018, 5, 7)))
+		LocalDate weekStartDate = LocalDate.of(2018, 5, 7);
+		WeeklyTimeSheet manojWeeklyTimeSheet = WeeklyTimeSheet.of(manoj).forWeekOf(Week.of(weekStartDate))
 				.withDefaultStandardHours()
-				.forMonday(DailyTimeSheet.withDefaultStandardHours().forWorkingDay().onMonday().workedOn(iTrack)
+				.forMonday(DailyTimeSheet.withDefaultStandardHours().forDate(weekStartDate).forWorkingDay().workedOn(iTrack)
 						.forDuration(Duration.ofHours(8)).onTasks("Development")
 						.dailyComments("Consolidated daily comment").build())
-				.forTuesday(DailyTimeSheet.withDefaultStandardHours().forWorkingDay().onTuesday().workedOn(iTrack)
+				.forTuesday(DailyTimeSheet.withDefaultStandardHours().forDate(weekStartDate.plusDays(1)).forWorkingDay().workedOn(iTrack)
 						.forDuration(Duration.ofHours(4)).onTasks("Development").and().workedOn(finalSelect)
 						.forDuration(Duration.ofHours(4)).onTasks("Testing").build())
-				.forWednesday(DailyTimeSheet.withDefaultStandardHours().forWorkingDay().onWednesday().workedOn(iTrack)
+				.forWednesday(DailyTimeSheet.withDefaultStandardHours().forDate(weekStartDate.plusDays(2)).forWorkingDay().workedOn(iTrack)
 						.forDuration(Duration.ofHours(4)).onTasks("Development").and().workedOn(finalSelect)
 						.forDuration(Duration.ofHours(4)).onTasks("Testing").build())
-				.forThursday(DailyTimeSheet.withDefaultStandardHours().forWorkingDay().onThursday().workedOn(iTrack)
+				.forThursday(DailyTimeSheet.withDefaultStandardHours().forDate(weekStartDate.plusDays(3)).forWorkingDay().workedOn(iTrack)
 						.forDuration(Duration.ofHours(8)).onTasks("Development").build())
-				.forFriday(DailyTimeSheet.withDefaultStandardHours().forWorkingDay().onFriday().workedOn(iTrack)
+				.forFriday(DailyTimeSheet.withDefaultStandardHours().forDate(weekStartDate.plusDays(4)).forWorkingDay().workedOn(iTrack)
 						.forDuration(Duration.ofHours(4)).onTasks("Development").and().workedOn(finalSelect)
 						.forDuration(Duration.ofHours(4)).onTasks("Testing").dailyComments("Dual entries").build())
-				.forSaturday(DailyTimeSheet.withDefaultStandardHours().forWeekendSaturday(iTrack).build())
-				.forSunday(DailyTimeSheet.withDefaultStandardHours().forWeekendSunday(iTrack).build()).build();
+				.forSaturday(DailyTimeSheet.withDefaultStandardHours().forDate(weekStartDate.plusDays(5)).forWeekendSaturday(iTrack).build())
+				.forSunday(DailyTimeSheet.withDefaultStandardHours().forDate(weekStartDate.plusDays(6)).forWeekendSunday(iTrack).build()).build();
 		
 		 systemUnderTest.save(manojWeeklyTimeSheet);
 	}

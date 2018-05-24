@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.Optional;
 
 import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetSubmissionPageVM;
+import com.gspann.itrack.domain.model.common.dto.TimeSheetMetaDataVM;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 
@@ -21,9 +21,9 @@ public interface TimesheetManagementService {
 //	public void getTimeSheetsPendingForApproval(final String approverCode, final Week week);
 //	public void getTimeSheetsWithPendingActions(final String approverCode, final Week week);
 	
-	public TimeSheetSubmissionPageVM getTimeSheetSubmissionPageVM(final String resourceCode);
+	public TimeSheetMetaDataVM getTimeSheetMetaData(final String resourceCode);
 	
-	public Optional<WeeklyTimeSheet> createTimeSheet(final TimeSheetDTO timesheet);
+	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet);
 
 	public Optional<WeeklyTimeSheet> findTimeSheetById(final long id);
 	

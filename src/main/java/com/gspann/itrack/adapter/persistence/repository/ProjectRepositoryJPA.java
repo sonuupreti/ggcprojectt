@@ -7,7 +7,7 @@ import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
 import com.gspann.itrack.domain.model.projects.ProjectType;
 
-public interface ProjectRepositorySpec {
+public interface ProjectRepositoryJPA {
 	
 
 	ProjectType saveProjectType(final ProjectType projectType);

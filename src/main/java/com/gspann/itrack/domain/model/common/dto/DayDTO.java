@@ -1,5 +1,6 @@
 package com.gspann.itrack.domain.model.common.dto;
 
+import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -17,11 +18,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @ToString
-@EqualsAndHashCode(of = "day")
+@EqualsAndHashCode(of = "date")
 public class DayDTO {
 	
 	@NotNull
-	private String day;
+	private LocalDate date;
 
 	private String comments;
 	

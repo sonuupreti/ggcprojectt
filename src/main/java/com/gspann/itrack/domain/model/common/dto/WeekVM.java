@@ -33,10 +33,6 @@ public class WeekVM {
 
 	private DayOfWeek weekEndDay;
 
-//	private Duration dailyStandardHours;
-//
-//	private Duration weeklyStandardHours;
-	
 	private int dailyStandardHours;
 
 	private int weeklyStandardHours;

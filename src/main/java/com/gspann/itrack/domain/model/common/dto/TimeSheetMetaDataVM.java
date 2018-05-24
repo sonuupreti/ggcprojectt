@@ -11,11 +11,11 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @ToString
-public class TimeSheetSubmissionPageVM {
+public class TimeSheetMetaDataVM {
 
 	private ResourceAllocationSummary resourceAllocationSummary;
 	
 	private WeekVM weekDetails;
 	
-	private TimesheetActionType[] actions;
+	private TimeSheetActionType[] actions;
 }

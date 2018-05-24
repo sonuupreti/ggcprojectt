@@ -28,4 +28,6 @@ public class ResourceProjectAllocationSummary {
 	private String projectTypeName;
 
 	private short proportion;
+
+	private boolean customerTimeTracking;
 }

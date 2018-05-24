@@ -7,20 +7,20 @@ import com.gspann.itrack.common.enums.StringValuedEnum;
 
 @Immutable
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum TimesheetActionType implements StringValuedEnum {
+public enum TimeSheetStatusType implements StringValuedEnum {
 	
 	// @formatter:off
-	SAVE("SAVE", "Save Timesheet"), 
-	SUBMIT("SUBMIT", "Submit Timesheet"),
-	APPROVE("APPROVE", "Approve Timesheet"),
-	REJECT("REJECT", "Reject Timesheet"); 
+	NEW("NEW", "New Timesheet"), 
+	SAVED("SAVED", "Saved Timesheet"),
+	SUBMITTED("SUBMITTED", "Submitted Timesheet"),
+	APPROVED("APPROVED", "Approved Timesheet"); 
 	// @formatter:on
 	
 	private String code;
 	
 	private String description;
 
-	private TimesheetActionType(final String code, final String description) {
+	private TimeSheetStatusType(final String code, final String description) {
 		this.code = code;
 		this.description = description;
 	}
@@ -39,15 +39,15 @@ public enum TimesheetActionType implements StringValuedEnum {
 	}
 
 	@Override
-	public TimesheetActionType enumByValue(String description) {
-		for (TimesheetActionType e : values())
+	public TimeSheetStatusType enumByValue(String description) {
+		for (TimeSheetStatusType e : values())
 			if (e.value().equals(description))
 				return e;
 		throw new IllegalArgumentException();
 	}
 
-	public StringValuedEnum enumByCode(String code) {
-		for (TimesheetActionType e : values())
+	public TimeSheetStatusType enumByCode(String code) {
+		for (TimeSheetStatusType e : values())
 			if (e.getCode().equals(code))
 				return e;
 		throw new IllegalArgumentException();

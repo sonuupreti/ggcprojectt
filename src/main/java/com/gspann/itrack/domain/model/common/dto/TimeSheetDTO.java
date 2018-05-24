@@ -12,6 +12,8 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class TimeSheetDTO {
+	
+	private long weeklyTimeSheetId;
 
 	private String resourceCode;
 	

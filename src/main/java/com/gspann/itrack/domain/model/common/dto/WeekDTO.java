@@ -1,8 +1,8 @@
 package com.gspann.itrack.domain.model.common.dto;
 
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.validation.constraints.NotNull;
 
@@ -22,5 +22,5 @@ public class WeekDTO {
 	@NotNull
 	private LocalDate weekStartDate;
 	
-	private Set<DayDTO> dailyEntries = new LinkedHashSet<>(7);
+	private Set<DayDTO> dailyEntries = new TreeSet<>((x, y) -> x.getDate().compareTo(y.getDate()));
 }

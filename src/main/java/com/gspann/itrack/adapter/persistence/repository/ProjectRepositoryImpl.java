@@ -18,7 +18,7 @@ import com.gspann.itrack.domain.model.projects.ProjectType;
 import com.gspann.itrack.domain.model.projects.Project_;
 
 @Repository
-public class ProjectRepositoryImpl implements ProjectRepositorySpec {
+public class ProjectRepositoryImpl implements ProjectRepositoryJPA {
 
 	@PersistenceContext
 	private EntityManager entityManager;
@@ -64,17 +64,6 @@ public class ProjectRepositoryImpl implements ProjectRepositorySpec {
 	public List<ProjectStatus> findAllProjectStatuses() {
 		return entityManager.createQuery("from ProjectStatus p", ProjectStatus.class).getResultList();
 	}
-
-//	@Override
-//	public List<Project> findAllByTypeCode(String typeCode) {
-//		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<Project> query = criteriaBuilder.createQuery(Project.class);
-//		Root<Project> project = query.from(Project.class);
-//		query.select(project);
-//		query.where(criteriaBuilder
-//				.equal(project.get(Project_.type.getName()).get(AbstractAssignable_.code.getName()), typeCode));
-//		return entityManager.createQuery(query).getResultList();
-//	}
 
 	@Override
 	public List<Project> findAllBenchProjects() {

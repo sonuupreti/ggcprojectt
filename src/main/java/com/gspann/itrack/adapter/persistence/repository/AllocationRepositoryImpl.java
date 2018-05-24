@@ -13,7 +13,6 @@ import org.springframework.stereotype.Repository;
 
 import com.gspann.itrack.domain.model.allocations.Allocation;
 import com.gspann.itrack.domain.model.allocations.Allocation_;
-import com.gspann.itrack.domain.model.common.dto.ResourceAllocationSummary;
 import com.gspann.itrack.domain.model.common.dto.ResourceProjectAllocationSummary;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectType;
@@ -41,7 +40,7 @@ public class AllocationRepositoryImpl implements AllocationRepositoryJPA {
 				resource.get(Resource_.code.getName()), resource.get(Resource_.name.getName()),
 				project.get(Project_.code.getName()), project.get(Project_.name.getName()),
 				projectType.get(ProjectType_.code.getName()), projectType.get(ProjectType_.description.getName()),
-				allocation.get(Allocation_.proportion.getName())));
+				allocation.get(Allocation_.proportion.getName()), allocation.get(Allocation_.customerTimeTracking.getName())));
 		query.where(criteriaBuilder.equal(resource.get(Resource_.code.getName()), resourceCode));
 		query.orderBy(criteriaBuilder.asc(projectType.get(ProjectType_.code.getName())));
 		return entityManager.createQuery(query).getResultList();
