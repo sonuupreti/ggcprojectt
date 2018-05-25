@@ -7,6 +7,7 @@ import java.time.temporal.TemporalAdjusters;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -107,7 +108,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 
 	@Override
 	@Transactional
-	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(TimeSheetDTO timesheet) {
+	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet, final Set<ProjectSummary> allocatedProjects) {
 		Resource resource = resourceRepository.findById(timesheet.getResourceCode()).get();
 
 		Optional<WeeklyTimeSheet> existingTimeSheet = null;
@@ -124,11 +125,13 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		holidays.add(weekStartDate.plusDays(3));
 
 		LocalDate weekDate = null;
-
-		Set<TimeSheetEntry> timesheetEntries = new HashSet<>(5);
+//		Map<LocalDate, DayDTO> dailyEntriesMap = timesheet.getWeek().dailyEntriesMap();
+//		for (LocalDate date : dailyEntriesMap.keySet()) 
+//            System.out.println("key: " + date);
+		
 		Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>(7);
-		Set<DayDTO> dailyEntries = new TreeSet<>((x, y) -> y.getDate().compareTo(x.getDate()));
-		dailyEntries.addAll(timesheet.getWeek().getDailyEntries());
+		Set<DayDTO> dailyEntries = timesheet.getWeek().getDailyEntries();
+
 		for (var dayDTO : dailyEntries) {
 			weekDate = dayDTO.getDate();
 			DayOfWeek dayName = weekDate.getDayOfWeek();
@@ -142,8 +145,8 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 				dayType = DayType.WORKING_DAY;
 			}
 
+			Set<TimeSheetEntry> timesheetEntries = new LinkedHashSet<>(5);
 			DailyTimeSheet dailyTimeSheet = null;
-			timesheetEntries.clear();
 			for (var entry : dayDTO.getTimeEntries()) {
 				TimeSheetEntry timeEntry = null;
 				switch (dayType) {
@@ -189,6 +192,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		if (existingTimeSheet.isPresent()) {
 			// Update existing timesheet
 			weeklyTimeSheet = existingTimeSheet.get();
+//			weeklyTimeSheet.clearAllDailyTimeSheets();
 			weeklyTimeSheet.addAllDailyTimeSheets(dailyTimeSheets);
 		} else {
 			// Create new timesheet in DB

@@ -2,7 +2,9 @@ package com.gspann.itrack.domain.service.api;
 
 import java.time.LocalDate;
 import java.util.Optional;
+import java.util.Set;
 
+import com.gspann.itrack.domain.model.common.dto.ProjectSummary;
 import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
 import com.gspann.itrack.domain.model.common.dto.TimeSheetMetaDataVM;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
@@ -23,7 +25,7 @@ public interface TimesheetManagementService {
 	
 	public TimeSheetMetaDataVM getTimeSheetMetaData(final String resourceCode);
 	
-	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet);
+	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet, final Set<ProjectSummary> allocatedProjects);
 
 	public Optional<WeeklyTimeSheet> findTimeSheetById(final long id);
 	

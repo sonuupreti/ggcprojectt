@@ -77,11 +77,14 @@ public class TimeSheetsResource {
 	@Timed
 	public ResponseEntity<TimeSheetVM> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet)
 			throws URISyntaxException {
-		String manojResCode = "20001";
-		timesheet.setResourceCode(manojResCode);
 		log.debug("REST request to  create TimeSheet : {}", timesheet);
 		System.out.println("input timeSheet -->" + timesheet);
-		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(timesheet);
+		for(var v: timesheet.getWeek().getDailyEntries()) {
+			System.out.println(v.getDate());
+		}
+		TimeSheetMetaDataVM timeSheetMetaDataVM = timesheetManagementService.getTimeSheetMetaData(timesheet.getResourceCode());
+		
+		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(timesheet, timeSheetMetaDataVM.getResourceAllocationSummary().getProjects());
 		if (weeklyTimeSheet.isPresent()) {
 			WeeklyTimeSheet createdTimesheet = weeklyTimeSheet.get();
 			TimeSheetVM timeSheetVM = new TimeSheetVM();
@@ -89,9 +92,9 @@ public class TimeSheetsResource {
 			timeSheetVM.setStatus(createdTimesheet.status() == TimesheetStatus.SAVED ? TimeSheetStatusType.SAVED
 					: TimeSheetStatusType.SUBMITTED);
 			Set<DayDTO> dailyEntries = new TreeSet<>((x, y) -> x.getDate().compareTo(y.getDate()));
-			Set<TimeEntryDTO> timeEntries = new LinkedHashSet<>(5);
+			
 			for (var dailyEntry : createdTimesheet.dailyTimeSheets()) {
-				timeEntries.clear();
+				Set<TimeEntryDTO> timeEntries = new LinkedHashSet<>(5);
 				for (var entry : dailyEntry.entries()) {
 					timeEntries.add(
 							TimeEntryDTO.of(entry.project().code(), (int) entry.hours.toHours(), entry.comments()));
@@ -100,7 +103,7 @@ public class TimeSheetsResource {
 			}
 			WeekDTO weekDTO = WeekDTO.of(createdTimesheet.week().startingFrom(), dailyEntries);
 			timeSheetVM.setWeekDetails(weekDTO);
-			TimeSheetMetaDataVM timeSheetMetaDataVM = timesheetManagementService.getTimeSheetMetaData(manojResCode);
+			
 			timeSheetMetaDataVM.setActions(createdTimesheet.status() == TimesheetStatus.SUBMITTED
 					? new TimeSheetActionType[] { TimeSheetActionType.NONE }
 					: new TimeSheetActionType[] { TimeSheetActionType.SUBMIT });

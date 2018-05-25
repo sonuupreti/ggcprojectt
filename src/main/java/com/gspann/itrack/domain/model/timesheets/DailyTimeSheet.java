@@ -70,9 +70,9 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 	@Column(name = "COMMENTS", nullable = true, length = 255)
 	private String dailyComments;
 
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "DAILY_TIME_SHEET_ID", nullable = false)
-	private Set<TimeSheetEntry> entries = new LinkedHashSet<TimeSheetEntry>();
+	private Set<TimeSheetEntry> entries = new LinkedHashSet<>();
 
 	@NotNull
 	@ManyToOne

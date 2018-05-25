@@ -5,9 +5,11 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMet
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -70,11 +72,11 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	@JoinColumn(name = "RESOURCE_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_RESOURCE_CODE))
 	private Resource resource;
 
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false)
-	@org.hibernate.annotations.OrderBy(clause = "DAY_OF_WEEK asc")
+	@org.hibernate.annotations.OrderBy(clause = "DATE asc")
 	@Getter(value = AccessLevel.NONE)
-	private Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<DailyTimeSheet>();
+	private Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>();
 
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "CLIENT_TIMESHEET_SCREEN_SHOT_ID", unique = false, nullable = true, foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_CLIENT_TIMESHEET_SCREEN_SHOT_ID))
@@ -99,11 +101,19 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	public Set<DailyTimeSheet> dailyTimeSheets() {
 		return Collections.unmodifiableSet(this.dailyTimeSheets);
 	}
+	
+	public void clearAllDailyTimeSheets() {
+		this.dailyTimeSheets.clear();
+	}
+	
 	public boolean addDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
 		return this.dailyTimeSheets.add(dailyTimeSheet);
 	}
 	
 	public boolean addAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
+		for(var dailyTimesheet: dailyTimeSheets) {
+			dailyTimesheet.setWeeklyTimeSheet(this);
+		}
 		return this.dailyTimeSheets.addAll(dailyTimeSheets);
 	}
 
