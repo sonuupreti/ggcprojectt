@@ -44,7 +44,7 @@ import lombok.extern.slf4j.Slf4j;
  * REST controller for managing Time sheets.
  */
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/timesheets")
 @Slf4j
 public class TimeSheetsResource {
 
@@ -73,7 +73,7 @@ public class TimeSheetsResource {
 	 * getTimeSheetSubmissionPageVM(manojResCode), HttpStatus.OK); }
 	 */
 
-	@PostMapping("/timesheets")
+	@PostMapping
 	@Timed
 	public ResponseEntity<TimeSheetVM> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet)
 			throws URISyntaxException {
@@ -128,7 +128,7 @@ public class TimeSheetsResource {
 	 * @throws URISyntaxException
 	 *             if the Location URI syntax is incorrect
 	 */
-	@PutMapping("/timesheets")
+	@PutMapping
 	@Timed
 	public ResponseEntity<TimeSheetDTO> updateTimesheet(@Valid @RequestBody TimeSheetDTO timesheet)
 			throws URISyntaxException {
@@ -149,7 +149,7 @@ public class TimeSheetsResource {
 	 * @return the ResponseEntity with status 200 (OK) and the list of accounts in
 	 *         body
 	 */
-	@GetMapping("/timesheets")
+	@GetMapping
 	@Timed
 	public ResponseEntity<List<AccountDTO>> listTimesheets(Pageable pageable) {
 		log.debug("REST request to get a page of Account");
