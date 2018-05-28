@@ -12,7 +12,7 @@ import com.gspann.itrack.domain.model.projects.Project;
 /**
  * Spring Data JPA repository for the Project entity.
  */
-public interface ProjectRepository extends JpaRepository<Project, String>, ProjectRepositorySpec {
+public interface ProjectRepository extends JpaRepository<Project, String>, ProjectRepositoryJPA {
 
 	public List<Project> findByTypeCode(String typeCode);
 	

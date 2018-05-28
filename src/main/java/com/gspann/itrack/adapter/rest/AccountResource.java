@@ -26,7 +26,7 @@ import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.application.service.UserService;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetSubmissionPageVM;
+import com.gspann.itrack.domain.model.common.dto.TimeSheetMetaDataVM;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
 import com.gspann.itrack.service.dto.UserDTO;
 

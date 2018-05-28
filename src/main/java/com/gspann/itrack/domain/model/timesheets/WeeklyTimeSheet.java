@@ -4,9 +4,12 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMet
 
 import java.time.DayOfWeek;
 import java.time.Duration;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
@@ -29,6 +32,7 @@ import com.gspann.itrack.domain.model.docs.Document;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -68,10 +72,11 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	@JoinColumn(name = "RESOURCE_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_RESOURCE_CODE))
 	private Resource resource;
 
-	@OneToMany(cascade = CascadeType.PERSIST, fetch = FetchType.EAGER)
+	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false)
-	@org.hibernate.annotations.OrderBy(clause = "DAY_OF_WEEK asc")
-	private Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<DailyTimeSheet>();
+	@org.hibernate.annotations.OrderBy(clause = "DATE asc")
+	@Getter(value = AccessLevel.NONE)
+	private Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>();
 
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "CLIENT_TIMESHEET_SCREEN_SHOT_ID", unique = false, nullable = true, foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_CLIENT_TIMESHEET_SCREEN_SHOT_ID))
@@ -90,37 +95,74 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	@Column(name = "USE_AS_TEMPLATE", length = 1)
 	private boolean useAsTemplate = false;
 
+	@Column(name = "APPROVER_COMMENTS", nullable = true, length = 255)
+	private String approverComments;
+	
+	public Set<DailyTimeSheet> dailyTimeSheets() {
+		return Collections.unmodifiableSet(this.dailyTimeSheets);
+	}
+	
+	public void clearAllDailyTimeSheets() {
+		this.dailyTimeSheets.clear();
+	}
+	
+	public boolean addDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
+		return this.dailyTimeSheets.add(dailyTimeSheet);
+	}
+	
+	public boolean addAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
+		for(var dailyTimesheet: dailyTimeSheets) {
+			dailyTimesheet.setWeeklyTimeSheet(this);
+		}
+		return this.dailyTimeSheets.addAll(dailyTimeSheets);
+	}
+
 	public Map<DayOfWeek, DailyTimeSheet> dayWiseDailyTimeSheets() {
 		return dailyTimeSheets.stream()
 				.collect(Collectors.toMap(x -> x.day(), x -> x));
 	}
 	
 	public void save() {
-		
+		this.status = TimesheetStatus.SAVED;
 	}
 	
 	public void submit() {
-		
+		this.status = TimesheetStatus.SUBMITTED;
 	}
 	
 	public void saveAsTemplate() {
-		
+		this.useAsTemplate = true;
 	}
 
 	public void approve() {
-
+		this.status = TimesheetStatus.APPROVED;
 	}
 
 	public void approve(final Project project) {
-
+		for(var dailyTimeSheet: dailyTimeSheets) {
+			for(var entry: dailyTimeSheet.entries()) {
+				if(entry.project().equals(project)) {
+					entry.approve();
+				}
+			}
+		}
+		this.status = TimesheetStatus.PARTIALLY_APPROVED;
 	}
 
 	public void reject() {
-
+		this.status = TimesheetStatus.REJECTED;
 	}
 
 	public void reject(final Project project) {
-
+		for(var dailyTimeSheet: dailyTimeSheets) {
+			for(var entry: dailyTimeSheet.entries()) {
+				if(entry.project().equals(project)) {
+					entry.approve();
+				}
+			}
+		}
+		// TODO: Need to be decided, what would be the current status of weekly timesheet in this case
+		//this.status = TimesheetStatus.PARTIALLY_APPROVED;
 	}
 
 	public static WeeklyTimeSheetWeekBuilder of(final Resource resource) {
