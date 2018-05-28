@@ -12,6 +12,7 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
+import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
 import com.gspann.itrack.domain.model.projects.ProjectType;
@@ -38,6 +39,14 @@ public class ProjectRepositoryImpl implements ProjectRepositorySpec {
 	public Optional<ProjectType> findProjectTypeByCode(final String projectTypeCode) {
 		return Optional.ofNullable(entityManager.find(ProjectType.class, projectTypeCode));
 	}
+	
+	@Override
+	public Optional<Practice> findPracticeByCode(final String practiceCode) {
+		return Optional.ofNullable(entityManager.find(Practice.class, practiceCode));
+	}
+	
+	
+	
 
 	@Override
 	public List<ProjectType> findAllProjectTypes() {
@@ -65,16 +74,17 @@ public class ProjectRepositoryImpl implements ProjectRepositorySpec {
 		return entityManager.createQuery("from ProjectStatus p", ProjectStatus.class).getResultList();
 	}
 
-//	@Override
-//	public List<Project> findAllByTypeCode(String typeCode) {
-//		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<Project> query = criteriaBuilder.createQuery(Project.class);
-//		Root<Project> project = query.from(Project.class);
-//		query.select(project);
-//		query.where(criteriaBuilder
-//				.equal(project.get(Project_.type.getName()).get(AbstractAssignable_.code.getName()), typeCode));
-//		return entityManager.createQuery(query).getResultList();
-//	}
+	// @Override
+	// public List<Project> findAllByTypeCode(String typeCode) {
+	// CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+	// CriteriaQuery<Project> query = criteriaBuilder.createQuery(Project.class);
+	// Root<Project> project = query.from(Project.class);
+	// query.select(project);
+	// query.where(criteriaBuilder
+	// .equal(project.get(Project_.type.getName()).get(AbstractAssignable_.code.getName()),
+	// typeCode));
+	// return entityManager.createQuery(query).getResultList();
+	// }
 
 	@Override
 	public List<Project> findAllBenchProjects() {
@@ -82,9 +92,8 @@ public class ProjectRepositoryImpl implements ProjectRepositorySpec {
 		CriteriaQuery<Project> query = criteriaBuilder.createQuery(Project.class);
 		Root<Project> project = query.from(Project.class);
 		query.select(project);
-		query.where(
-				criteriaBuilder.equal(project.get(Project_.type.getName()).get(Project_.code.getName()),
-						ProjectType.CODE.BENCH.value()));
+		query.where(criteriaBuilder.equal(project.get(Project_.type.getName()).get(Project_.code.getName()),
+				ProjectType.CODE.BENCH.value()));
 		return entityManager.createQuery(query).getResultList();
 	}
 
@@ -95,8 +104,7 @@ public class ProjectRepositoryImpl implements ProjectRepositorySpec {
 		Root<Project> project = query.from(Project.class);
 		query.select(project);
 		Predicate paidLeaveTypePredicate = criteriaBuilder.equal(
-				project.get(Project_.type.getName()).get(Project_.code.getName()),
-				ProjectType.CODE.PAID_LEAVE.value());
+				project.get(Project_.type.getName()).get(Project_.code.getName()), ProjectType.CODE.PAID_LEAVE.value());
 		Predicate unpaidLeaveTypePredicate = criteriaBuilder.equal(
 				project.get(Project_.type.getName()).get(Project_.code.getName()),
 				ProjectType.CODE.UNPAID_LEAVE.value());

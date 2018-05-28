@@ -27,4 +27,7 @@ public interface ProjectRepository extends JpaRepository<Project, String>, Proje
 	
 	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(ps.code, ps.description) FROM ProjectStatus ps") 
     List<Pair<String, String>> findAllProjectStatusCodeAndDescription();
+	
+	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(ps.code, ps.name) FROM Practice ps") 
+    List<Pair<String, String>> findAllPracticeCodeAndDescription();
 }

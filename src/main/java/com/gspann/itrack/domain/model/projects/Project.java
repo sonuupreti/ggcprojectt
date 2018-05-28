@@ -60,16 +60,29 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	@Column(name = "NAME", nullable = false, length = 150)
 	private String name;
 
+	public void updateName(final String name) {
+		this.name = name;
+	}
+	
+	
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PRJ_TYPE_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_PRJ_TYPE_CODE))
 	private ProjectType type;
 
+	public void updateProjectType(final ProjectType type) {
+		this.type = type;
+	}
+	
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
 	@JoinColumn(name = "PRJ_STATUS_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_PRJ_STATUS_CODE))
 	private ProjectStatus status;
 
+	public void updateProjectStatus(final ProjectStatus status) {
+		this.status = status;
+	}
+	
 	public void startOn(final LocalDate startDate) {
 		this.dateRange = DateRange.dateRange().startingOn(startDate)
 				.endingOn(this.dateRange != null ? dateRange.tillDate() : null);
@@ -341,6 +354,8 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		ProjectStatusBuilder paidLeave();
 
 		ProjectStatusBuilder unpaidLeave();
+		
+		ProjectStatusBuilder withType(final ProjectType type);
 	}
 
 	public interface ProjectStatusBuilder {
@@ -351,6 +366,8 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		NameBuilder asOnHold();
 
 		NameBuilder asClosed();
+
+		NameBuilder withStatus(final ProjectStatus status);
 	}
 
 	public interface NameBuilder {
@@ -369,6 +386,8 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		EndDateBuilder startingFrom(final LocalDate startDate);
 
 		ProjectPracticeBuilder startingIndefinatelyFrom(final LocalDate startDate);
+
+		TechnologiesBuilder withPractices(Set<Practice> practices);
 	}
 
 	public interface EndDateBuilder {
@@ -392,19 +411,21 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	}
 
 	public interface CustomerManagerBuilder {
-		CustomerBuilder atCustomerEndManagedBy(final String customerManager);
+		CustomerProjectIdBuilder atCustomerEndManagedBy(final String customerManager);
 	}
 
-	public interface CustomerBuilder extends Buildable<Project> {
-		Buildable<Project> withCustomerProjectId(final String customerProjectId);
-
+	public interface CustomerProjectIdBuilder extends Buildable<Project> {
+		CustomerProjectNameBuilder withCustomerProjectId(final String customerProjectId);
+	}
+	
+	public interface CustomerProjectNameBuilder extends Buildable<Project> {
 		Buildable<Project> withCustomerProjectName(final String customerProjectName);
 	}
 
 	public static class ProjectBuilder
 			implements ProjectTypeBuilder, ProjectStatusBuilder, NameBuilder, LocationBuilder, AccountBuilder,
 			StartDateBuilder, EndDateBuilder, ProjectPracticeBuilder, TechnologiesBuilder, OffshoreManagerBuilder,
-			OnshoreManagerBuilder, CustomerManagerBuilder, CustomerBuilder {
+			OnshoreManagerBuilder, CustomerManagerBuilder, CustomerProjectIdBuilder, CustomerProjectNameBuilder {
 
 		private Project project = new Project();
 		private LocalDate projectStartDate;
@@ -454,6 +475,12 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 			return this;
 		}
 
+		@Override
+		public ProjectStatusBuilder withType(ProjectType type) {
+			this.project.type = type;
+			return this;
+		}
+
 		public NameBuilder asPending() {
 			this.project.status = ProjectStatus.pending();
 			return this;
@@ -471,6 +498,12 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 
 		public NameBuilder asClosed() {
 			this.project.status = ProjectStatus.closed();
+			return this;
+		}
+		
+		@Override
+		public NameBuilder withStatus(ProjectStatus status) {
+			this.project.status = status;
 			return this;
 		}
 
@@ -535,13 +568,13 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		}
 
 		@Override
-		public CustomerBuilder atCustomerEndManagedBy(final String customerManager) {
+		public CustomerProjectIdBuilder atCustomerEndManagedBy(final String customerManager) {
 			this.project.customerManager = customerManager;
 			return this;
 		}
 
 		@Override
-		public Buildable<Project> withCustomerProjectId(String customerProjectId) {
+		public CustomerProjectNameBuilder withCustomerProjectId(String customerProjectId) {
 			this.project.customerProjectId = customerProjectId;
 			return this;
 		}

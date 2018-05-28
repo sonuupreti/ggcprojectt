@@ -3,6 +3,7 @@ package com.gspann.itrack.adapter.persistence.repository;
 import java.util.List;
 import java.util.Optional;
 
+import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
 import com.gspann.itrack.domain.model.projects.ProjectType;
@@ -27,4 +28,6 @@ public interface ProjectRepositorySpec {
 	List<Project> findAllBenchProjects();
 
 	List<Project> findAllLeaveProjects();
+
+	Optional<Practice> findPracticeByCode(String practiceCode);
 }
