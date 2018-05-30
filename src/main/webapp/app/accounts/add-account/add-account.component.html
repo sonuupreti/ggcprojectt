@@ -1,0 +1,81 @@
+
+
+<div class="add-account">
+    <h4>Add New Account</h4>
+    <mat-card class="example-card">
+      <mat-card-header>
+        <mat-card-title><b>Please enter the details below</b></mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="container"
+           fxLayout
+           fxLayout.xs="column"
+           fxLayoutAlign="center"
+           fxLayoutGap="10px"
+           fxLayoutGap.xs="0">
+        <div fxFlex="45%">
+            <p>
+            <mat-form-field>
+                <input matInput placeholder="Account Code" [(ngModel)]="accountCode" [disabled]="true">
+                <mat-hint>(This will be auto generated)</mat-hint>
+              </mat-form-field>
+              
+            </p>
+          <p>
+              <mat-form-field>
+                  <input matInput placeholder="Customer Name" [(ngModel)]="customerName">
+                </mat-form-field>
+  </p>  
+  
+  <p>
+              <mat-form-field>
+                  <input matInput placeholder="Customer Entity" [(ngModel)]="customerEntity">
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field>
+                    <input matInput placeholder="Customer Reporting Manager" [(ngModel)]="customerReportingManager">
+                  </mat-form-field>
+            </p>
+              
+              
+              <p>
+                  <mat-form-field>
+                      <mat-select placeholder="Account Manager" [(ngModel)]="selectedAccountManager">
+                        <mat-option *ngFor="let list of accountManagerList" [value]="list.key">
+                          {{list.value}}
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+              </p>
+        </div>
+        <div fxFlex="10%">
+  
+        </div>
+        <div fxFlex="45%">
+          <p>
+           <mat-form-field>
+                  <mat-select placeholder="Location" [(ngModel)]="selectedLocation">
+                    <mat-option *ngFor="let list of locationList" [value]="list.key">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </p>
+              <p>
+                  <label class="time-tracking-label" style="color:rgba(0,0,0,.54);">Time Tracking System Available</label>
+                  <mat-radio-group [(ngModel)]="isTimeTrackingAvailable">
+                      <mat-radio-button value="1">Yes</mat-radio-button>
+                      <mat-radio-button value="0">NO</mat-radio-button>
+                    </mat-radio-group>
+                  </p>
+        </div>
+      </div>
+      </mat-card-content>
+      <mat-card-actions>
+          <button mat-raised-button  color="primary" (click)="saveAccountDetails();">Create Account</button>
+          <button mat-button color="primary">Reset All</button>
+      </mat-card-actions>
+    </mat-card>
+  </div>

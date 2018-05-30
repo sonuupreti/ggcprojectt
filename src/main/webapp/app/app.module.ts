@@ -5,7 +5,9 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Ng2Webstorage } from 'ngx-webstorage';
 import { JhiEventManager } from 'ng-jhipster';
-
+import { MaterialModule } from './material.module';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
 import { NotificationInterceptor } from './blocks/interceptor/notification.interceptor';
@@ -19,40 +21,73 @@ import { StateStorageService } from 'app/core/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
 import { JhiMainComponent, NavbarComponent, FooterComponent, ProfileService, PageRibbonComponent, ErrorComponent } from './layouts';
 
+import { ListAccountsComponent } from './accounts/list-accounts/list-accounts.component';
+import { ListAccountsService } from './accounts/list-accounts/account.service';
+import { AddAccountComponent } from './accounts/add-account/add-account.component';
+import { AddAccountService } from './accounts/add-account/add-account.service';
+import { ViewAccountService } from './accounts/view-account/view-account.service';
+import { TimesheetService } from './timesheet-view/timesheet.service';
+import { ViewAccountComponent } from './accounts/view-account/view-account.component';
+import { TimesheetView } from './timesheet-view/timesheet-view.component';
+import { PreviousTimesheetView } from './timesheet-view/previous-timesheet-view/previous-timesheet-view.component';
+import { CurrentTimesheetView } from './timesheet-view/current-timesheet-view/current-timesheet-view.component';
+import { RemoveAccountConfirmDialogComponent } from './dialog/remove-account-confirm-dialog/remove-account-confirm-dialog.component';
+
 @NgModule({
-  imports: [
-    BrowserModule,
-    Itrack2AppRoutingModule,
-    Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
-    Itrack2SharedModule,
-    Itrack2CoreModule,
-    Itrack2HomeModule,
-    Itrack2EntityModule
-    // jhipster-needle-angular-add-module JHipster will add new module here
-  ],
-  declarations: [JhiMainComponent, NavbarComponent, ErrorComponent, PageRibbonComponent, FooterComponent],
-  providers: [
-    ProfileService,
-    PaginationConfig,
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: AuthExpiredInterceptor,
-      multi: true,
-      deps: [StateStorageService, Injector]
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: ErrorHandlerInterceptor,
-      multi: true,
-      deps: [JhiEventManager]
-    },
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: NotificationInterceptor,
-      multi: true,
-      deps: [Injector]
-    }
-  ],
-  bootstrap: [JhiMainComponent]
+    imports: [
+        BrowserModule,
+        BrowserAnimationsModule,
+        MaterialModule,
+        FlexLayoutModule,
+        Itrack2AppRoutingModule,
+        Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
+        Itrack2SharedModule,
+        Itrack2CoreModule,
+        Itrack2HomeModule,
+        Itrack2EntityModule
+        // jhipster-needle-angular-add-module JHipster will add new module here
+    ],
+    declarations: [
+        JhiMainComponent,
+        NavbarComponent,
+        ErrorComponent,
+        PageRibbonComponent,
+        FooterComponent,
+        ListAccountsComponent,
+        AddAccountComponent,
+        ViewAccountComponent,
+        TimesheetView,
+        PreviousTimesheetView,
+        CurrentTimesheetView,
+        RemoveAccountConfirmDialogComponent
+    ],
+    providers: [
+        ProfileService,
+        ListAccountsService,
+        AddAccountService,
+        ViewAccountService,
+        PaginationConfig,
+        TimesheetService,
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: AuthExpiredInterceptor,
+            multi: true,
+            deps: [StateStorageService, Injector]
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ErrorHandlerInterceptor,
+            multi: true,
+            deps: [JhiEventManager]
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: NotificationInterceptor,
+            multi: true,
+            deps: [Injector]
+        }
+    ],
+    entryComponents: [RemoveAccountConfirmDialogComponent],
+    bootstrap: [JhiMainComponent]
 })
 export class Itrack2AppModule {}
