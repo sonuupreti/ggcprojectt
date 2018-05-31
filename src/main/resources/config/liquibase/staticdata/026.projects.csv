@@ -1,0 +1,4 @@
+code,version,name,prj_type_code,prj_status_code,offshore_mgr_code,onshore_mgr_code,location_id,from_date,till_date,account_code,customer_project_id,customer_project_name,customer_manager
+PDL0000001,0,Paid Leave,PDL,WIP,20000,20000,1,2018-05-05,NULL,IN1000,NULL,NULL,None
+UPL0000002,0,Unpaid Leave,UPL,WIP,20000,20000,1,2018-05-05,NULL,IN1000,NULL,NULL,None
+BNH0000003,0,Bench,BNH,WIP,20000,20000,1,2018-05-05,NULL,IN1000,NULL,NULL,None

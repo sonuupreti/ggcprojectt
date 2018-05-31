@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.constants.ApplicationConstant;
+import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 
 @RunWith(SpringRunner.class)
@@ -39,6 +40,23 @@ public class SkillsRepositoryTest {
 //		Practice development = Practice.of("Development", "Rajveer Singh", "Java, Spring, Hibernate, AngularJS");
 //		systemUnderTest.savePractice(development);
 	}
+	
+/*	@Test
+	public void testSaveTechnology() {
+		Technology Java = Technology.of("JAVA");
+		systemUnderTest.saveTechnology(Java);
+		
+		Technology Angular = Technology.of("Angular Js");
+		systemUnderTest.saveTechnology(Angular);
+
+//		
+//		Practice QA = Practice.of("QA", "Ankit Bhardwaj", "JUnit, Salenium, Cucumber, Functional Testing,Integration Testing, Load Testing");
+//		systemUnderTest.savePractice(QA);
+//		
+//		Practice development = Practice.of("Development", "Rajveer Singh", "Java, Spring, Hibernate, AngularJS");
+//		systemUnderTest.savePractice(development);
+	}*/
+	
 
 	@Test
 	public void testFindPracticeById() {

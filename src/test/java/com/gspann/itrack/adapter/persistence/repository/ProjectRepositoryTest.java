@@ -20,6 +20,7 @@ import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
@@ -46,6 +47,9 @@ public class ProjectRepositoryTest {
 	@Autowired
 	private ProjectRepository systemUnderTest;
 	
+	@Autowired
+	private SkillsRepository skillsRepository;
+	
 //	@Test
 	public void testSaveProjectTypes() {
 		systemUnderTest.saveProjectType(ProjectType.fixBid());
@@ -71,6 +75,12 @@ public class ProjectRepositoryTest {
 
 		Set<Practice> practices = new HashSet<>();
 		practices.add(Practice.adms());
+		
+		
+		Set<Technology> technologies = new HashSet<>();
+		Technology java = skillsRepository.findTechnologyById(3).get();
+		technologies.add(java);
+		//technologies.add(Technology.of("Node Js"));
 
 		Resource admin = resourceRepository.getOne("20000");
 		Account internal = accountRepository.getOne("IN1000");
@@ -96,16 +106,22 @@ public class ProjectRepositoryTest {
 //		systemUnderTest.saveAndFlush(bench);
 
 		Resource manager = resourceRepository.getOne("20001");
-		Project iTrack = Project.project().investment().asInProgress().namedAs("iTrack").locatedAt(gurgaon)
+		/*Project iTrack = Project.project().investment().asInProgress().namedAs("iTrack").locatedAt(gurgaon)
 				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
-				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
+				.withTechnologies(technologies).atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
 		systemUnderTest.saveAndFlush(iTrack);
 		Project finalSelect = Project.project().investment().asInProgress().namedAs("FinalSelect").locatedAt(gurgaon)
 				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
-				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
+				.withTechnologies(technologies).atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
-		systemUnderTest.saveAndFlush(finalSelect);
+		systemUnderTest.saveAndFlush(finalSelect);*/
+		
+		Project finalTest = Project.project().investment().asInProgress().namedAs("FinalSelect").locatedAt(gurgaon)
+				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
+				.withTechnologies(technologies).atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
+				.atCustomerEndManagedBy("None").build();
+		systemUnderTest.saveAndFlush(finalTest);
 	}
 
 	@Test
