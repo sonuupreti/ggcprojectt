@@ -243,30 +243,6 @@ public class OrganisationRepositoryTest {
 	}
 
 	@Test
-	public void test22SaveHolidayOccasions() {
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.GLOBAL_DAY_NEW_YEAR));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.GLOBAL_EVE_CHRISTMAS));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.US_NH_MEMORIAL_DAY));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.US_NH_INDEPENDENCE_DAY));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.US_NH_LABOR_DAY));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_THANKS_GIVING_DAY_1));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_THANKS_GIVING_DAY_2));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.IN_NH_REPUBLIC_DAY));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.IN_NH_INDEPENDENCE_DAY));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.IN_NH_GANDHI_JAYANTI));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_PONGAL));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_HOLI));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_DIWALI));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_GANESH_CHATURTHI));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_ID_UL_FITR_RAMZAN));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.UK_NH_BOXING_DAY));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_EASTER_MONDAY));
-		systemUnderTest.saveOccasion(Occasion.byReasonCode(Occasion.REASON.EVE_GOOD_FRIDAY));
-
-	}
-	
-
-	@Test
 	public void test23SaveBillabilityStatus() {
 		systemUnderTest.saveBillabilityStatus(BillabilityStatus.ofBillable());
 		systemUnderTest.saveBillabilityStatus(BillabilityStatus.ofBuffer());

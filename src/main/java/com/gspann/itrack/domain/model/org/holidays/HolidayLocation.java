@@ -1,5 +1,7 @@
 package com.gspann.itrack.domain.model.org.holidays;
 
+import javax.persistence.Access;
+import javax.persistence.AccessType;
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -19,10 +21,11 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @Entity
 @Table(name = "HOLIDAY_LOCATION_MAP")
+@Access(AccessType.FIELD)
 public class HolidayLocation {
 
 	@EmbeddedId
-	private HolidayLocationId id;
+	private HolidayLocationId id = new HolidayLocationId();
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@MapsId("holidayId")
@@ -38,4 +41,16 @@ public class HolidayLocation {
 			fetch = FetchType.EAGER, optional = false)
 	// @formatter:on
 	private Occasion occasion;
+	
+	public static HolidayLocation of(final City location, final Occasion occasion) {
+		HolidayLocation holidayLocation = new HolidayLocation();
+		holidayLocation.location = location;
+		holidayLocation.occasion = occasion;
+		return holidayLocation;
+	}
+	
+	public HolidayLocation setHoliday(final Holiday holiday) {
+		this.holiday = holiday;
+		return this;
+	}
 }

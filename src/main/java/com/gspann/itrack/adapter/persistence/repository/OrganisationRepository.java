@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Optional;
 
 import com.gspann.itrack.domain.model.business.payments.BillabilityStatus;
-import com.gspann.itrack.domain.model.org.holidays.Occasion;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
@@ -71,12 +70,4 @@ public interface OrganisationRepository {
 	public Optional<BillabilityStatus> findBillabilityStatusByCode(final String billabilityStatusCode);
 
 	public List<BillabilityStatus> findAllBillabilityStatuses();
-	
-	Occasion saveOccasion(final Occasion occasion);
-	
-	Optional<Occasion> findOccasionByName(final String name);
-
-	Optional<Occasion> findOccasionById(final short id);
-
-	List<Occasion> findAllOccasions();
 }

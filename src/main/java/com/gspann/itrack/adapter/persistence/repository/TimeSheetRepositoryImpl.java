@@ -30,14 +30,12 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 		CriteriaQuery<WeeklyTimeSheet> query = criteriaBuilder.createQuery(WeeklyTimeSheet.class);
 		Root<WeeklyTimeSheet> weeklyTimeSheet = query.from(WeeklyTimeSheet.class);
 		query.select(weeklyTimeSheet);
-		Predicate weekStartDatePredicate = criteriaBuilder.equal(
-				weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()).get(Week_.dateRange.getName()).get(DateRange_.fromDate.getName()),
-				weekStartDate);
+		Predicate weekStartDatePredicate = criteriaBuilder.equal(weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName())
+				.get(Week_.dateRange.getName()).get(DateRange_.fromDate.getName()), weekStartDate);
 		query.where(weekStartDatePredicate);
 		WeeklyTimeSheet timesheet = null;
 		try {
-			timesheet = entityManager.createQuery(query)
-					.getSingleResult();
+			timesheet = entityManager.createQuery(query).getSingleResult();
 		} catch (NoResultException e) {
 			// No state with such name exists, so return null
 		}

@@ -56,15 +56,6 @@ public final class ApplicationConstant {
 
     public static final String API_VERSION = API_VERSION_v1;
     
-    public static final DayOfWeek WEEK_START_DAY = DayOfWeek.MONDAY;
-//    public static final DayOfWeek WEEK_START_DAY = DayOfWeek.WEDNESDAY;
-
-    public static final DayOfWeek WEEK_END_FIRST = DayOfWeek.SATURDAY;
-    public static final DayOfWeek WEEK_END_SECOND = DayOfWeek.SUNDAY;
-    
-    public static final Duration WEEKLY_STANDARD_HOURS = Duration.ofHours(40);
-    public static final Duration DAILY_STANDARD_HOURS = Duration.ofHours(8);
-    
     private final static ZoneId DEFAULT_TIME_ZONE = ZoneId.systemDefault();
     private final static Locale DEFAULT_LOCALE = Locale.getDefault();
     

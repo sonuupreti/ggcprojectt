@@ -41,12 +41,12 @@ public class WeekVM {
 
 	private Set<DayVM> dailyDetails;
 
-	public static WeekVM current(final Duration weeklyStandardHours, final Duration dailyStandardHours) {
+	public static WeekVM current(final Duration weeklyStandardHours, final Duration dailyStandardHours, final DayOfWeek weekStartDay) {
 		LocalDate now = LocalDate.now();
 
 		WeekVM weekVM = new WeekVM();
-		weekVM.weekStartDate = now.with(TemporalAdjusters.previousOrSame(ApplicationConstant.WEEK_START_DAY));
-		weekVM.weekEndDate = now.with(TemporalAdjusters.nextOrSame(ApplicationConstant.WEEK_START_DAY)).minusDays(1);
+		weekVM.weekStartDate = now.with(TemporalAdjusters.previousOrSame(weekStartDay));
+		weekVM.weekEndDate = now.with(TemporalAdjusters.nextOrSame(weekStartDay)).minusDays(1);
 		weekVM.weekLength = 7;
 		weekVM.weekStartDay = weekVM.weekStartDate.getDayOfWeek();
 		weekVM.weekEndDay = weekVM.weekEndDate.getDayOfWeek();

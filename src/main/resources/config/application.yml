@@ -146,4 +146,21 @@ jhipster:
 # https://www.jhipster.tech/common-application-properties/
 # ===================================================================
 
-# application:
+application:
+    timesheet:
+        # Suffix 'h' signifies hours and is a must
+        standard-daily-hours: 8h
+        standard-weekly-hours: 40h
+        # The date onwards which system should allow the time sheet submission, such as 1st April. Required format dd-MM-yyyy
+        system-start-date: 30-05-2018
+        # Week ends in either numeric format in range 0 to 6 or Day names such as SUNDAY, FRIDAY etc.
+        # E.g. in numeric format for week end Saturday and Sunday either in numeric of day name format
+        #week-ends:
+        #    - 5 or SATURDAY
+        #    - 6 or SUNDAY
+        week-start-day: MONDAY
+        week-end-day: SUNDAY
+        week-ends:
+            - SATURDAY
+            - SUNDAY
+                  

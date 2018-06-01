@@ -38,6 +38,7 @@ public class AllocationRepositoryImpl implements AllocationRepositoryJPA {
 		Join<Allocation, Resource> resource = allocation.join(Allocation_.resource);
 		query.select(criteriaBuilder.construct(ResourceProjectAllocationSummary.class,
 				resource.get(Resource_.code.getName()), resource.get(Resource_.name.getName()),
+				resource.get(Resource_.deputedLocation.getName()),
 				project.get(Project_.code.getName()), project.get(Project_.name.getName()),
 				projectType.get(ProjectType_.code.getName()), projectType.get(ProjectType_.description.getName()),
 				allocation.get(Allocation_.proportion.getName()), allocation.get(Allocation_.customerTimeTracking.getName())));
