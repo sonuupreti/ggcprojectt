@@ -525,6 +525,9 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface GenderBuilder {
+		
+		public DesignationBuilder withGender(final Gender gender);
+		
 		public DesignationBuilder male();
 
 		public DesignationBuilder female();
@@ -668,6 +671,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			return this;
 		}
 
+
+		@Override
+		public DesignationBuilder withGender(Gender gender) {
+			this.resource.gender = gender;
+			return this;
+		}
+		
 		@Override
 		public DesignationBuilder male() {
 			this.resource.gender = Gender.MALE;

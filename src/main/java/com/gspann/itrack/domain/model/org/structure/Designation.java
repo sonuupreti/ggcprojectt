@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -15,6 +16,7 @@ import javax.validation.constraints.NotNull;
 import org.hibernate.annotations.Immutable;
 
 import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
+import com.gspann.itrack.domain.model.location.State;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -46,8 +48,13 @@ public class Designation extends AbstractIdentifiable<Short> {
 	@Column(name = "LEVEL", nullable = false)
 	private short level;
 
-	@NotNull
+/*	@NotNull
 	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "DEPARTMENT_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DESIGNATIONS_DEPARTMENT_ID))
-	private Department department;
+	private Department department;*/
+	
+	@NotNull
+	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.org.structure.Department.class, fetch = FetchType.LAZY)
+	@JoinColumn(name = "STATE_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DESIGNATIONS_DEPARTMENT_ID))
+	private State state;
 }

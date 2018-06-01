@@ -15,8 +15,10 @@ import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ProjectDTO;
+import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
+import com.gspann.itrack.domain.model.staff.Resource;
 
 public class BeanConverterUtil {
 
@@ -81,13 +83,29 @@ public class BeanConverterUtil {
 		projectDTO.setStartDate(project.dateRange().fromDate());
 		projectDTO.setEndDate(project.dateRange().tillDate());
 		projectDTO.setTechnologies(project.technologies());
-		
-		
-		
-		
-		
-		
 		return projectDTO;
+	}
+	
+	public static ResourceDTO resourceEntitytoDto(Resource resource) {
+		ResourceDTO resourceDTO = new ResourceDTO();
+		resourceDTO.setEmailId(resource.emailId());
+		resourceDTO.setActualJoiningDate(resource.actualJoiningDate());
+		resourceDTO.setBaseLocation(resource.baseLocation());
+		resourceDTO.setDeputedLocation(resource.baseLocation());
+		resourceDTO.setDesignation(resource.designation());
+		resourceDTO.setEmployeeStatusCode(resource.employmentStatus().code());
+		resourceDTO.setEmploymentTypeCode(resource.employmentType().code());
+		resourceDTO.setExitDate(resource.exitDate());
+		resourceDTO.setExpectedJoiningDate(resource.expectedJoiningDate());
+		resourceDTO.setGender(resource.gender());
+		resourceDTO.setGreytHRId(resource.greytHRID());
+		//resourceDTO.setImageId(resource.image().id());
+		resourceDTO.setName(resource.name());
+		resourceDTO.setPrimarySkills(resource.primarySkills());
+		resourceDTO.setResourceCode(resource.code());
+		resourceDTO.setSecondarySkills(resource.secondarySkills());
+		resourceDTO.setVersion(resource.version());
+		return resourceDTO;
 	}
 
 }

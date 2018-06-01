@@ -3,13 +3,18 @@ package com.gspann.itrack.domain.service.api;
 import java.time.LocalDate;
 
 import org.javamoney.moneta.Money;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import com.gspann.itrack.domain.model.common.Toggle;
+import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
+import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
 
 public interface ResourceManagementService {
 
-	public void addResource();
-
+	public ResourceDTO addResource(ResourceDTO resourceDTO);
+	public ResourceOnLoadVM resourceOnLodPage();
+	public Page<ResourceDTO> getAllResources(Pageable pageable);
 	public void onBoardToBench(final String resourceCode, final LocalDate joiningDate);
 
 	public void onBoardToProject(final String resourceCode, final String projectCode, final Money hourlyRate,
