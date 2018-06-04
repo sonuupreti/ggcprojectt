@@ -1,5 +1,7 @@
 package com.gspann.itrack.domain.model.common.dto;
 
+import com.gspann.itrack.domain.model.location.City;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,6 +20,8 @@ public class ResourceProjectAllocationSummary {
 	private String resourceCode;
 
 	private String resourceName;
+
+	private City deputedLocation;
 	
 	private String projectCode;
 	

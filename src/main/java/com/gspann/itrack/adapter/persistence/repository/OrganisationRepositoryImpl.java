@@ -10,7 +10,6 @@ import javax.persistence.PersistenceContext;
 import org.springframework.stereotype.Repository;
 
 import com.gspann.itrack.domain.model.business.payments.BillabilityStatus;
-import com.gspann.itrack.domain.model.org.holidays.Occasion;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
@@ -246,38 +245,5 @@ public class OrganisationRepositoryImpl implements OrganisationRepository {
 	@Override
 	public List<BillabilityStatus> findAllBillabilityStatuses() {
 		return entityManager.createQuery("from BillabilityStatus b", BillabilityStatus.class).getResultList();
-	}
-
-	@Override
-	public Occasion saveOccasion(Occasion occasion) {
-		Optional<Practice> existingOccasion = findPracticeByName(occasion.name());
-		if (existingOccasion.isPresent()) {
-			return entityManager.merge(occasion);
-		} else {
-			entityManager.persist(occasion);
-			return occasion;
-		}
-	}
-
-	@Override
-	public Optional<Occasion> findOccasionByName(String name) {
-		Occasion occasion = null;
-		try {
-			occasion = entityManager.createQuery("from Occasion o where name = :name", Occasion.class)
-					.setParameter("name", name).getSingleResult();
-		} catch (NoResultException e) {
-			// No state with such name exists, so return null
-		}
-		return Optional.ofNullable(occasion);
-	}
-
-	@Override
-	public Optional<Occasion> findOccasionById(short id) {
-		return Optional.ofNullable(entityManager.find(Occasion.class, id));
-	}
-
-	@Override
-	public List<Occasion> findAllOccasions() {
-		return entityManager.createQuery("from Occasion o", Occasion.class).getResultList();
 	}
 }

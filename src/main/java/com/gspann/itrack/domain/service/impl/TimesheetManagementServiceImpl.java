@@ -3,14 +3,11 @@ package com.gspann.itrack.domain.service.impl;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 
 import javax.transaction.Transactional;
 
@@ -21,16 +18,17 @@ import com.gspann.itrack.adapter.persistence.repository.AllocationRepository;
 import com.gspann.itrack.adapter.persistence.repository.ProjectRepository;
 import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
 import com.gspann.itrack.adapter.persistence.repository.TimeSheetRepository;
-import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.domain.model.common.dto.DayDTO;
 import com.gspann.itrack.domain.model.common.dto.DayVM;
 import com.gspann.itrack.domain.model.common.dto.ProjectSummary;
 import com.gspann.itrack.domain.model.common.dto.ResourceAllocationSummary;
 import com.gspann.itrack.domain.model.common.dto.ResourceProjectAllocationSummary;
+import com.gspann.itrack.domain.model.common.dto.TimeSheetActionType;
 import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
 import com.gspann.itrack.domain.model.common.dto.TimeSheetMetaDataVM;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetActionType;
 import com.gspann.itrack.domain.model.common.dto.WeekVM;
+import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.org.holidays.Holiday;
 import com.gspann.itrack.domain.model.staff.Resource;
 import com.gspann.itrack.domain.model.timesheets.DailyTimeSheet;
 import com.gspann.itrack.domain.model.timesheets.DayType;
@@ -38,7 +36,9 @@ import com.gspann.itrack.domain.model.timesheets.TimeSheetEntry;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
+import com.gspann.itrack.domain.service.api.HolidayService;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
+import com.gspann.itrack.infra.config.ApplicationProperties;
 
 import lombok.experimental.var;
 
@@ -57,13 +57,24 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	@Autowired
 	private AllocationRepository allocationRepository;
 
+	@Autowired
+	private HolidayService holidayService;
+
+	private ApplicationProperties.TimeSheet TIMESHEET_PROPERTIES;
+
+	public TimesheetManagementServiceImpl(final ApplicationProperties applicationProperties) {
+		TIMESHEET_PROPERTIES = applicationProperties.timeSheet();
+	}
+
 	@Override
 	public TimeSheetMetaDataVM getTimeSheetMetaData(String resourceCode) {
 		List<ResourceProjectAllocationSummary> allocationSummaries = allocationRepository
 				.findAllAllocationSummaries(resourceCode);
+		City deputedLocation = null;
 		if (allocationSummaries.size() > 0) {
 			ResourceAllocationSummary resourceAllocationSummary = ResourceAllocationSummary
 					.of(allocationSummaries.get(0).resourceCode(), allocationSummaries.get(0).resourceName());
+			deputedLocation = allocationSummaries.get(0).deputedLocation();
 			for (var allocationSummary : allocationSummaries) {
 				resourceAllocationSummary.addProjectAllocation(
 						ProjectSummary.of(allocationSummary.projectCode(), allocationSummary.projectName(),
@@ -71,31 +82,41 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 								allocationSummary.proportion(), allocationSummary.customerTimeTracking()));
 			}
 
-			WeekVM weekDTO = WeekVM.current(ApplicationConstant.WEEKLY_STANDARD_HOURS,
-					ApplicationConstant.DAILY_STANDARD_HOURS);
+			WeekVM weekDTO = WeekVM.current(TIMESHEET_PROPERTIES.STANDARD_WEEKLY_HOURS(),
+					TIMESHEET_PROPERTIES.STANDARD_DAILY_HOURS(), TIMESHEET_PROPERTIES.WEEK_START_DAY(),
+					TIMESHEET_PROPERTIES.WEEK_END_DAY());
 
-			LocalDate now = LocalDate.now();
-			LocalDate startDate = now.with(TemporalAdjusters.previousOrSame(ApplicationConstant.WEEK_START_DAY));
-			LocalDate endDate = now.with(TemporalAdjusters.nextOrSame(ApplicationConstant.WEEK_START_DAY));
+//			LocalDate currentDate = LocalDate.now();
+			LocalDate weekStartDate = weekDTO.getWeekStartDate();
+			LocalDate weekEndDate = weekDTO.getWeekEndDate();
+			Week week = Week.of(weekStartDate);
 
-			Set<LocalDate> holidays = new HashSet<LocalDate>();
-			holidays.add(startDate.plusDays(3));
-
-			while (!startDate.isEqual(endDate)) {
-				if (holidays.contains(startDate)) {
-					weekDTO.addDayVM(DayVM.ofHoliday(startDate, "Diwali"));
-				} else if (isWeekend(startDate.getDayOfWeek())) {
-					weekDTO.addDayVM(DayVM.ofWeekend(startDate));
-				} else {
-					weekDTO.addDayVM(DayVM.ofWorkingDay(startDate));
+			Set<Holiday> holidays = holidayService.getHolidaysByWeekAndLocation(week, deputedLocation);
+			LocalDate currentDate = weekStartDate;
+			boolean isHoliday = false;
+			String holidayOccassions = null;
+			while (!currentDate.isEqual(weekEndDate)) {
+				for (var holiday : holidays) {
+					if (currentDate.equals(holiday.date())) {
+						isHoliday = true;
+						holidayOccassions = holiday.locationOcassions().stream().map(e -> e.occasion().name())
+								.reduce(", ", String::concat);
+					}
 				}
-				startDate = startDate.plusDays(1);
+				if (isHoliday) {
+					weekDTO.addDayVM(DayVM.ofHoliday(currentDate, holidayOccassions));
+				} else if (isWeekend(weekStartDate.getDayOfWeek())) {
+					weekDTO.addDayVM(DayVM.ofWeekend(currentDate));
+				} else {
+					weekDTO.addDayVM(DayVM.ofWorkingDay(currentDate));
+				}
+				currentDate = currentDate.plusDays(1);
 			}
 
 			// Find any saved timesheet, pending for submission or create new if none is
 			// there for current week.
 
-			return TimeSheetMetaDataVM.of(resourceAllocationSummary, weekDTO,
+			return TimeSheetMetaDataVM.of(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(), resourceAllocationSummary, weekDTO,
 					new TimeSheetActionType[] { TimeSheetActionType.SAVE, TimeSheetActionType.SUBMIT });
 		} else {
 			return null;
@@ -103,12 +124,13 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	private boolean isWeekend(final DayOfWeek dayOfWeek) {
-		return dayOfWeek == ApplicationConstant.WEEK_END_FIRST || dayOfWeek == ApplicationConstant.WEEK_END_SECOND;
+		return TIMESHEET_PROPERTIES.WEEKENDS().contains(dayOfWeek);
 	}
 
 	@Override
 	@Transactional
-	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet, final Set<ProjectSummary> allocatedProjects) {
+	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet,
+			final Set<ProjectSummary> allocatedProjects) {
 		Resource resource = resourceRepository.findById(timesheet.getResourceCode()).get();
 
 		Optional<WeeklyTimeSheet> existingTimeSheet = null;
@@ -125,10 +147,11 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		holidays.add(weekStartDate.plusDays(3));
 
 		LocalDate weekDate = null;
-//		Map<LocalDate, DayDTO> dailyEntriesMap = timesheet.getWeek().dailyEntriesMap();
-//		for (LocalDate date : dailyEntriesMap.keySet()) 
-//            System.out.println("key: " + date);
-		
+		// Map<LocalDate, DayDTO> dailyEntriesMap =
+		// timesheet.getWeek().dailyEntriesMap();
+		// for (LocalDate date : dailyEntriesMap.keySet())
+		// System.out.println("key: " + date);
+
 		Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>(7);
 		Set<DayDTO> dailyEntries = timesheet.getWeek().getDailyEntries();
 
@@ -192,7 +215,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		if (existingTimeSheet.isPresent()) {
 			// Update existing timesheet
 			weeklyTimeSheet = existingTimeSheet.get();
-//			weeklyTimeSheet.clearAllDailyTimeSheets();
+			// weeklyTimeSheet.clearAllDailyTimeSheets();
 			weeklyTimeSheet.addAllDailyTimeSheets(dailyTimeSheets);
 		} else {
 			// Create new timesheet in DB

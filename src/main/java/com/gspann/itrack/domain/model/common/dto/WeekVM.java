@@ -36,17 +36,18 @@ public class WeekVM {
 	private int dailyStandardHours;
 
 	private int weeklyStandardHours;
-	
+
 	private boolean flexibleWeekends = false;
 
 	private Set<DayVM> dailyDetails;
 
-	public static WeekVM current(final Duration weeklyStandardHours, final Duration dailyStandardHours) {
+	public static WeekVM current(final Duration weeklyStandardHours, final Duration dailyStandardHours,
+			final DayOfWeek weekStartDay, final DayOfWeek weekEndDay) {
 		LocalDate now = LocalDate.now();
 
 		WeekVM weekVM = new WeekVM();
-		weekVM.weekStartDate = now.with(TemporalAdjusters.previousOrSame(ApplicationConstant.WEEK_START_DAY));
-		weekVM.weekEndDate = now.with(TemporalAdjusters.nextOrSame(ApplicationConstant.WEEK_START_DAY)).minusDays(1);
+		weekVM.weekStartDate = now.with(TemporalAdjusters.previousOrSame(weekStartDay));
+		weekVM.weekEndDate = now.with(TemporalAdjusters.nextOrSame(weekEndDay));
 		weekVM.weekLength = 7;
 		weekVM.weekStartDay = weekVM.weekStartDate.getDayOfWeek();
 		weekVM.weekEndDay = weekVM.weekEndDate.getDayOfWeek();
@@ -63,7 +64,7 @@ public class WeekVM {
 		weekVM.weekEndDate = weekEndDate;
 		weekVM.weekLength = Long.valueOf(ChronoUnit.DAYS.between(weekStartDate, weekEndDate)).intValue();
 		weekVM.weekStartDay = weekStartDate.getDayOfWeek();
-		weekVM.weekEndDay = weekVM.weekEndDate.getDayOfWeek();
+		weekVM.weekEndDay = weekEndDate.getDayOfWeek();
 		weekVM.weeklyStandardHours = (int) weeklyStandardHours.toHours();
 		weekVM.dailyStandardHours = (int) dailyStandardHours.toHours();
 		weekVM.dailyDetails = new TreeSet<DayVM>((DayVM o1, DayVM o2) -> o1.getDate().compareTo(o2.getDate()));

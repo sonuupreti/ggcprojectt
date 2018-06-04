@@ -11,6 +11,7 @@ import java.util.TreeSet;
 
 import javax.validation.Valid;
 
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -36,6 +37,7 @@ import com.gspann.itrack.domain.model.common.dto.WeekDTO;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
+import com.gspann.itrack.infra.config.ApplicationProperties;
 
 import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
@@ -46,21 +48,27 @@ import lombok.extern.slf4j.Slf4j;
 @RestController
 @RequestMapping("/api/timesheets")
 @Slf4j
-public class TimeSheetsResource {
+public class TimeSheetResource {
 
 	private static final String ENTITY_NAME = "timesheet";
 
 	private final TimesheetManagementService timesheetManagementService;
+	
+    private final Environment env;
 
-	public TimeSheetsResource(final TimesheetManagementService timesheetManagementService) {
+    private final ApplicationProperties applicationProperties;
+
+	public TimeSheetResource(final TimesheetManagementService timesheetManagementService, final Environment env, final ApplicationProperties applicationProperties) {
 		this.timesheetManagementService = timesheetManagementService;
+		this.env = env;
+		this.applicationProperties = applicationProperties;
 	}
 
 	@GetMapping("/initSubmission/{resourceCode}")
 	@Timed
 	public ResponseEntity<TimeSheetMetaDataVM> initTimesheetSubmission(@PathVariable String resourceCode, final Principal principal) {
 		log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
-//		String manojResCode = "20001";
+		System.out.println("????????????? -> " + applicationProperties);
 		return new ResponseEntity<TimeSheetMetaDataVM>(timesheetManagementService.getTimeSheetMetaData(resourceCode),
 				HttpStatus.OK);
 	}

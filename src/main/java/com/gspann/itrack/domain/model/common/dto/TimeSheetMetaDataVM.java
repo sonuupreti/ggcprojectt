@@ -1,5 +1,7 @@
 package com.gspann.itrack.domain.model.common.dto;
 
+import java.time.LocalDate;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,6 +14,8 @@ import lombok.ToString;
 @AllArgsConstructor(staticName = "of")
 @ToString
 public class TimeSheetMetaDataVM {
+	
+	private LocalDate systemStartDate;
 
 	private ResourceAllocationSummary resourceAllocationSummary;
 	

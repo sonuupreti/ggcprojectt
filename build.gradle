@@ -43,6 +43,7 @@ apply plugin: 'propdeps'
 apply plugin: 'com.moowork.node'
 apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
+apply plugin: 'propdeps-eclipse'
 
 dependencyManagement {
   imports {
@@ -231,6 +232,7 @@ dependencies {
 	compile("org.javamoney:moneta:1.1")
 	compile("org.jadira.usertype:usertype.core:6.0.1.GA")
 	compileOnly('org.projectlombok:lombok:1.16.20')
+	compile "org.springframework.boot:spring-boot-configuration-processor"
 	
 	/*compile("org.zalando:logbook-spring-boot-starter:${logbook_version}") {
 		exclude group: "org.zalando", module: "logbook-httpclient"
