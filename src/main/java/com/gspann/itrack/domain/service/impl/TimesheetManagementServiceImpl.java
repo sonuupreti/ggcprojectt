@@ -3,7 +3,6 @@ package com.gspann.itrack.domain.service.impl;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.time.temporal.TemporalAdjusters;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -84,17 +83,16 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			}
 
 			WeekVM weekDTO = WeekVM.current(TIMESHEET_PROPERTIES.STANDARD_WEEKLY_HOURS(),
-					TIMESHEET_PROPERTIES.STANDARD_WEEKLY_HOURS(), TIMESHEET_PROPERTIES.WEEK_START_DAY());
+					TIMESHEET_PROPERTIES.STANDARD_DAILY_HOURS(), TIMESHEET_PROPERTIES.WEEK_START_DAY(),
+					TIMESHEET_PROPERTIES.WEEK_END_DAY());
 
-			LocalDate currentDate = LocalDate.now();
-			LocalDate weekStartDate = currentDate
-					.with(TemporalAdjusters.previousOrSame(TIMESHEET_PROPERTIES.WEEK_START_DAY()));
-			LocalDate weekEndDate = currentDate
-					.with(TemporalAdjusters.nextOrSame(TIMESHEET_PROPERTIES.WEEK_START_DAY()));
+//			LocalDate currentDate = LocalDate.now();
+			LocalDate weekStartDate = weekDTO.getWeekStartDate();
+			LocalDate weekEndDate = weekDTO.getWeekEndDate();
 			Week week = Week.of(weekStartDate);
 
 			Set<Holiday> holidays = holidayService.getHolidaysByWeekAndLocation(week, deputedLocation);
-			currentDate = weekEndDate;
+			LocalDate currentDate = weekStartDate;
 			boolean isHoliday = false;
 			String holidayOccassions = null;
 			while (!currentDate.isEqual(weekEndDate)) {
@@ -118,7 +116,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			// Find any saved timesheet, pending for submission or create new if none is
 			// there for current week.
 
-			return TimeSheetMetaDataVM.of(resourceAllocationSummary, weekDTO,
+			return TimeSheetMetaDataVM.of(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(), resourceAllocationSummary, weekDTO,
 					new TimeSheetActionType[] { TimeSheetActionType.SAVE, TimeSheetActionType.SUBMIT });
 		} else {
 			return null;
