@@ -1,0 +1,29 @@
+#prevTSView{
+    margin:20px auto;
+}
+#prevTS{
+    width:100%;
+}
+#prevTS-header{
+    background: #F4F6F9;
+    border:none;
+}
+#quickLinks{
+    color: #666;
+}
+.quick-link-icon{
+    margin:0 6px;
+    cursor:pointer;
+}
+.collapsed{
+    height: 0px;
+    min-height: 0;
+    visibility: 'hidden';
+}
+.expanded{
+    height: '*';
+    visibility: 'visible';
+}
+/* .contract-icon{
+    background: url('../../../content/images/contarct-Icon.png');
+} */

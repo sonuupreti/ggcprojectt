@@ -1,1 +1,63 @@
-<h3>My Timesheet previous</h3>
+<mat-card id="prevTSView">
+        <mat-table #table [dataSource]="timesheets" id="prevTS">
+    
+            <ng-container matColumnDef="weekOf">
+                <mat-header-cell *matHeaderCellDef> Week of </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekOf}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.status}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="submittedOn">
+                <mat-header-cell *matHeaderCellDef> Submitted On </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.submittedOn}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="approverAction">
+                <mat-header-cell *matHeaderCellDef> Approver's Action </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.approverAction}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="comments">
+                <mat-header-cell *matHeaderCellDef> Comments </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.comments}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="quickLinks">
+                <mat-header-cell *matHeaderCellDef> Quick Links </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet" id="quickLinks">
+                    <i class="fa fa-eye quick-link-icon"></i>
+                    <i class="fa quick-link-icon"
+                        (click)="expandRow($event,timesheet)"
+                        [class.fa-arrows-alt]="expandedElement != timesheet"
+                        [class.fa-compress]="expandedElement == timesheet"
+                        [class.expanded]="expandedElement == timesheet">
+                    </i>
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="expandedDetail">
+                <mat-cell *matCellDef="let timesheet"> 
+                  Detail Row View
+                </mat-cell>
+              </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="displayedColumns" id="prevTS-header"></mat-header-row>
+    
+            <mat-row *matRowDef="let row; columns: displayedColumns;"
+                [ngStyle]="{'border-bottom-style':expandedElement == row ? 'none':'solid'}">
+            </mat-row>
+    
+            <mat-row 
+                *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+                [class.expanded]="row.element == expandedElement" 
+                [class.collapsed]="row.element != expandedElement"
+                style="overflow: hidden"> 
+            </mat-row>
+        </mat-table>
+    </mat-card>
+    
+      
