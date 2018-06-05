@@ -16,6 +16,7 @@ import { Itrack2CoreModule } from 'app/core';
 import { Itrack2AppRoutingModule } from './app-routing.module';
 import { Itrack2HomeModule } from './home/home.module';
 import { Itrack2EntityModule } from './entities/entity.module';
+import { TimeSheetSubmitModule } from './timesheet-submit/timesheet-submit.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
@@ -26,11 +27,7 @@ import { ListAccountsService } from './accounts/list-accounts/account.service';
 import { AddAccountComponent } from './accounts/add-account/add-account.component';
 import { AddAccountService } from './accounts/add-account/add-account.service';
 import { ViewAccountService } from './accounts/view-account/view-account.service';
-import { TimesheetService } from './timesheet-view/timesheet.service';
 import { ViewAccountComponent } from './accounts/view-account/view-account.component';
-import { TimesheetView } from './timesheet-view/timesheet-view.component';
-import { PreviousTimesheetView } from './timesheet-view/previous-timesheet-view/previous-timesheet-view.component';
-import { CurrentTimesheetView } from './timesheet-view/current-timesheet-view/current-timesheet-view.component';
 import { RemoveAccountConfirmDialogComponent } from './dialog/remove-account-confirm-dialog/remove-account-confirm-dialog.component';
 
 @NgModule({
@@ -44,7 +41,8 @@ import { RemoveAccountConfirmDialogComponent } from './dialog/remove-account-con
         Itrack2SharedModule,
         Itrack2CoreModule,
         Itrack2HomeModule,
-        Itrack2EntityModule
+        Itrack2EntityModule,
+        TimeSheetSubmitModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
@@ -56,9 +54,6 @@ import { RemoveAccountConfirmDialogComponent } from './dialog/remove-account-con
         ListAccountsComponent,
         AddAccountComponent,
         ViewAccountComponent,
-        TimesheetView,
-        PreviousTimesheetView,
-        CurrentTimesheetView,
         RemoveAccountConfirmDialogComponent
     ],
     providers: [
@@ -67,7 +62,6 @@ import { RemoveAccountConfirmDialogComponent } from './dialog/remove-account-con
         AddAccountService,
         ViewAccountService,
         PaginationConfig,
-        TimesheetService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: AuthExpiredInterceptor,
