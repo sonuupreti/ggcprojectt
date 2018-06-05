@@ -10,6 +10,6 @@ import com.gspann.itrack.domain.model.org.structure.Company;
 
 public interface CompanyRepository extends JpaRepository<Company, String> {
 	
-	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(r.code, r.name) FROM Company r") 
+	@Query("SELECT new com.gspann.itrack.domain.model.common.dto.Pair(r.id, r.name) FROM Company r") 
     List<Pair<String, String>> findAllCodeAndName();
 }

@@ -50,7 +50,7 @@ public class ResourceRestController {
     }
 	
     
-    @GetMapping("/initAddAccount")
+    @GetMapping("/initAddResource")
     @Timed
     public ResourceOnLoadVM initResourceOnLodPage(final Principal principal) {
         log.debug("<<<<<----- Resource Page onLoad ------>>>");
@@ -62,7 +62,7 @@ public class ResourceRestController {
     }
     
     
-/*    @PostMapping("/resource")
+    @PostMapping("/resource")
     @Timed
     public ResponseEntity<ResourceDTO> createAccounts(@Valid @RequestBody ResourceDTO resourceDTO) throws URISyntaxException {
         log.debug("REST request to save Resource : {}", resourceDTO);
@@ -74,8 +74,8 @@ public class ResourceRestController {
         
         return ResponseEntity.created(new URI("/api/resource/" + resourceDTO1.getResourceCode()))
             .headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, resourceDTO1.getResourceCode()))
-            .body(accountDTO1);
-    }*/
+            .body(resourceDTO1);
+    }
     
     
 	 	@GetMapping("/resource")

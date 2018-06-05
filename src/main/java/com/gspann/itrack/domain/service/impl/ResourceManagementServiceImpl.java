@@ -60,7 +60,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		Resource resources = null;
 		if( null != resourceDTO.getEmploymentType().code() && resourceDTO.getEmploymentType().code().equalsIgnoreCase("FTE")) {
 			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(resourceDTO.getBaseLocation()).asFullTimeEmployee()
-					.withJustAnnualSalary(resourceDTO.getAnnualSalary()).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(resourceDTO.getDesignation())
+					.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(resourceDTO.getDesignation())
 					.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
 		}
 		else if(null != resourceDTO.getEmploymentType().code() && resourceDTO.getEmploymentType().code().equalsIgnoreCase("Contractor")) {
@@ -70,7 +70,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		}
 		else if(null != resourceDTO.getEmploymentType().code() && resourceDTO.getEmploymentType().code().equalsIgnoreCase("Sub-Contractor")) {
 		resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(resourceDTO.getBaseLocation()).asFullTimeEmployee()
-				.withJustAnnualSalary(resourceDTO.getAnnualSalary()).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(resourceDTO.getDesignation())
+				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(resourceDTO.getDesignation())
 				.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
 	}
 		resourceRepository.saveAndFlush(resources);
