@@ -1,24 +1,46 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ComponentFactoryResolver, ViewChildren, Type } from '@angular/core';
 import { DataSource } from '@angular/cdk/collections';
 import { Observable } from 'rxjs/Observable';
+import { TimesheetDetailedViewComponent } from './timesheet-detailed-view/timesheet-detailed-view.component';
+import { timeSheetsDetailedViewDirective } from './timesheet-detailed-view/timesheet-detailed-view.directive';
 
 @Component({
     selector: 'jhi-previous-timesheet-view',
     templateUrl: './previous-timesheet-view.component.html',
     styleUrls: ['./previous-timesheet-view.component.css']
 })
-export class PreviousTimesheetView {
+export class PreviousTimesheetViewComponent {
     displayedColumns = ['weekOf', 'status', 'submittedOn', 'approverAction', 'comments', 'quickLinks'];
     timesheets = new RecentTSDataSource();
     isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
     expandedElement: any;
+    dynamicComponentRef: any;
+    @ViewChildren(timeSheetsDetailedViewDirective) detailedRow: timeSheetsDetailedViewDirective;
 
-    expandRow(ev, timesheet) {
+    constructor(private componentFactoryResolver: ComponentFactoryResolver) {}
+    expandRow(ev, timesheet, index) {
+        if (this.dynamicComponentRef) {
+            this.dynamicComponentRef.destroy();
+        }
         if (ev.currentTarget.classList.contains('expanded')) {
             this.expandedElement = undefined;
         } else {
             this.expandedElement = timesheet;
+            this.loadComponent(index);
         }
+    }
+
+    loadComponent(index) {
+        const componentData = this.getData();
+        const componentFactory = this.componentFactoryResolver.resolveComponentFactory(componentData.component);
+        const viewContainerRef = this.detailedRow._results[index].viewContainerRef;
+        viewContainerRef.clear();
+        this.dynamicComponentRef = viewContainerRef.createComponent(componentFactory);
+        (<TimesheetDetailedViewComponent>this.dynamicComponentRef.instance).data = componentData.data;
+    }
+
+    getData() {
+        return new DetailedRowData(TimesheetDetailedViewComponent, this.expandedElement);
     }
 }
 
@@ -120,4 +142,8 @@ export class RecentTSDataSource extends DataSource<any> {
         return Observable.of(rows);
     }
     disconnect() {}
+}
+
+export class DetailedRowData {
+    constructor(public component: Type<any>, public data: any) {}
 }

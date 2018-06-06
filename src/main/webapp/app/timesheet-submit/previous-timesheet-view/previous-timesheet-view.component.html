@@ -28,12 +28,13 @@
     
             <ng-container matColumnDef="quickLinks">
                 <mat-header-cell *matHeaderCellDef> Quick Links </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet" id="quickLinks">
+                <mat-cell *matCellDef="let timesheet;let i=index;" id="quickLinks">
                     <i class="fa fa-eye quick-link-icon"></i>
-                    <i class="fa quick-link-icon"
-                        (click)="expandRow($event,timesheet)"
+                    <i class="quick-link-icon"
+                        (click)="expandRow($event,timesheet,i/2)"
+                        [class.fa]="expandedElement != timesheet"
                         [class.fa-arrows-alt]="expandedElement != timesheet"
-                        [class.fa-compress]="expandedElement == timesheet"
+                        [class.contract-icon]="expandedElement == timesheet"
                         [class.expanded]="expandedElement == timesheet">
                     </i>
                 </mat-cell>
@@ -41,13 +42,14 @@
     
             <ng-container matColumnDef="expandedDetail">
                 <mat-cell *matCellDef="let timesheet"> 
-                  Detail Row View
+                  <!-- Detail Row View -->
+                  <ng-template expand-row></ng-template>
                 </mat-cell>
               </ng-container>
             
             <mat-header-row *matHeaderRowDef="displayedColumns" id="prevTS-header"></mat-header-row>
     
-            <mat-row *matRowDef="let row; columns: displayedColumns;"
+            <mat-row *matRowDef="let row; columns: displayedColumns;let i=index;"
                 [ngStyle]="{'border-bottom-style':expandedElement == row ? 'none':'solid'}">
             </mat-row>
     

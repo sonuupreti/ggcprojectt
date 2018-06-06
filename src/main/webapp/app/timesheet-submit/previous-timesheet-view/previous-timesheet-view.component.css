@@ -24,6 +24,10 @@
     height: '*';
     visibility: 'visible';
 }
-/* .contract-icon{
-    background: url('../../../content/images/contarct-Icon.png');
-} */
+.contract-icon{
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    background-size: 14px 14px !important;
+    background: url('./../../../content/images/contarct-icon.png');
+}
