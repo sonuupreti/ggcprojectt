@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { TimesheetApprovalsService } from 'app/timesheet-approvals/timesheet-approvals.service';
 
 @Component({
     selector: 'jhi-pending-requests',
@@ -7,7 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class PendingRequestsComponent implements OnInit {
     selected = 'RecentFirst';
-    constructor() {}
+    timeSheetData = [];
+    constructor(private timesheetApprovalService: TimesheetApprovalsService) {}
 
-    ngOnInit() {}
+    ngOnInit() {
+        this.timesheetApprovalService.getPendingTimesheetData().subscribe(timesheetData => {
+            this.timeSheetData = timesheetData;
+            console.log(this.timeSheetData);
+        });
+    }
 }
