@@ -13,3 +13,34 @@
   #viewBy{
     background:#8ebfd636;
   }
+  #resourceName{
+    color: #0EB3F7;
+  }
+  #recivedOn{
+    color: #2e303387;
+  }
+  .resourceTimeSheet{
+    margin: 1em;
+    border: 1px solid #0EB3F7;
+    padding: 1.5em;
+    background: #f4f6f97a;
+  }
+
+  .resourceTable{
+    width:100%;
+    margin-bottom: 1em;
+    margin-top: 1em;
+  }
+  .tableContent{
+    border: 1px solid #3333332e;
+    padding: 0.6em;
+  }
+  .resourceTableLightGray{
+    background:#F4F6F9;
+  }
+  .resourceTableWhite{
+    background:#FFFFFF;
+  }
+  .weekendsColor td:nth-child(7),.weekendsColor td:nth-child(8), .weekendsColor th:nth-child(7), .weekendsColor th:nth-child(8){
+    background: #EBF3DB;
+  }

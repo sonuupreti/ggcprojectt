@@ -25,8 +25,64 @@
               </span>
             </div>
           </div>
-          <div class="row">
+          <div class="row" >
+            <div class="container resourceTimeSheet" *ngFor="let timeSheetData of timeSheetData">
+              <div class="row">
+                <div class="col-sm-7">
+                  <strong>
+                    <span id="resourceName">{{timeSheetData.resource.value}} - </span>
+                    <span>
+                        Week {{timeSheetData.weekDetails.week}} ({{timeSheetData.weekDetails.weekStartDate | date :'MMM'}} {{timeSheetData.weekDetails.weekStartDate | date :'dd'}} - {{timeSheetData.weekDetails.weekEndDate | date : 'dd'}}, {{timeSheetData.weekDetails.weekEndDate | date : 'yyyy'}})
+                    </span>
+                  </strong>
+                </div>
+                <div class="col-sm-3" id="recivedOn">
+                    <strong>Recived on: {{timeSheetData.weekDetails.submittedDate | date}}</strong>
+                </div>
+                <div class="col-sm-2">
 
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-sm-12">
+                    <table class="resourceTable">
+                        <thead class="weekendsColor">
+                          <th class="tableContent resourceTableLightGray">
+                            Projects
+                          </th>
+                          <th class="tableContent text-center resourceTableLightGray" *ngFor="let dates of timeSheetData.weekDetails.dailyDetails">
+                              {{dates.date | date: 'MM/dd'}}
+                          </th>
+                          <th class="tableContent text-center">
+                            Total
+                          </th>
+                          <th colspan="2" class="text-center">
+                            Action
+                          </th>
+                        </thead>
+                        <tbody>
+                          <tr *ngFor="let projectData of timeSheetData.projects" class="weekendsColor">
+                            <td class="tableContent resourceTableLightGray ">
+                              {{projectData.project.key}} - {{projectData.project.value}}
+                            </td>
+                            <td class="tableContent text-center resourceTableWhite" *ngFor="let dailyEntries of projectData.dailyEntries">
+                                {{dailyEntries.timeEntries.hours}}
+                            </td>
+                            <td class="tableContent text-center resourceTableWhite">
+                              {{projectData.totalSubmittedHrs}}
+                            </td>
+                            <td class="text-center">
+                              action
+                            </td>
+                            <td>
+                              action
+                            </td>
+                          </tr>
+                        </tbody>
+                      </table>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
     </div>
