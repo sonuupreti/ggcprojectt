@@ -90,9 +90,9 @@ public class BeanConverterUtil {
 		ResourceDTO resourceDTO = new ResourceDTO();
 		resourceDTO.setEmailId(resource.emailId());
 		resourceDTO.setActualJoiningDate(resource.actualJoiningDate());
-		resourceDTO.setBaseLocation(resource.baseLocation());
-		resourceDTO.setDeputedLocation(resource.baseLocation());
-		resourceDTO.setDesignation(resource.designation());
+		resourceDTO.setBaseLocationId(resource.baseLocation().id());
+		resourceDTO.setDeputedLocationId(resource.deputedLocation().id());
+		resourceDTO.setDesignationId(resource.designation().id());
 		resourceDTO.setEmployeeStatusCode(resource.employmentStatus().code());
 		resourceDTO.setEmploymentTypeCode(resource.employmentType().code());
 		resourceDTO.setExitDate(resource.exitDate());

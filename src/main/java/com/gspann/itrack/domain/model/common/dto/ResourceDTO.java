@@ -1,5 +1,6 @@
 package com.gspann.itrack.domain.model.common.dto;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
@@ -26,7 +27,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+//@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class ResourceDTO {
 	
 	private String resourceCode;
@@ -38,15 +39,16 @@ public class ResourceDTO {
 	private String name;
 	@NotNull
 	private Gender gender;
-	@NotNull
-	private Designation designation;
-	@NotNull
+	/*@NotNull
+	private Designation designation*/;
+	private short designationId;
+	//@NotNull
 	private String employmentTypeCode;
 	@NotNull
 	private String employeeStatusCode;
 	@NotNull
-	private City baseLocation;
-	private City deputedLocation;
+	private int baseLocationId;
+	private int deputedLocationId;
 	@NotNull
 	private String primarySkills;
 	
@@ -56,7 +58,8 @@ public class ResourceDTO {
 	private LocalDate actualJoiningDate;
 	private LocalDate exitDate;
 	private long imageId;
+	@NotNull
 	private EmploymentType employmentType;
-	private Money annualSalary;
+	private BigDecimal annualSalary;
 
 }

@@ -48,13 +48,13 @@ public class Designation extends AbstractIdentifiable<Short> {
 	@Column(name = "LEVEL", nullable = false)
 	private short level;
 
-	@NotNull
+	/*@NotNull
 	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
 	@JoinColumn(name = "DEPARTMENT_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DESIGNATIONS_DEPARTMENT_ID))
-	private Department department;
+	private Department department;*/
 	
-	/*@NotNull
+	@NotNull
 	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.org.structure.Department.class, fetch = FetchType.LAZY)
-	@JoinColumn(name = "STATE_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DESIGNATIONS_DEPARTMENT_ID))
-	private State state;*/
+	@JoinColumn(name = "DEPARTMENT_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DESIGNATIONS_DEPARTMENT_ID))
+	private Department department;
 }

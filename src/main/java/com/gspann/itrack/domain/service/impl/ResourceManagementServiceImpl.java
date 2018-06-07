@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,7 @@ import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
+import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
@@ -57,20 +59,24 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 	@Override
 	@javax.transaction.Transactional
 	public ResourceDTO addResource(ResourceDTO resourceDTO) {
+		
+		City baseLocation = locationRepository.loadCity(resourceDTO.getBaseLocationId());
+		Optional<Designation> designation=organizationRepository.findDesignationById(resourceDTO.getDesignationId());
+			
 		Resource resources = null;
-		if( null != resourceDTO.getEmploymentType().code() && resourceDTO.getEmploymentType().code().equalsIgnoreCase("FTE")) {
-			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(resourceDTO.getBaseLocation()).asFullTimeEmployee()
-					.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(resourceDTO.getDesignation())
+		if( null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase("FTE")) {
+			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asFullTimeEmployee()
+					.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
 					.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
 		}
-		else if(null != resourceDTO.getEmploymentType().code() && resourceDTO.getEmploymentType().code().equalsIgnoreCase("Contractor")) {
-			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(resourceDTO.getBaseLocation()).asDirectContractor()
-					.withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(resourceDTO.getDesignation())
+		else if(null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase("Contractor")) {
+			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asDirectContractor()
+					.withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
 					.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
 		}
-		else if(null != resourceDTO.getEmploymentType().code() && resourceDTO.getEmploymentType().code().equalsIgnoreCase("Sub-Contractor")) {
-		resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(resourceDTO.getBaseLocation()).asFullTimeEmployee()
-				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(resourceDTO.getDesignation())
+		else if(null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase("Sub-Contractor")) {
+		resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asFullTimeEmployee()
+				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
 				.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
 	}
 		resourceRepository.saveAndFlush(resources);
