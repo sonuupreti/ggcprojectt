@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.time.LocalDate;
 import java.time.Year;
+import java.util.List;
 
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -19,10 +20,12 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CountryCode;
+import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Country;
 import com.gspann.itrack.domain.model.org.holidays.Holiday;
 import com.gspann.itrack.domain.model.org.holidays.HolidayCalendar;
 import com.gspann.itrack.domain.model.org.holidays.Occasion;
+import com.gspann.itrack.domain.model.timesheets.Week;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
@@ -41,10 +44,24 @@ public class HolidayCalendarRepositoryTest {
 	@Test
 	public void testSave() {
 		Country india = locationRepository.findCountryByCode(CountryCode.IN.alpha2()).get();
+		
+		
+		/*HolidayCalendar calendar = HolidayCalendar.forYear(Year.of(2017));
 		Occasion republicDay = systemUnderTest.findOccasionById((short)8).get();
-		HolidayCalendar calendar = HolidayCalendar.forYear(Year.of(2017));
 		calendar.addHoliday(Holiday.on(LocalDate.of(2017, 1, 26)).national(india).withOccassion(republicDay).build());
-		systemUnderTest.save(calendar);
+		systemUnderTest.save(calendar);*/
+		
+		/*HolidayCalendar calendar1 = HolidayCalendar.forYear(Year.of(2018));
+		Occasion ramzan = systemUnderTest.findOccasionById((short)15).get();
+		calendar1.addHoliday(Holiday.on(LocalDate.of(2018, 6, 15)).national(india).withOccassion(ramzan).build());
+		systemUnderTest.saveAndFlush(calendar1);*/
+		
+		HolidayCalendar calendar3 = HolidayCalendar.forYear(Year.of(2018));
+		Occasion holi = systemUnderTest.findOccasionById((short)12).get();
+		City city = locationRepository.findCityById(new Integer(1)).get();
+		calendar3.addHoliday(Holiday.on(LocalDate.of(2018, 3, 2)).regional(city).withOccassion(holi).build());
+		systemUnderTest.saveAndFlush(calendar3);
+
 	}
 
 //	@Test
@@ -70,4 +87,12 @@ public class HolidayCalendarRepositoryTest {
 
 	}
 	
+	@Test
+	public void testFindAllHolidaysByWeek() {
+		LocalDate weekStartDate = LocalDate.of(2017, 1, 24);
+		Week week = Week.of(weekStartDate);
+		City city = locationRepository.findCityById(new Integer(1)).get();
+		List<Holiday> holidays = systemUnderTest.findAllHolidaysByWeek(week, city);
+		System.out.println("Holidays are ---->"+holidays);
+	}
 }
