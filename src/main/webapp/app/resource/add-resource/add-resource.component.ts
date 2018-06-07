@@ -11,7 +11,9 @@ export class AddResourceComponent implements OnInit {
     FTEFields: Array<any>;
     contractorFields: Array<any>;
     constructor(private fb: FormBuilder) {}
-
+    rateMessage: string = 'Cost Rate = (Annual Salary + Overheads (Commission' +
+        '+Bonus+Others))/Standard working hours per week(40)*' +
+        'Number of weeks in a year(52)))';
     ngOnInit() {
         this.resourceForm = this.fb.group({
             resourceName: new FormControl('', [Validators.required]),
