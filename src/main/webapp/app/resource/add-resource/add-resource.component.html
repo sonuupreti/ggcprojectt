@@ -18,18 +18,14 @@
             </p>
             <p>
               <mat-form-field>
-                <mat-select placeholder="Resource Name" formControlName="resourceName">
-                  <mat-option *ngFor="let list of accountList" [value]="list">
-                    {{list.value}}
-                  </mat-option>
-                </mat-select>
+                <input matInput placeholder="Resource Name" formControlName="resourceName" required>
                 <mat-error *ngIf="resourceForm.get('resourceName').hasError('required')">Required</mat-error>
               </mat-form-field>
             </p>
 
             <p>
               <mat-form-field>
-                <mat-select placeholder="Company Name" formControlName="companyName">
+                <mat-select placeholder="Company Name" formControlName="companyName" required>
                   <mat-option *ngFor="let list of projectTypeList" [value]="list">
                     {{list.value}}
                   </mat-option>
@@ -40,7 +36,7 @@
 
             <p>
               <mat-form-field>
-                <mat-select placeholder="Department" formControlName="department">
+                <mat-select placeholder="Department" formControlName="department" required>
                   <mat-option *ngFor="let list of projectTypeList" [value]="list">
                     {{list.value}}
                   </mat-option>
@@ -49,6 +45,19 @@
               </mat-form-field>
             </p>
 
+
+            <p>
+                <mat-form-field>
+                  <mat-select placeholder="Designation" formControlName="designation" required>
+                    <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="resourceForm.get('designation').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+
+              
             <p>
               <label class="time-tracking-label" style="color:rgba(0,0,0,.54);">Employee Type</label>
               <mat-radio-group formControlName="employeeType" required>
@@ -60,23 +69,93 @@
             </p>
             <div *ngIf="resourceForm.get('employeeType').value === '1'">
 
+              <p>
                 <mat-form-field>
-                    <mat-select placeholder="Currency" formControlName="currency">
-                      <mat-option *ngFor="let list of projectTypeList" [value]="list">
-                        {{list.value}}
-                      </mat-option>
-                    </mat-select>
-                    <mat-error *ngIf="resourceForm.get('currency').hasError('required')">Required</mat-error>
-                  </mat-form-field>
-
+                  <mat-select placeholder="Currency" formControlName="currency" required>
+                    <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+              <p>
                 <mat-form-field>
-                  <input matInput placeholder="Anual Package" formControlName="anualPackage">
+                  <input matInput placeholder="Salary" formControlName="anualPackage" required>
+                  <mat-hint>(Please enter cost per hour)</mat-hint>
                   <mat-error *ngIf="resourceForm.get('anualPackage').hasError('required')">Required</mat-error>
                 </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Comission" formControlName="commision" required>
+                  <mat-error *ngIf="resourceForm.get('commision').hasError('required')">Required</mat-error>
+                </mat-form-field>
 
-              
+              </p>
+
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Bonus/Others" formControlName="bonus" required>
+                  <mat-error *ngIf="resourceForm.get('bonus').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+            </div>
+
+            <div *ngIf="resourceForm.get('employeeType').value === '2' || resourceForm.get('employeeType').value === '3'">
+              <p>
+                <mat-form-field>
+                  <mat-select placeholder="Currency" formControlName="currency" required>
+                    <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Rate Per Hour" formControlName="ratePerHour" required>
+                  <mat-error *ngIf="resourceForm.get('ratePerHour').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker3" placeholder="Start Date" formControlName="startDate" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                  <mat-error *ngIf="resourceForm.get('startDate').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker4" placeholder="End Date" formControlName="endDate" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                  <mat-datepicker #picker4></mat-datepicker>
+                  <mat-error *ngIf="resourceForm.get('endDate').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                  <mat-form-field>
+                      <input matInput placeholder="Remarks(if any)" formControlName="remarks">
+                    </mat-form-field>
+              </p>
 
             </div>
+
+            <p>
+              <mat-form-field>
+                <mat-select placeholder="Employee Status" formControlName="empStatus" required>
+                  <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                    {{list.value}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="resourceForm.get('empStatus').hasError('required')">Required</mat-error>
+              </mat-form-field>
+            </p>
           </div>
           <div fxFlex="10%">
           </div>
