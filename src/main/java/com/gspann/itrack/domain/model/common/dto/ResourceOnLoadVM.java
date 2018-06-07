@@ -14,7 +14,7 @@ import lombok.ToString;
 @AllArgsConstructor(staticName = "of")
 @ToString
 public class ResourceOnLoadVM {
-	List<Pair<String, String>> companiesList;
-	List<Pair<String, String>> locationsList;
+	List<Pair<Short, String>> companiesList;
+	List<Pair<Integer, String>> locationsList;
 	
 }

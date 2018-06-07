@@ -190,8 +190,8 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 			Pair<Integer, String> loc = new Pair<Integer, String>(location.cityId(), location.format());
 			locationPairs.add(loc);
 		}
-		List<Pair<String, String>> locationsList = resourceRepository.findAllCodeAndName();
-		List<Pair<String, String>> companiesList = companyRepository.findAllCodeAndName();
-		return ResourceOnLoadVM.of(companiesList,locationsList);
+		/*List<Pair<Integer, String>> locationsList = locationRepository.findAllLocations();
+		List<Pair<Short, String>> companiesList = companyRepository.findAllCodeAndName();*/
+		return ResourceOnLoadVM.of(companyPairs,locationPairs);
 	}
 }
