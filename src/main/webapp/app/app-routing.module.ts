@@ -22,6 +22,10 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
                     loadChildren: './projects/projects.module#ProjectsModule'
                 },
                 {
+                    path: 'resource',
+                    loadChildren: './resource/resource.module#ResourceModule'
+                },
+                {
                     path: 'listaccounts',
                     component: ListAccountsComponent
                 },

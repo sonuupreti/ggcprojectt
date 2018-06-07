@@ -1,0 +1,19 @@
+.add-resource .mat-form-field{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.add-resource .time-tracking-label{
+    display: block;
+    margin-bottom: 10px;
+}
+.add-resource mat-radio-button:not(:first-child){
+    margin-left: 20px;
+}
+.container{
+    width: 100%;
+    margin: 0;
+}
+.mat-chip{
+    margin: 4px !important;
+}
