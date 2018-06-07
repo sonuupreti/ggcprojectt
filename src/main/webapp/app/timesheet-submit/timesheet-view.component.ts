@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
     templateUrl: './timesheet-view.component.html',
     styleUrls: ['./timesheet-view.component.css']
 })
-export class TimesheetView implements OnInit {
+export class TimesheetViewComponent implements OnInit {
     constructor() {}
 
     ngOnInit() {}

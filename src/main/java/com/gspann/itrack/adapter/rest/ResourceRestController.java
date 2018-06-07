@@ -64,7 +64,7 @@ public class ResourceRestController {
     
     @PostMapping("/resource")
     @Timed
-    public ResponseEntity<ResourceDTO> createAccounts(@Valid @RequestBody ResourceDTO resourceDTO) throws URISyntaxException {
+    public ResponseEntity<ResourceDTO> createResource(@Valid @RequestBody ResourceDTO resourceDTO) throws URISyntaxException {
         log.debug("REST request to save Resource : {}", resourceDTO);
         if (resourceDTO.getResourceCode() != null) {
             throw new BadRequestAlertException("A new resource code cannot  have an already existed reesource ID", ENTITY_NAME, "idexists");

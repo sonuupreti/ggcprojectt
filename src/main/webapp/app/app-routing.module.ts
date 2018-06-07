@@ -5,7 +5,6 @@ import { DEBUG_INFO_ENABLED } from 'app/app.constants';
 import { ListAccountsComponent } from './accounts/list-accounts/list-accounts.component';
 import { AddAccountComponent } from './accounts/add-account/add-account.component';
 import { ViewAccountComponent } from './accounts/view-account/view-account.component';
-import { TimesheetView } from './timesheet-view/timesheet-view.component';
 
 const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
 
@@ -40,7 +39,7 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
                 },
                 {
                     path: 'timesheet-view',
-                    component: TimesheetView,
+                    loadChildren: './timesheet-submit/timesheet-submit.module#TimeSheetSubmitModule',
                     data: {
                         authorities: ['ROLE_ADMIN']
                     }

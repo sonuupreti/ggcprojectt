@@ -3,12 +3,17 @@ package com.gspann.itrack.domain.model.org.structure;
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.FK_DEPARTMENTS_COMPANY_ID;
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.UNQ_DEPT_NAME;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
@@ -44,4 +49,10 @@ public class Department extends AbstractIdentifiable<Short> {
 	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.org.structure.Company.class, fetch = FetchType.EAGER)
 	@JoinColumn(name = "COMPANY_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DEPARTMENTS_COMPANY_ID))
 	private Company company;
+	
+	@NotNull
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "department", fetch = FetchType.LAZY)
+	private Set<Designation> designations = new HashSet<Designation>();
+	
+	
 }
