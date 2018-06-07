@@ -41,6 +41,12 @@
   .resourceTableWhite{
     background:#FFFFFF;
   }
+  .resourceTableYellow{
+    background: red;
+  }
   .weekendsColor td:nth-child(7),.weekendsColor td:nth-child(8), .weekendsColor th:nth-child(7), .weekendsColor th:nth-child(8){
     background: #EBF3DB;
+  }
+  .leffSideFilters{
+    margin: 1.5em;
   }

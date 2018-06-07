@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { TimesheetApprovalsService } from 'app/timesheet-approvals/timesheet-approvals.service';
+import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
     selector: 'jhi-pending-requests',
@@ -8,6 +9,7 @@ import { TimesheetApprovalsService } from 'app/timesheet-approvals/timesheet-app
 })
 export class PendingRequestsComponent implements OnInit {
     selected = 'RecentFirst';
+    @Input() tabRequest: any;
     timeSheetData: any = [
         {
             status: 'Not Submitted',
@@ -28,6 +30,7 @@ export class PendingRequestsComponent implements OnInit {
                 dailyStandardHours: 8,
                 weeklyStandardHours: 40,
                 flexibleWeekends: false,
+                totalWeekSubmitedHours: 60,
                 dailyDetails: [
                     {
                         date: '2018-05-21',
@@ -36,7 +39,11 @@ export class PendingRequestsComponent implements OnInit {
                             code: 'WD',
                             value: 'Regular Working Day'
                         },
-                        remarks: null
+                        remarks: null,
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
                     },
                     {
                         date: '2018-05-22',
@@ -45,7 +52,11 @@ export class PendingRequestsComponent implements OnInit {
                             code: 'WD',
                             value: 'Regular Working Day'
                         },
-                        remarks: null
+                        remarks: null,
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
                     },
                     {
                         date: '2018-05-23',
@@ -54,7 +65,11 @@ export class PendingRequestsComponent implements OnInit {
                             code: 'WD',
                             value: 'Regular Working Day'
                         },
-                        remarks: null
+                        remarks: null,
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
                     },
                     {
                         date: '2018-05-24',
@@ -63,7 +78,11 @@ export class PendingRequestsComponent implements OnInit {
                             code: 'HD',
                             value: 'Holiday'
                         },
-                        remarks: 'Diwali'
+                        remarks: 'Diwali',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
                     },
                     {
                         date: '2018-05-25',
@@ -72,7 +91,11 @@ export class PendingRequestsComponent implements OnInit {
                             code: 'WD',
                             value: 'Regular Working Day'
                         },
-                        remarks: null
+                        remarks: null,
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
                     },
                     {
                         date: '2018-05-26',
@@ -81,7 +104,11 @@ export class PendingRequestsComponent implements OnInit {
                             code: 'WE',
                             value: 'Weekend'
                         },
-                        remarks: null
+                        remarks: null,
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
                     },
                     {
                         date: '2018-05-27',
@@ -90,7 +117,11 @@ export class PendingRequestsComponent implements OnInit {
                             code: 'WE',
                             value: 'Weekend'
                         },
-                        remarks: null
+                        remarks: null,
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
                     }
                 ]
             },
@@ -230,11 +261,90 @@ export class PendingRequestsComponent implements OnInit {
                             }
                         }
                     ]
+                },
+                {
+                    project: {
+                        key: 'INV0000001',
+                        value: 'UNPAID LEAVE'
+                    },
+                    projectType: {
+                        key: 'INV',
+                        value: 'Investment'
+                    },
+                    actions: {
+                        isApproved: false,
+                        isCancelled: true
+                    },
+                    proportion: 50,
+                    customerTimeTracking: false,
+                    totalSubmittedHrs: 20,
+                    dailyEntries: [
+                        {
+                            date: '2018-05-21',
+                            timeEntries: {
+                                hours: 0,
+                                comments: 'iTrack standup'
+                            }
+                        },
+                        {
+                            date: '2018-05-22',
+                            timeEntries: {
+                                hours: 0,
+                                comments: 'iTrack standup'
+                            }
+                        },
+                        {
+                            date: '2018-05-23',
+                            timeEntries: {
+                                hours: 8,
+                                comments: 'iTrack standup'
+                            }
+                        },
+                        {
+                            date: '2018-05-24',
+                            timeEntries: {
+                                hours: 4,
+                                comments: 'iTrack standup'
+                            }
+                        },
+                        {
+                            date: '2018-05-25',
+                            timeEntries: {
+                                hours: 4,
+                                comments: 'iTrack standup'
+                            }
+                        },
+                        {
+                            date: '2018-05-26',
+                            timeEntries: {
+                                hours: 4,
+                                comments: 'iTrack standup'
+                            }
+                        },
+                        {
+                            date: '2018-05-27',
+                            timeEntries: {
+                                hours: 4,
+                                comments: 'iTrack standup'
+                            }
+                        }
+                    ]
                 }
             ]
         }
     ];
-    constructor(private timesheetApprovalService: TimesheetApprovalsService) {}
+    constructor(private timesheetApprovalService: TimesheetApprovalsService, private config: NgbPopoverConfig) {
+        config.placement = 'top';
+        config.triggers = 'hover';
+    }
 
-    ngOnInit() {}
+    ngOnInit() {
+        console.log(this.tabRequest);
+    }
+
+    public getColor(projectKey) {
+        if (projectKey === 'INV0000001') {
+            return '#e8d23347';
+        }
+    }
 }
