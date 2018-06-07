@@ -28,7 +28,7 @@ import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.adapter.rest.util.PaginationUtil;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
-import com.gspann.itrack.domain.model.common.dto.EditAccountVM;
+
 import com.gspann.itrack.domain.service.api.AccountManagementService;
 
 import io.github.jhipster.web.util.ResponseUtil;
