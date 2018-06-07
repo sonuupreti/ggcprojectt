@@ -28,6 +28,7 @@ import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.adapter.rest.util.PaginationUtil;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
+import com.gspann.itrack.domain.model.common.dto.EditAccountVM;
 import com.gspann.itrack.domain.service.api.AccountManagementService;
 
 import io.github.jhipster.web.util.ResponseUtil;
@@ -57,14 +58,23 @@ public class AccountsResource {
     @GetMapping("/initAddAccount")
     @Timed
     public AddAccountPageVM initAddAccountPage(final Principal principal) {
-        log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
+        log.debug("REST request to getAddAccountPageVM() ------>>>");
 		//String manojResCode = "20001";
         return accountsManagementService.getAddAccountPageVM();
         
         
         
     }
-    
+    @GetMapping("/initEditAccount/{id}")
+    @Timed
+    public AddAccountPageVM initEditAccountPage(final Principal principal,@PathVariable String id) {
+        log.debug("REST request to getEditAccountVM() ------>>>");
+		//String manojResCode = "20001";
+        return accountsManagementService.getEditAccountVM(id);
+        
+        
+        
+    }
     
     
     /**

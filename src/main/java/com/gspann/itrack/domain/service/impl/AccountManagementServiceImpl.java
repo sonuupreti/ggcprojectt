@@ -19,6 +19,7 @@ import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
+import com.gspann.itrack.domain.model.common.dto.EditAccountVM;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
@@ -174,6 +175,25 @@ public class AccountManagementServiceImpl implements AccountManagementService {
 		List<Pair<String, String>> resourceList = resourceRepository.findAllCodeAndName();
 		return AddAccountPageVM.of(resourceList, locationPairs);
 
+	}
+
+	@Override
+	public AddAccountPageVM getEditAccountVM(String accountCode) {
+		
+		
+		Optional<Account> account = accountRepository.findById(accountCode);
+		Account accountObj=account.get();
+		String countryCode = accountObj.location().state().country().code();
+		
+		List<Location> locations = locationRepository.findAllLocationsByCountryCode(countryCode);
+		Collections.sort(locations);
+		List<Pair<Integer, String>> locationPairs = new LinkedList<>();
+		for (Location location : locations) {
+			Pair<Integer, String> loc = new Pair<Integer, String>(location.cityId(), location.format());
+			locationPairs.add(loc);
+		}
+		List<Pair<String, String>> resourceList = resourceRepository.findAllCodeAndName();
+		return AddAccountPageVM.of(resourceList, locationPairs);
 	}
 
 }

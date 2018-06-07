@@ -36,7 +36,7 @@ public class City extends AbstractIdentifiable<Integer> {
 	private String name;
 
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.location.State.class, fetch = FetchType.LAZY)
+	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.location.State.class, fetch = FetchType.EAGER)
 	@JoinColumn(name = "STATE_ID", nullable = false, foreignKey = @ForeignKey(name = FK_CITIES_STATE_ID))
 	private State state;
 

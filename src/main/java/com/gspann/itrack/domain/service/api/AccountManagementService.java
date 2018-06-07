@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
+import com.gspann.itrack.domain.model.common.dto.EditAccountVM;
 
 
 
@@ -51,6 +52,9 @@ public interface AccountManagementService {
 
 
 	public AddAccountPageVM getAddAccountPageVM();
+
+
+	public AddAccountPageVM getEditAccountVM(String accountCode);
 	
 
 }
