@@ -88,6 +88,8 @@ public class PersistenceConstant {
 		public static final String PK_PROJECT_PRACTICE_MAP = "pk_project_practice_map";
 		public static final String FK_PROJECT_PRACTICE_MAP_PROJECT_CODE = "fk_project_practice_map_project_code";
 		public static final String FK_PROJECT_PRACTICE_MAP_PRACTICE_CODE = "fk_project_practice_map_practice_code";
+		
+		
 
 		public static final String PK_COMPANY_ID = "pk_company_id";
 		public static final String UNQ_COMP_NAME = "unq_comp_name";
@@ -192,5 +194,12 @@ public class PersistenceConstant {
 		public static final String PK_INVOICE_ID = "pk_invoice_id";
 		public static final String FK_INVOICES_PO_ID = "fk_invoices_po_id";
 
+
+		public static final String PK_TECHNOLOGY_ID = "pk_technology_id";
+		public static final String UNQ_TECHNOLOGY_NAME = "unq_technology_name";
+		public static final String PK_PROJECT_TECHNOLOGY_MAP = "pk_project_technology_map";
+		public static final String FK_PROJECT_TECHNOLOGY_MAP_PROJECT_CODE = "fk_project_technology_map_project_code";
+		public static final String FK_PROJECT_TECHNOLOGY_MAP_TECHNOLOGY_ID = "fk_project_technology_map_technology_id";
+		
 	}
 }

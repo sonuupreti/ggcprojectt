@@ -28,5 +28,6 @@ public class AddProjectPageVM {
 	
 	List<Pair<String, String>> practiceList;
 	List<Pair<String, String>>accountList;
+	List<Pair<Integer, String>>technologyList;
 
 }

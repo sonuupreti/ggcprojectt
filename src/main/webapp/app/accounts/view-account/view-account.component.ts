@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ViewAccountService } from './view-account.service';
-import { Router, NavigationStart, NavigationEnd, NavigationError, NavigationCancel, RoutesRecognized } from '@angular/router';
+import { Router } from '@angular/router';
 import 'rxjs/add/operator/filter';
 import { MatDialog } from '@angular/material';
 import { RemoveAccountConfirmDialogComponent } from '../../../app/dialog/remove-account-confirm-dialog/remove-account-confirm-dialog.component';
@@ -88,7 +88,10 @@ export class ViewAccountComponent implements OnInit {
                     this.router.navigate(['listaccounts']);
                 });
             }
-            //this.dialogResult = result;
         });
+    }
+
+    navigateToProjectPage() {
+        this.router.navigate(['projects/add-project', { accountCode: this.accountCode }]);
     }
 }

@@ -22,6 +22,7 @@ import com.gspann.itrack.adapter.persistence.repository.AccountRepository;
 import com.gspann.itrack.adapter.persistence.repository.LocationRepository;
 import com.gspann.itrack.adapter.persistence.repository.ProjectRepository;
 import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
+import com.gspann.itrack.adapter.persistence.repository.SkillsRepository;
 import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
@@ -30,6 +31,7 @@ import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ProjectDTO;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
+import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
@@ -54,6 +56,9 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
 
 	@Autowired
 	private ProjectRepository projectRepository;
+	
+	@Autowired
+	private SkillsRepository skillsRepository;
 
 	@Override
 	public void assignOffShoreManager() {
@@ -109,10 +114,29 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
 			practices.add(practice2);
 
 		}
+		
+		List<Pair<Integer, String>> technologyList = projectDTO.getTechnologyList();
+		ListIterator<Pair<Integer, String>> iter1 = technologyList.listIterator();
+		Set<Technology> technologies = new HashSet<>();
+		
+		while (iter1.hasNext()) {
+			Pair<Integer, String> keyValue=iter1.next();
+			if(keyValue.getKey()!=0) {
+
+		Technology technology = skillsRepository.loadTechnologyById(keyValue.getKey());
+			
+			technologies.add(technology);
+			}
+			else {
+				technologies.add(Technology.of(keyValue.getValue()));
+			}
+				
+			}
+		
 		Project project = projectRepository.save(Project.project().withType(projectType).withStatus(projectStatus)
 				.namedAs(projectDTO.getProjectName()).locatedAt(location).inAccount(account)
 				.startingFrom(projectDTO.getStartDate()).till(projectDTO.getEndDate()).withPractices(practices)
-				.withTechnologies(projectDTO.getTechnologies()).atOffshoreManagedBy(offShoreManager)
+				.withTechnologies(technologies).atOffshoreManagedBy(offShoreManager)
 				.atOnshoreManagedBy(onShoreManager).atCustomerEndManagedBy(projectDTO.getCustomerManager())
 				.withCustomerProjectId(projectDTO.getCustomerProjectId())
 				.withCustomerProjectName(projectDTO.getCustomerProjectName()).build());
@@ -167,7 +191,25 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
 			practices.add(practice2);
 
 		}
-		
+		List<Pair<Integer, String>> technologyList = projectDTO.getTechnologyList();
+		ListIterator<Pair<Integer, String>> iter1 = technologyList.listIterator();
+		Set<Technology> technologies = new HashSet<>();
+		while (iter1.hasNext()) {
+
+			Pair<Integer, String> keyValue=iter1.next();
+			if(keyValue.getKey()!=0) {
+
+		Technology technology = skillsRepository.loadTechnologyById(keyValue.getKey());
+			
+			technologies.add(technology);
+			}
+			else {
+				technologies.add(Technology.of(keyValue.getValue()));
+			}
+				
+			
+
+		}
 		project1.updatecustomerManager(projectDTO.getCustomerManager());
 		project1.updateCustomerProjectId(projectDTO.getCustomerProjectId());
 		project1.updateCustomerProjectName(projectDTO.getCustomerProjectName());
@@ -175,7 +217,7 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
 		project1.updateStartDate(projectDTO.getStartDate());
 		project1.updatePractices(practices);
 		project1.updateLocation(location);
-		project1.updateTechnology(projectDTO.getTechnologies());
+		project1.updateTechnologies(technologies);
 		project1.updateName(projectDTO.getProjectName());
 		project1.updateProjectType(projectType);
 		project1.updateProjectStatus(projectStatus);
@@ -198,6 +240,15 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
 			locationPairs.add(loc);
 		}
 
+		List <Technology> technologies=skillsRepository.findAllTechnologies();
+		
+		List<Pair<Integer, String>> technologyPairs = new LinkedList<>();
+		for (Technology technology : technologies) {
+			Pair<Integer, String> loc = new Pair<Integer, String>(technology.id(), technology.name());
+			technologyPairs.add(loc);
+		}
+		
+		
 		List<Pair<String, String>> accountList = accountRepository.findAllCodeAndName();
 		List<Pair<String, String>> projectTypeList = projectRepository.findAllProjectTypeCodeAndDescription();
 
@@ -207,7 +258,7 @@ public class ProjectManagementServiceImpl implements ProjectManagementService {
 
 		List<Pair<String, String>> resourceList = resourceRepository.findAllCodeAndName();
 
-		return AddProjectPageVM.of(resourceList, locationPairs, projectTypeList, projectStatusList, practiceList,accountList);
+		return AddProjectPageVM.of(resourceList, locationPairs, projectTypeList, projectStatusList, practiceList,accountList,technologyPairs);
 
 	}
 

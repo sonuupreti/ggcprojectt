@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
-import { MatTableDataSource } from '@angular/material';
-import { ListProjectsService } from './list-projects.service';
+import { MatSort, MatTableDataSource } from '@angular/material';
+import { ProjectService } from '../projects.service';
 export interface Element {
     accountCode: number;
     customerName: string;
@@ -16,24 +16,33 @@ export interface Element {
 @Component({
     selector: 'jhi-list-projects',
     templateUrl: './list-projects.component.html',
-    styles: []
+    styleUrls: ['./list-project.component.css']
 })
 export class ListProjectsComponent implements OnInit {
+    @ViewChild(MatSort) sort: MatSort;
     displayedColumns = [
-        'accountCode',
-        'customerName',
+        'projectCode',
+        'projectName',
+        'projectTypeDescription',
+        'accountName',
         'location',
-        'customerReportingManager',
-        'accountManagerName',
-        'customerTimeTracking'
+        'startDate',
+        'endDate',
+        'status'
     ];
     dataSource;
-    constructor(private listProjectsService: ListProjectsService) {}
+    constructor(private projectService: ProjectService) {}
 
     ngOnInit() {
-        this.listProjectsService.getProjectsList().subscribe(projectsList => {
+        this.projectService.getProjectsList().subscribe(projectsList => {
             this.dataSource = new MatTableDataSource(projectsList);
             console.log(this.dataSource);
         });
+    }
+
+    search(filterValue: string) {
+        filterValue = filterValue.trim();
+        filterValue = filterValue.toLowerCase();
+        this.dataSource.filter = filterValue;
     }
 }
