@@ -18,6 +18,7 @@ import com.gspann.itrack.adapter.persistence.repository.LocationRepository;
 import com.gspann.itrack.adapter.persistence.repository.OrganisationRepository;
 import com.gspann.itrack.adapter.persistence.repository.ProjectRepository;
 import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
+import com.gspann.itrack.adapter.persistence.repository.SkillsRepository;
 import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
 import com.gspann.itrack.domain.model.business.Account;
@@ -27,6 +28,7 @@ import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
+import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Company;
 import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
@@ -54,7 +56,8 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 	private OrganisationRepository organizationRepository;
 	
 	@Autowired
-	private CompanyRepository companyRepository;
+	private SkillsRepository skillsRepository;
+
 
 	@Override
 	@javax.transaction.Transactional
@@ -175,6 +178,9 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		List<Department> departments = organizationRepository.findAllDepartments();
 		//Collections.sort(companies);
 		List<Location> locations = locationRepository.findAllLocations();
+		List<Designation> designations= organizationRepository.findAllDesignations();
+		List <Technology> technologies=skillsRepository.findAllTechnologies();
+
 		Collections.sort(locations);
 		
 		List<Pair<Short, String>> companyPairs = new LinkedList<>();
@@ -190,8 +196,31 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 			Pair<Integer, String> loc = new Pair<Integer, String>(location.cityId(), location.format());
 			locationPairs.add(loc);
 		}
-		/*List<Pair<Integer, String>> locationsList = locationRepository.findAllLocations();
-		List<Pair<Short, String>> companiesList = companyRepository.findAllCodeAndName();*/
-		return ResourceOnLoadVM.of(companyPairs,locationPairs);
+		List<Pair<Short, String>> departmentPairs = new LinkedList<>();
+		for (Department department : departments) {
+			Pair<Short, String> dept = new Pair<Short, String>(department.id(), department.name());
+			departmentPairs.add(dept);
+		}
+		
+		List<Pair<Short, String>> designationsPairs = new LinkedList<>();
+		for(Designation designation:designations) {
+			Pair<Short, String> dept = new Pair<Short, String>(designation.id(),designation.name());
+			designationsPairs.add(dept);
+		}
+		List<Pair<Integer, String>> technologiesPairs =  new LinkedList<>();
+		for(Technology technology:technologies) {
+			Pair<Integer, String> tech = new Pair<Integer, String>(technology.id(),technology.name());
+			technologiesPairs.add(tech);
+		}
+		//TODO: need to confirm wheather we need to get it from database
+		List<Pair<String, String>> currencyPairs =  new LinkedList<>();
+		Pair<String, String> inrCurrency = new Pair<String, String>(CurrencyCode.INR.name(),CurrencyCode.INR.name());
+		Pair<String, String> gbpCurrency = new Pair<String, String>(CurrencyCode.GBP.name(),CurrencyCode.GBP.name());
+		Pair<String, String> usdCurrency = new Pair<String, String>(CurrencyCode.USD.name(),CurrencyCode.USD.name());
+		currencyPairs.add(inrCurrency);
+		currencyPairs.add(gbpCurrency);
+		currencyPairs.add(usdCurrency);
+		
+		return ResourceOnLoadVM.of(companyPairs,locationPairs,departmentPairs,designationsPairs,technologiesPairs,currencyPairs);
 	}
 }

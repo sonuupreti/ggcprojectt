@@ -16,5 +16,9 @@ import lombok.ToString;
 public class ResourceOnLoadVM {
 	List<Pair<Short, String>> companiesList;
 	List<Pair<Integer, String>> locationsList;
+	List<Pair<Short, String>> departmentList;
+	List<Pair<Short, String>> designationList;
+	List<Pair<Integer, String>> technologiesPairs;
+	List<Pair<String, String>> currencyPairs;
 	
 }
