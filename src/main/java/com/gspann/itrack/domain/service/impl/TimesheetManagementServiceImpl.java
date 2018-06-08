@@ -67,6 +67,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	@Override
+	@Transactional
 	public TimeSheetMetaDataVM getTimeSheetMetaData(String resourceCode) {
 		List<ResourceProjectAllocationSummary> allocationSummaries = allocationRepository
 				.findAllAllocationSummaries(resourceCode);
@@ -105,12 +106,13 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 				}
 				if (isHoliday) {
 					weekDTO.addDayVM(DayVM.ofHoliday(currentDate, holidayOccassions));
-				} else if (isWeekend(weekStartDate.getDayOfWeek())) {
+				} else if (isWeekend(currentDate.getDayOfWeek())) {
 					weekDTO.addDayVM(DayVM.ofWeekend(currentDate));
 				} else {
 					weekDTO.addDayVM(DayVM.ofWorkingDay(currentDate));
 				}
 				currentDate = currentDate.plusDays(1);
+				isHoliday = false;
 			}
 
 			// Find any saved timesheet, pending for submission or create new if none is

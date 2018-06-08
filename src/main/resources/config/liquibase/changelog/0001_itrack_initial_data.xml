@@ -61,92 +61,101 @@
                   commentLineStartsWith="#">
         </loadData>
         
+       
+       <loadData encoding="UTF-8"
+                  file="config/liquibase/staticdata/009.technologies.csv"
+                  separator=","
+                  tableName="technologies"
+                  commentLineStartsWith="#">
+        </loadData>
+       
+        
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/009.project_types.csv"
+                  file="config/liquibase/staticdata/010.project_types.csv"
                   separator=","
                   tableName="project_types"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/010.project_statuses.csv"
+                  file="config/liquibase/staticdata/011.project_statuses.csv"
                   separator=","
                   tableName="project_statuses"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/011.employment_types.csv"
+                  file="config/liquibase/staticdata/012.employment_types.csv"
                   separator=","
                   tableName="employment_types"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/012.employment_statuses.csv"
+                  file="config/liquibase/staticdata/013.employment_statuses.csv"
                   separator=","
                   tableName="employment_statuses"
                   commentLineStartsWith="#">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/013.billability_statuses.csv"
+                  file="config/liquibase/staticdata/014.billability_statuses.csv"
                   separator=","
                   tableName="billability_statuses"
                   commentLineStartsWith="#">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/014.holiday_occasions.csv"
+                  file="config/liquibase/staticdata/015.holiday_occasions.csv"
                   separator=","
                   tableName="occasions"
                   commentLineStartsWith="#">
         </loadData>
 
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/020.resources.csv"
+                  file="config/liquibase/staticdata/021.resources.csv"
                   separator=","
                   tableName="resources"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/021.resource_practice_map.csv"
+                  file="config/liquibase/staticdata/022.resource_practice_map.csv"
                   separator=","
                   tableName="resource_practice_map"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/022.cost_details.csv"
+                  file="config/liquibase/staticdata/023.cost_details.csv"
                   separator=","
                   tableName="cost_details"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/023.fte_cost_details.csv"
+                  file="config/liquibase/staticdata/024.fte_cost_details.csv"
                   separator=","
                   tableName="fte_cost_details"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/024.accounts.csv"
+                  file="config/liquibase/staticdata/025.accounts.csv"
                   separator=","
                   tableName="accounts"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/025.projects.csv"
+                  file="config/liquibase/staticdata/026.projects.csv"
                   separator=","
                   tableName="projects"
                   commentLineStartsWith="#">
         </loadData>
         
         <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/026.project_practice_map.csv"
+                  file="config/liquibase/staticdata/027.project_practice_map.csv"
                   separator=","
                   tableName="project_practice_map"
                   commentLineStartsWith="#">

@@ -50,7 +50,9 @@ import {
         MatIconModule,
         MatTabsModule,
         MatTableModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatChipsModule,
+        MatAutocompleteModule
     ],
     exports: [
         CommonModule,
@@ -66,7 +68,9 @@ import {
         MatIconModule,
         MatTabsModule,
         MatTableModule,
-        MatTooltipModule
+        MatTooltipModule,
+        MatChipsModule,
+        MatAutocompleteModule
     ]
 })
 export class MaterialModule {}

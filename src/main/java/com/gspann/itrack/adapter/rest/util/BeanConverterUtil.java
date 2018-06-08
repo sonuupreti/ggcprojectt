@@ -1,11 +1,10 @@
 package com.gspann.itrack.adapter.rest.util;
 
-import java.util.ArrayList;
-import java.util.HashSet;
+
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
+
 import java.util.Set;
 
 import org.slf4j.Logger;
@@ -16,6 +15,7 @@ import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ProjectDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
+import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
@@ -29,14 +29,12 @@ public class BeanConverterUtil {
 
 	public static Account accountDTOtoEntity(AccountDTO accountDTO) {
 
-		
-		
 		return null;
 	}
 
 	public static AccountDTO accountEntitytoDto(Account account) {
 
-		AccountDTO accountDTO=new AccountDTO();
+		AccountDTO accountDTO = new AccountDTO();
 		accountDTO.setAccountCode(account.code());
 		accountDTO.setCustomerName(account.customerName());
 		accountDTO.setCustomerEntity(account.customerEntity());
@@ -49,21 +47,33 @@ public class BeanConverterUtil {
 		return accountDTO;
 	}
 
-	public static ProjectDTO projectEntitytoDto(Project project ) {
+	public static ProjectDTO projectEntitytoDto(Project project) {
 		Set<Practice> practices = project.practices();
 		List<Pair<String, String>> practiceList = new LinkedList<>();
-	 
-		Iterator iter =practices.iterator();
-			while(iter.hasNext()){
 
-		Practice object =(Practice)iter.next();
-		Pair<String, String> practice = new Pair<String, String>(object.code(), object.name());
-		practiceList.add(practice);
-			}
-		
-		ProjectDTO projectDTO= new ProjectDTO();
-		
+		Iterator iter = practices.iterator();
+		while (iter.hasNext()) {
+
+			Practice object = (Practice) iter.next();
+			Pair<String, String> practice = new Pair<String, String>(object.code(), object.name());
+			practiceList.add(practice);
+		}
+
+		Set<Technology> technologies = project.technologies();
+		List<Pair<Integer, String>> technologiesList = new LinkedList<>();
+
+		Iterator iter1 = technologies.iterator();
+		while (iter1.hasNext()) {
+
+			Technology object = (Technology) iter1.next();
+			Pair<Integer, String> technology = new Pair<Integer, String>(object.id(), object.name());
+			technologiesList.add(technology);
+		}
+
+		ProjectDTO projectDTO = new ProjectDTO();
+
 		projectDTO.setAccountCode(project.account().code());
+		projectDTO.setAccountName(project.account().customerName());
 		projectDTO.setLocation(project.location().name());
 		projectDTO.setCustomerManager(project.customerManager());
 		projectDTO.setCustomerProjectId(project.customerProjectId());
@@ -82,7 +92,9 @@ public class BeanConverterUtil {
 		projectDTO.setProjectTypeDescription(project.type().description());
 		projectDTO.setStartDate(project.dateRange().fromDate());
 		projectDTO.setEndDate(project.dateRange().tillDate());
-		projectDTO.setTechnologies(project.technologies());
+
+		projectDTO.setTechnologyList(technologiesList);
+
 		return projectDTO;
 	}
 	

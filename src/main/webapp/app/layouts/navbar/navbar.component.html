@@ -33,6 +33,13 @@
                     </a>
                 </li>
                 <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <a class="nav-link" routerLink="/timesheet-approvals" (click)="collapseNavbar()">
+                            <span>
+                                <span>Timesheet Requests</span>
+                            </span>
+                        </a>
+                    </li>
+                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                     <a class="nav-link" routerLink="/projects/list-projects" (click)="collapseNavbar()">
                         <span>
                             <span>Projects</span>

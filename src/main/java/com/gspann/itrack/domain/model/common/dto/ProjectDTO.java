@@ -34,10 +34,12 @@ public class ProjectDTO {
 	@NotNull
 	private String projectTypeCode;
 	private String projectTypeDescription;
-
+	
+	@NotNull
 	private String projectStatusCode;
 	private String projectStatusDescription;
-
+	
+	@NotNull
 	List<Pair<String, String>> practiceList;
 	
 	@NotNull
@@ -46,11 +48,12 @@ public class ProjectDTO {
 	private String customerProjectId;
 	private String customerProjectName;
 	
+	@NotNull
 	private int cityId;
 	private String location;
 
 	@NotNull
-	private String technologies;
+	List<Pair<Integer, String>> technologyList;
 
 	@NotNull
 	private String offshoreManagerCode;
@@ -58,16 +61,20 @@ public class ProjectDTO {
 	@NotNull
 	private String onshoreManagerCode;
 
-	@NotNull
+	
 	private String offshoreManagerName;
 
-	@NotNull
+	
 	private String onshoreManagerName;
 
+	@NotNull
 	private String accountCode;
 	private String accountName;
 	
-	private LocalDate startDate; 
+	@NotNull
+	private LocalDate startDate;
+	
+	@NotNull
 	private LocalDate endDate; 
 
 }

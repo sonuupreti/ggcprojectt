@@ -43,6 +43,13 @@ const LAYOUT_ROUTES = [navbarRoute, ...errorRoute];
                     data: {
                         authorities: ['ROLE_ADMIN']
                     }
+                },
+                {
+                    path: 'timesheet-approvals',
+                    loadChildren: './timesheet-approvals/timesheet-approvals.module#TimesheetApprovalsModule',
+                    data: {
+                        authorities: ['ROLE_ADMIN']
+                    }
                 }
             ],
             { useHash: true, enableTracing: DEBUG_INFO_ENABLED }

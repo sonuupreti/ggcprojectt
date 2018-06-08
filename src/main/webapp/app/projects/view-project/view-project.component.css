@@ -1,0 +1,32 @@
+.view-project .mat-form-field{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+.view-project .time-tracking-label{
+    display: block;
+    margin-bottom: 10px;
+}
+.view-project mat-radio-button:not(:first-child){
+    margin-left: 20px;
+}
+.container{
+    width: 100%;
+    margin: 0;
+}
+.view-project .quick-actions button{
+    width: 140px;
+}
+.view-project .custom-chip{
+    padding: 6px;
+    background: #ddd;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+.mat-chip{
+    margin: 4px !important;
+}
+.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label{
+    color: blue;
+}
