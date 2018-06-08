@@ -10,9 +10,10 @@ import { ApprovedRequestsComponent } from './approved-requests/approved-requests
 import { RejectedRequestsComponent } from './rejected-requests/rejected-requests.component';
 import { TimesheetApprovalsComponent } from 'app/timesheet-approvals/timesheet-approvals.component';
 import { TimesheetApprovalsService } from 'app/timesheet-approvals/timesheet-approvals.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
-    imports: [CommonModule, MaterialModule, RouterModule.forChild(routes)],
+    imports: [CommonModule, MaterialModule, RouterModule.forChild(routes), NgbModule.forRoot()],
     declarations: [TimesheetApprovalsComponent, PendingRequestsComponent, ApprovedRequestsComponent, RejectedRequestsComponent],
     providers: [TimesheetApprovalsService]
 })

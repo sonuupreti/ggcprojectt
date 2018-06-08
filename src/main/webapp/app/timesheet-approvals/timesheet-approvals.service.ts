@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 export class TimesheetApprovalsService {
     constructor(private http: HttpClient) {}
 
-    getPendingTimesheetData(): Observable<any> {
-        return this.http.get('../mockResponse/timeSeetResponse.json');
-    }
+    // getPendingTimesheetData(): Observable<any> {
+    //     //return this.http.get('src/main/webapp/app/mockResponse/timeSeetResponse.json');
+    // }
 }
