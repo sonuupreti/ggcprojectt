@@ -1,5 +1,7 @@
 package com.gspann.itrack.domain.model.org.skills;
 
+import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -9,22 +11,31 @@ import javax.validation.constraints.NotNull;
 import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Getter
-@Accessors(chain = true, fluent=true)
+@Accessors(chain = true, fluent = true)
 @NoArgsConstructor
-@AllArgsConstructor(staticName="of")
+@AllArgsConstructor(staticName = "of")
 @ToString
-//@Entity
-//@Table(name = "TECHNOLOGY", uniqueConstraints = @UniqueConstraint(name = "UNQ_TECHNOLOGY_NAME", columnNames = { "NAME"}))
-public class Technology extends AbstractIdentifiable<Short> {
+@EqualsAndHashCode(of = "name", callSuper = false)
+@Entity
+@Table(name = "TECHNOLOGIES", uniqueConstraints = @UniqueConstraint(name = UNQ_TECHNOLOGY_NAME, columnNames = {
+		"NAME" }))
+public class Technology extends AbstractIdentifiable<Integer> {
 
-    @NotNull
-    @Column(name = "NAME", nullable = false, length = 100)
-    private String name;
-
+	@NotNull
+	@Column(name = "NAME", nullable = false, length = 100)
+	private String name;
+	
+	public static Technology of(int id, String name) {
+		Technology technology = new Technology();
+		technology.id=id;
+		technology.name=name;
+				return technology;
+	}
 }

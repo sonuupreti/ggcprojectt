@@ -6,10 +6,21 @@ import java.util.Optional;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 
 import org.springframework.stereotype.Repository;
 
+import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.org.holidays.Holiday;
+import com.gspann.itrack.domain.model.org.holidays.HolidayLocation;
+import com.gspann.itrack.domain.model.org.holidays.HolidayLocation_;
+import com.gspann.itrack.domain.model.org.holidays.Holiday_;
 import com.gspann.itrack.domain.model.org.holidays.Occasion;
+import com.gspann.itrack.domain.model.timesheets.Week;
 
 @Repository
 public class HolidayCalendarRepositoryImpl implements HolidayCalendarRepositoryJPA {
@@ -49,4 +60,19 @@ public class HolidayCalendarRepositoryImpl implements HolidayCalendarRepositoryJ
 	public List<Occasion> findAllOccasions() {
 		return entityManager.createQuery("from Occasion o", Occasion.class).getResultList();
 	}
+	
+	@Override
+	public List<Holiday> findAllHolidaysByWeek(Week week, City location) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<Holiday> query = criteriaBuilder.createQuery(Holiday.class);
+		Root<Holiday> holiday = query.from(Holiday.class);
+		Join<Holiday, HolidayLocation> holidayLocation = holiday.join(Holiday_.locationOcassions);
+		query.select(holiday);
+		Predicate weekRangePredicate = criteriaBuilder.between(holiday.get(Holiday_.date), week.startingFrom(), week.endingOn());
+		Predicate locationIdpredicate = criteriaBuilder.equal(holidayLocation.get(HolidayLocation_.location), location.id());
+		query.where(criteriaBuilder.and(locationIdpredicate, weekRangePredicate));
+				
+		return entityManager.createQuery(query).getResultList();
+	}
+
 }

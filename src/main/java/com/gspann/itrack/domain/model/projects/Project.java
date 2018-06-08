@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,6 +35,7 @@ import com.gspann.itrack.domain.model.common.Toggle;
 import com.gspann.itrack.domain.model.common.type.BaseAutoAssignableVersionableEntity;
 import com.gspann.itrack.domain.model.common.type.Buildable;
 import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.staff.Resource;
 
@@ -143,13 +145,34 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		this.practices = practices;
 	}
 
+	
 	@NotNull
-	@Column(name = "TECHNOLOGIES", nullable = false, length = 255)
-	private String technologies;
-
-	public void updateTechnology(final String technologies) {
+	@OneToMany(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+	// @formatter:off
+ 	@JoinTable(
+	        name = "PROJECT_TECHNOLOGY_MAP",
+	        joinColumns = @JoinColumn(name = "PROJECT_CODE", referencedColumnName="CODE", 
+	        foreignKey = @ForeignKey(name = FK_PROJECT_TECHNOLOGY_MAP_PROJECT_CODE), unique = false),
+	        inverseJoinColumns = @JoinColumn(name = "TECHNOLOGY_ID", referencedColumnName="ID", 
+	    	foreignKey = @ForeignKey(name = FK_PROJECT_TECHNOLOGY_MAP_TECHNOLOGY_ID), unique = false)
+	)
+    // @formatter:on
+	private Set<Technology> technologies = new HashSet<Technology>();
+	
+	
+	public void updateTechnologies(final Set<Technology> technologies) {
 		this.technologies = technologies;
 	}
+////	@NotNull
+////	@Column(name = "TECHNOLOGIES", nullable = false, length = 255)
+////	private String technologies;
+//
+	
+	
+	
+//	public void updateTechnology(final String technologies) {
+//		this.technologies = technologies;
+//	}
 
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
@@ -399,7 +422,7 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	}
 
 	public interface TechnologiesBuilder {
-		OffshoreManagerBuilder withTechnologies(final String technologies);
+		OffshoreManagerBuilder withTechnologies(final Set<Technology> technologies);
 	}
 
 	public interface OffshoreManagerBuilder {
@@ -550,7 +573,7 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		}
 
 		@Override
-		public OffshoreManagerBuilder withTechnologies(String technologies) {
+		public OffshoreManagerBuilder withTechnologies(Set<Technology> technologies) {
 			this.project.technologies = technologies;
 			return this;
 		}

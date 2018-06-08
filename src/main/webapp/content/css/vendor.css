@@ -18,16 +18,27 @@ body{
 jhi-page-ribbon{
     display: none;
 }
-.view-account .mat-select-disabled .mat-select-arrow-wrapper{
+.view-mode .mat-select-disabled .mat-select-arrow-wrapper{
     visibility: hidden;
 }
 
-.view-account .mat-form-field-disabled .mat-form-field-underline{
+.view-mode .mat-form-field-disabled .mat-form-field-underline{
     visibility: hidden;
 }
 
-.view-account .mat-form-field-disabled .mat-input-element, .view-account .mat-form-field-disabled .mat-select-value-text{
+.view-mode .mat-form-field-disabled .mat-input-element, .view-mode .mat-form-field-disabled .mat-select-value-text{
     font-weight: bold;
     color: #333;
+}
+
+.view-mode .mat-form-field-disabled mat-datepicker-toggle{
+    visibility: hidden;
+}
+
+.ng-touched.ng-valid .mat-input-placeholder{
+    color: blue;
+}
+.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label{
+    color: blue;
 }
 
