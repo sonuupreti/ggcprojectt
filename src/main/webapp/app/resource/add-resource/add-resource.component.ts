@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormsModule, FormBuilder, FormGroupDirective, FormGroup, NgForm, Validators } from '@angular/forms';
 
+import { ResourceService } from '../resource.service';
 @Component({
     selector: 'jhi-add-resource',
     templateUrl: './add-resource.component.html',
@@ -10,7 +11,9 @@ export class AddResourceComponent implements OnInit {
     resourceForm: FormGroup;
     FTEFields: Array<any>;
     contractorFields: Array<any>;
-    constructor(private fb: FormBuilder) {}
+    companiesList: Array<any>;
+    locationsList: Array<any>;
+    constructor(private fb: FormBuilder, private resourceService: ResourceService) {}
     rateMessage: string = 'Cost Rate = (Annual Salary + Overheads (Commission' +
         '+Bonus+Others))/Standard working hours per week(40)*' +
         'Number of weeks in a year(52)))';
@@ -21,7 +24,7 @@ export class AddResourceComponent implements OnInit {
             department: new FormControl('', [Validators.required]),
             designation: new FormControl('', [Validators.required]),
             joiningDate: new FormControl('', [Validators.required]),
-            actualJoiningDate: new FormControl('', [Validators.required]),
+            actualJoiningDate: new FormControl('', []),
             baseLocation: new FormControl('', []),
             deputedLocation: new FormControl('', []),
             employeeType: new FormControl('', []),
@@ -90,5 +93,11 @@ export class AddResourceComponent implements OnInit {
         });
 
         this.resourceForm.get('employeeType').setValue('1');
+
+        this.resourceService.initAddResource().subscribe(response => {
+            this.companiesList = response.companiesList;
+            this.locationsList = response.locationsList;
+        });
     }
+    save() {}
 }

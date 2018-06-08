@@ -26,7 +26,7 @@
             <p>
               <mat-form-field>
                 <mat-select placeholder="Company Name" formControlName="companyName" required>
-                  <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                  <mat-option *ngFor="let list of companiesList" [value]="list">
                     {{list.value}}
                   </mat-option>
                 </mat-select>
@@ -172,7 +172,7 @@
 
             <p>
               <mat-form-field>
-                <input matInput [matDatepicker]="picker2" placeholder="Actual Joining Date" formControlName="actualJoiningDate" required>
+                <input matInput [matDatepicker]="picker2" placeholder="Actual Joining Date" formControlName="actualJoiningDate">
                 <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
                 <mat-datepicker #picker2></mat-datepicker>
               </mat-form-field>
@@ -181,7 +181,7 @@
             <p>
               <mat-form-field>
                 <mat-select placeholder="Base Locaton" formControlName="baseLocation">
-                  <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                  <mat-option *ngFor="let list of locationsList" [value]="list">
                     {{list.value}}
                   </mat-option>
                 </mat-select>
@@ -191,7 +191,7 @@
             <p>
               <mat-form-field>
                 <mat-select placeholder="Deputed Location" formControlName="deputedLocation">
-                  <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                  <mat-option *ngFor="let list of locationsList" [value]="list">
                     {{list.value}}
                   </mat-option>
                 </mat-select>

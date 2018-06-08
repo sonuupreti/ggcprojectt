@@ -9,8 +9,12 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ResourceRoutingModule } from './resource-routing.module';
 import { AddResourceComponent } from './add-resource/add-resource.component';
 
+//services
+import { ResourceService } from './resource.service';
+
 @NgModule({
     imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule, ResourceRoutingModule],
-    declarations: [AddResourceComponent]
+    declarations: [AddResourceComponent],
+    providers: [ResourceService]
 })
 export class ResourceModule {}
