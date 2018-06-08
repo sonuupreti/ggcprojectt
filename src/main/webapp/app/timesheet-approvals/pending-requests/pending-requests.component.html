@@ -69,9 +69,8 @@
                                <td class="tableContent resourceTableLightGray" [ngStyle]="{'background': getColor(projectData.project.key)}">
                                   {{projectData.project.key}} - {{projectData.project.value}}
                                </td>
-                               <td [ngbPopover]="popContent" 
-                               placement="top" class="tableContent text-center resourceTableWhite" [ngStyle]="{'background': getColor(projectData.project.key)}" *ngFor="let dailyEntries of projectData.dailyEntries">
-                                  {{dailyEntries.timeEntries.hours}}
+                               <td  class="tableContent text-center resourceTableWhite" [ngStyle]="{'background': getColor(projectData.project.key)}" *ngFor="let dailyEntries of projectData.dailyEntries">
+                              <div [ngbPopover]="popContent" placement="top">{{dailyEntries.timeEntries.hours}}</div>
                                   <ng-template #popContent>
                                       {{dailyEntries.timeEntries.comments}}
                                   </ng-template>
@@ -88,7 +87,14 @@
                             </tr>
                             <tr class="weekendsColor">
                               <td class="tableContent resourceTableLightGray">Total Hours Per Day</td>
-                              <td class="tableContent resourceTableLightGray text-center" *ngFor="let dates of timeSheetData.weekDetails.dailyDetails">{{dates.timeEntries.hours}}</td>
+                              <td class="tableContent resourceTableLightGray text-center" *ngFor="let dates of timeSheetData.weekDetails.dailyDetails">
+                                <div [ngbPopover]="totalDayComments" placement="top">
+                                    {{dates.timeEntries.hours}}
+                                </div>
+                                <ng-template #totalDayComments>
+                                    {{dates.timeEntries.comments}}
+                                </ng-template>
+                              </td>
                               <td class="tableContent resourceTableLightGray text-center">{{timeSheetData.weekDetails.totalWeekSubmitedHours}}</td>
                             </tr>
                          </tbody>
