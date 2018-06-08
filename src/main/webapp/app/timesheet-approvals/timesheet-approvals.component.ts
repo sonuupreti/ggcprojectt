@@ -6,6 +6,9 @@ import { Component, OnInit } from '@angular/core';
     styles: []
 })
 export class TimesheetApprovalsComponent implements OnInit {
+    pending = 'pending';
+    approved = 'approved';
+    rejected = 'rejected';
     constructor() {}
 
     ngOnInit() {}
