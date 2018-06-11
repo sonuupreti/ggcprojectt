@@ -5,6 +5,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.util.List;
+import java.util.Optional;
 
 import javax.validation.Valid;
 
@@ -17,6 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +37,7 @@ import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
 import com.gspann.itrack.domain.service.api.AccountManagementService;
 import com.gspann.itrack.domain.service.api.ResourceManagementService;
 
+import io.github.jhipster.web.util.ResponseUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @RestController
@@ -102,4 +105,17 @@ public class ResourceRestController {
 	 		 HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/resource/search");
 	        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	    }*/
+	 	/**
+	 	 * This method is used to get Resource object by Id.
+	 	 * @param id
+	 	 * @return
+	 	 */
+	 	@GetMapping("/resource/{id}")
+	    @Timed
+	 	public ResponseEntity<ResourceDTO> getResourceById(@PathVariable String id){
+	 		 log.debug("START :: ResourceRestController :: getResourceById ");
+	 		ResourceDTO resourceDTO =resourceManagementService.findById(id);
+	 		 log.debug("END :: ResourceRestController :: getResourceById");
+	 		 return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resourceDTO));
+	 	}
 }

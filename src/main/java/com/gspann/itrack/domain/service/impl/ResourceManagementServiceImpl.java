@@ -224,4 +224,11 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		
 		return ResourceOnLoadVM.of(companyPairs,locationPairs,departmentPairs,designationsPairs,technologiesPairs,currencyPairs);
 	}
+	
+	@Override
+	public ResourceDTO findById(String id) {
+		log.debug("Request to get Resource : {}", id);
+		Optional<Resource> resource= resourceRepository.findById(id);
+		return BeanConverterUtil.resourceEntitytoDto(resource.get());
+	}
 }
