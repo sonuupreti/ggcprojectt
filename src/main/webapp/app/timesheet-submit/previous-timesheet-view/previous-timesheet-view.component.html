@@ -3,7 +3,7 @@
     
             <ng-container matColumnDef="weekOf">
                 <mat-header-cell *matHeaderCellDef> Week of </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.weekStartDate | date:'MMM dd'}} - {{timesheet.weekDetails.weekEndDate | date:'dd'}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.weekStartDate | date:'MMM dd'}}{{timesheet.weekDetails.weekStartDate | date:'dd' | dateSuffix}} - {{timesheet.weekDetails.weekEndDate | date:'dd'}}{{timesheet.weekDetails.weekEndDate | date:'dd' | dateSuffix}} </mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="status">

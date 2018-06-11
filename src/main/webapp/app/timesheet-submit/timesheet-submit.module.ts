@@ -11,6 +11,7 @@ import { TimesheetDetailedViewComponent } from './previous-timesheet-view/timesh
 import { TimeSheetsDetailedViewDirective } from './previous-timesheet-view/timesheet-detailed-view/timesheet-detailed-view.directive';
 import { TimesheetService } from './timesheet.service';
 import { EllipsisPipe } from './previous-timesheet-view/ellipsis.pipe';
+import { DateSuffixPipe } from './datesuffix.pipe';
 
 const routes = [
     {
@@ -29,7 +30,8 @@ const routes = [
         CurrentTimesheetView,
         TimesheetDetailedViewComponent,
         TimeSheetsDetailedViewDirective,
-        EllipsisPipe
+        EllipsisPipe,
+        DateSuffixPipe
     ],
     entryComponents: [TimesheetDetailedViewComponent],
     providers: [TimesheetService],
