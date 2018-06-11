@@ -32,19 +32,17 @@ public class ResourceDTO {
 	
 	private String resourceCode;
 	private long version;
-	@NotNull
 	private String emailId;
 	private String greytHRId;
 	@NotNull
 	private String name;
 	@NotNull
 	private Gender gender;
-	/*@NotNull
-	private Designation designation*/;
-	private short designationId;
-	//@NotNull
-	private String employmentTypeCode;
 	@NotNull
+	private short designationId;
+	@NotNull
+	private String employmentTypeCode;
+	
 	private String employeeStatusCode;
 	@NotNull
 	private int baseLocationId;
@@ -53,13 +51,16 @@ public class ResourceDTO {
 	private String primarySkills;
 	
 	private String secondarySkills;
-	private LocalDate expectedJoiningDate;
 	@NotNull
+	private LocalDate expectedJoiningDate;
 	private LocalDate actualJoiningDate;
 	private LocalDate exitDate;
 	private long imageId;
-	@NotNull
-	private EmploymentType employmentType;
+	private short companyId;
+	private short departmentId;
+	
+	/*@NotNull
+	private EmploymentType employmentType;*/
 	private BigDecimal annualSalary;
 
 }

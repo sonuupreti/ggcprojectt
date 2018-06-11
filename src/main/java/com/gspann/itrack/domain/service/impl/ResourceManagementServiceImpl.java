@@ -70,17 +70,18 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		if( null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase("FTE")) {
 			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asFullTimeEmployee()
 					.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
-					.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
+					.withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
+			
 		}
 		else if(null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase("Contractor")) {
 			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asDirectContractor()
 					.withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
-					.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
+					.withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
 		}
 		else if(null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase("Sub-Contractor")) {
 		resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asFullTimeEmployee()
 				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
-				.withEmail(resourceDTO.getEmailId()).withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().build();
+				.withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
 	}
 		resourceRepository.saveAndFlush(resources);
 		return BeanConverterUtil.resourceEntitytoDto(resources);
