@@ -1,5 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ElementRef, ViewChild } from '@angular/core';
 import { FormControl, FormsModule, FormBuilder, FormGroupDirective, FormGroup, NgForm, Validators } from '@angular/forms';
+import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
+import { Observable } from 'rxjs';
+
+import { Router } from '@angular/router';
 
 import { ResourceService } from '../resource.service';
 @Component({
@@ -9,11 +15,51 @@ import { ResourceService } from '../resource.service';
 })
 export class AddResourceComponent implements OnInit {
     resourceForm: FormGroup;
+    primarySkill: Array<any> = [];
+
     FTEFields: Array<any>;
     contractorFields: Array<any>;
     companiesList: Array<any>;
     locationsList: Array<any>;
-    constructor(private fb: FormBuilder, private resourceService: ResourceService) {}
+    departmentList: Array<any>;
+    designationList: Array<any>;
+    currencyList: Array<any>;
+    technologyList: Array<any>;
+
+    selectable: boolean = true;
+    removable: boolean = true;
+    addOnBlur: boolean = false;
+
+    separatorKeysCodes = [ENTER, COMMA];
+
+    primarySkillCtrl = new FormControl();
+
+    filteredTechnologies: Array<any>;
+
+    @ViewChild('technologyInput') technologyInput: ElementRef;
+
+    constructor(
+        private fb: FormBuilder,
+        private resourceService: ResourceService,
+        private config: NgbPopoverConfig,
+        private router: Router
+    ) {
+        config.placement = 'top';
+        config.triggers = 'hover';
+        this.primarySkillCtrl.valueChanges.subscribe(x => {
+            console.log(this.primarySkillCtrl);
+            var self = this;
+            this.filteredTechnologies = this.technologyList.filter(function(index) {
+                if (self.primarySkillCtrl.value) {
+                    if (typeof self.primarySkillCtrl.value === 'object') {
+                        return index.value.toLocaleLowerCase().indexOf(self.primarySkillCtrl.value.value.toLocaleLowerCase()) >= 0;
+                    } else {
+                        return index.value.toLocaleLowerCase().indexOf(self.primarySkillCtrl.value.toLocaleLowerCase()) >= 0;
+                    }
+                }
+            });
+        });
+    }
     rateMessage: string = 'Cost Rate = (Annual Salary + Overheads (Commission' +
         '+Bonus+Others))/Standard working hours per week(40)*' +
         'Number of weeks in a year(52)))';
@@ -24,11 +70,9 @@ export class AddResourceComponent implements OnInit {
             department: new FormControl('', [Validators.required]),
             designation: new FormControl('', [Validators.required]),
             joiningDate: new FormControl('', [Validators.required]),
-            actualJoiningDate: new FormControl('', []),
             baseLocation: new FormControl('', []),
-            deputedLocation: new FormControl('', []),
             employeeType: new FormControl('', []),
-            empStatus: new FormControl('', [Validators.required])
+            technology: new FormControl('', [Validators.required])
         });
 
         this.FTEFields = [
@@ -97,7 +141,61 @@ export class AddResourceComponent implements OnInit {
         this.resourceService.initAddResource().subscribe(response => {
             this.companiesList = response.companiesList;
             this.locationsList = response.locationsList;
+            this.departmentList = response.departmentList;
+            this.designationList = response.designationList;
+            this.currencyList = response.currencyPairs;
+            this.technologyList = response.technologiesPairs;
         });
     }
-    save() {}
+    save(event) {
+        event.preventDefault();
+    }
+
+    navigateTo() {
+        this.router.navigate(['./resource/view-resource']);
+    }
+
+    add(event: MatChipInputEvent): void {
+        const input = event.input;
+        const value = event.value;
+        if ((value || '').trim()) {
+            let flag = this.primarySkill.filter(index => {
+                return index.value.toLocaleLowerCase() === event.value.toLocaleLowerCase();
+            });
+            if (flag.length === 0) {
+                this.primarySkill.push({ key: 0, value: value.trim() });
+            }
+        }
+        // Reset the input value
+        if (input) {
+            input.value = '';
+        }
+        this.resourceForm.get('technology').setValue('field');
+    }
+
+    remove(list: any): void {
+        const index = this.primarySkill.indexOf(list);
+        if (index >= 0) {
+            this.primarySkill.splice(index, 1);
+        }
+        this.technologyList.push(list);
+        if (this.primarySkill.length === 0) {
+            this.resourceForm.get('technology').setValue('');
+        }
+    }
+
+    selected(event: MatAutocompleteSelectedEvent): void {
+        this.resourceForm.get('technology').setValue('field');
+        this.primarySkill.push({ key: event.option.value.key, value: event.option.value.value });
+        let self = this;
+        let index = self.technologyList.indexOf(event.option.value);
+        this.technologyList.splice(index, 1);
+        this.technologyInput.nativeElement.value = '';
+        this.primarySkillCtrl.setValue(null);
+    }
+    getSelected(list, code): any {
+        return list.find(index => {
+            return index.key === code;
+        });
+    }
 }

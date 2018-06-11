@@ -14,6 +14,8 @@ body{
 .card{
     background-color: inherit;
     border: 0;
+    width: 90vw;
+    margin: 0 auto;
 }
 jhi-page-ribbon{
     display: none;
@@ -40,5 +42,18 @@ jhi-page-ribbon{
 }
 .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label{
     color: blue;
+}
+mat-table{
+    padding: 20px;
+}
+mat-table mat-header-row{
+    border-radius: 5px;
+    background: #ddd;
+    border-bottom: 0 !important;
+
+}
+mat-table .mat-header-cell{
+    color: #000;
+    font-weight: bold;
 }
 

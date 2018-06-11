@@ -12,8 +12,6 @@
               <span class="fa fa-pencil-square-o"></span> Edit</button>
             <button [hidden]="isViewMode" mat-button (click)="updateProjectDetails();" color="primary">
               <span class="fa fa-save"></span> Save</button>
-            <button mat-button (click)="remove();" color="primary">
-              <span class="fa fa-trash"></span> Remove</button>
           </div>
 
         </mat-card-header>
@@ -24,7 +22,6 @@
                 <p>
                   <mat-form-field>
                     <input matInput placeholder="Project ID" formControlName="projectCode" [disabled]="true">
-                    <mat-hint>(This will be auto generated)</mat-hint>
                   </mat-form-field>
                 </p>
                 <p>
