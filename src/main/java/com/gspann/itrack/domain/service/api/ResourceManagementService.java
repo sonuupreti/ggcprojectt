@@ -16,6 +16,7 @@ public interface ResourceManagementService {
 	public ResourceOnLoadVM resourceOnLodPage();
 	public Page<ResourceDTO> getAllResources(Pageable pageable);
 	public void onBoardToBench(final String resourceCode, final LocalDate joiningDate);
+	public ResourceDTO findById(String id);
 
 	public void onBoardToProject(final String resourceCode, final String projectCode, final Money hourlyRate,
 			final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem);
