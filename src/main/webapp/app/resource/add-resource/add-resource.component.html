@@ -7,13 +7,13 @@
       </mat-card-title>
     </mat-card-header>
     <mat-card-content>
-      <form [formGroup]="resourceForm" novalidate (submit)="save($event)">
-        <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-          <div fxFlex="45%">
+      <form [formGroup]="resourceForm" novalidate (submit)="saveData($event)">
+        <div class="row">
+          <div class="col-sm-5">
             <p>
               <mat-form-field>
                 <input matInput placeholder="Resource Name" formControlName="resourceName" required>
-                <mat-error *ngIf="resourceForm.get('resourceName').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="resourceForm.get('resourceName').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
 
@@ -24,7 +24,7 @@
                     {{list.value}}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="resourceForm.get('companyName').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="resourceForm.get('companyName').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
 
@@ -35,7 +35,7 @@
                     {{list.value}}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="resourceForm.get('department').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="resourceForm.get('department').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
 
@@ -47,7 +47,7 @@
                     {{list.value}}
                   </mat-option>
                 </mat-select>
-                <mat-error *ngIf="resourceForm.get('designation').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="resourceForm.get('designation').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
 
@@ -58,7 +58,7 @@
                 <mat-radio-button value="1">FTE</mat-radio-button>
                 <mat-radio-button value="2">Contractor</mat-radio-button>
                 <mat-radio-button value="3">Sub-Contractor</mat-radio-button>
-                <mat-error *ngIf="resourceForm.get('employeeType').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="resourceForm.get('employeeType').hasError('required')">This is required field</mat-error>
               </mat-radio-group>
             </p>
             <div *ngIf="resourceForm.get('employeeType').value === '1'">
@@ -70,7 +70,7 @@
                       {{list.value}}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">Required</mat-error>
+                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">This is required field</mat-error>
                 </mat-form-field>
               </p>
               <p>
@@ -85,13 +85,13 @@
                     {{rateMessage}}
                   </ng-template>
 
-                  <mat-error *ngIf="resourceForm.get('anualPackage').hasError('required')">Required</mat-error>
+                  <mat-error *ngIf="resourceForm.get('anualPackage').hasError('required')">This is required field</mat-error>
                 </mat-form-field>
               </p>
               <p>
                 <mat-form-field>
                   <input matInput placeholder="Comission" formControlName="commision" required>
-                  <mat-error *ngIf="resourceForm.get('commision').hasError('required')">Required</mat-error>
+                  <mat-error *ngIf="resourceForm.get('commision').hasError('required')">This is required field</mat-error>
                 </mat-form-field>
 
               </p>
@@ -99,7 +99,7 @@
               <p>
                   <mat-form-field>
                     <input matInput placeholder="bonus" formControlName="commision" required>
-                    <mat-error *ngIf="resourceForm.get('bonus').hasError('required')">Required</mat-error>
+                    <mat-error *ngIf="resourceForm.get('bonus').hasError('required')">This is required field</mat-error>
                   </mat-form-field>
   
                 </p>
@@ -113,13 +113,13 @@
                       {{list.value}}
                     </mat-option>
                   </mat-select>
-                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">Required</mat-error>
+                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">This is required field</mat-error>
                 </mat-form-field>
               </p>
               <p>
                 <mat-form-field>
                   <input matInput placeholder="Rate Per Hour" formControlName="ratePerHour" required>
-                  <mat-error *ngIf="resourceForm.get('ratePerHour').hasError('required')">Required</mat-error>
+                  <mat-error *ngIf="resourceForm.get('ratePerHour').hasError('required')">This is required field</mat-error>
                 </mat-form-field>
               </p>
 
@@ -128,7 +128,7 @@
                   <input matInput [matDatepicker]="picker3" placeholder="Start Date" formControlName="startDate" required>
                   <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
                   <mat-datepicker #picker3></mat-datepicker>
-                  <mat-error *ngIf="resourceForm.get('startDate').hasError('required')">Required</mat-error>
+                  <mat-error *ngIf="resourceForm.get('startDate').hasError('required')">This is required field</mat-error>
                 </mat-form-field>
               </p>
 
@@ -151,15 +151,15 @@
 
 
           </div>
-          <div fxFlex="10%">
+          <div class="col-sm-1">
           </div>
-          <div fxFlex="45%">
+          <div class="col-sm-5">
             <p>
               <mat-form-field>
                 <input matInput [matDatepicker]="picker1" placeholder="Expected Joining Date" formControlName="joiningDate" required>
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
-                <mat-error *ngIf="resourceForm.get('joiningDate').hasError('required')">Required</mat-error>
+                <mat-error *ngIf="resourceForm.get('joiningDate').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
 
@@ -199,10 +199,9 @@
 
           </div>
         </div>
-        <button type="submit" mat-raised-button color="primary">Create Account</button>
-        <button mat-raised-button color="primary">Reset All</button>
+        <button type="submit" mat-raised-button color="primary">Create Resource</button>
+        <button type="button" mat-raised-button color="primary" (click)="reset();">Reset All</button>
       </form>
     </mat-card-content>
   </mat-card>
 </div>
-<button (click)="navigateTo();">Navigate</button>

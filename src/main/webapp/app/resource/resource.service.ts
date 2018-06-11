@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs/Observable';
 
 import { SERVER_API_URL } from 'app/app.constants';
@@ -10,5 +10,11 @@ export class ResourceService {
 
     initAddResource(): Observable<any> {
         return this.http.get(SERVER_API_URL + 'api/initAddResource');
+    }
+
+    saveResourceDetails(data): Observable<any> {
+        return this.http.post(SERVER_API_URL + 'api/resource', data, {}).map((response: HttpResponse<any>) => {
+            return response;
+        });
     }
 }

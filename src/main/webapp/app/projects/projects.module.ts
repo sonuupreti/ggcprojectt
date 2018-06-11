@@ -7,11 +7,10 @@ import { MaterialModule } from '../material.module';
 import { ListProjectsComponent } from './list-projects/list-projects.component';
 import { ProjectService } from './projects.service';
 import { AddProjectComponent } from './add-project/add-project.component';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ViewProjectComponent } from './view-project/view-project.component';
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule, RouterModule.forChild(projectsState)],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, RouterModule.forChild(projectsState)],
     providers: [ProjectService],
     declarations: [ListProjectsComponent, AddProjectComponent, ViewProjectComponent]
 })

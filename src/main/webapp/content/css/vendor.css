@@ -48,12 +48,24 @@ mat-table{
 }
 mat-table mat-header-row{
     border-radius: 5px;
-    background: #ddd;
+    background: #f4f6f9;
     border-bottom: 0 !important;
 
+}
+.mat-header-row {
+    min-height: 45px !important;
 }
 mat-table .mat-header-cell{
     color: #000;
     font-weight: bold;
+}
+.success-message{
+    color: #62B948;
+}
+.mat-raised-button.mat-primary{
+    background: #0EB3F7;
+}
+.mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label{
+    color: #0EB3F7;
 }
 

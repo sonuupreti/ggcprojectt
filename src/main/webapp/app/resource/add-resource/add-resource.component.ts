@@ -4,10 +4,13 @@ import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { MatAutocompleteSelectedEvent, MatChipInputEvent } from '@angular/material';
 import { Observable } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
 import { Router } from '@angular/router';
 
 import { ResourceService } from '../resource.service';
+export const DATE_FORMATE = 'yyyy-MM-dd';
+
 @Component({
     selector: 'jhi-add-resource',
     templateUrl: './add-resource.component.html',
@@ -147,8 +150,26 @@ export class AddResourceComponent implements OnInit {
             this.technologyList = response.technologiesPairs;
         });
     }
-    save(event) {
+    saveData(event) {
         event.preventDefault();
+        let datePipe = new DatePipe('en-US');
+        const data = {
+            name: this.resourceForm.get('resourceName').value,
+            annualSalary: this.resourceForm.get('anualPackage').value,
+            baseLocationId: this.resourceForm.get('baseLocation').value.key,
+            companyId: this.resourceForm.get('companyName').value.key,
+            departmentId: this.resourceForm.get('department').value.key,
+            designationId: this.resourceForm.get('designation').value.key,
+            primarySkills: 'sdf',
+            employmentTypeCode: this.resourceForm.get('employeeType').value,
+            gender: 'MALE',
+            expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE)
+        };
+
+        this.resourceService.saveResourceDetails(data).subscribe(response => {
+            localStorage.setItem('previousUrl', 'addProject');
+            this.router.navigate(['projects/view-project/' + response.projectCode]);
+        });
     }
 
     navigateTo() {
@@ -197,5 +218,11 @@ export class AddResourceComponent implements OnInit {
         return list.find(index => {
             return index.key === code;
         });
+    }
+
+    reset() {
+        this.resourceForm.reset();
+        this.resourceForm.get('technology').setValue('');
+        this.primarySkill = [];
     }
 }

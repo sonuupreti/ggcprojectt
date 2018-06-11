@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { MaterialModule } from '../material.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { ReactiveFormsModule } from '@angular/forms';
 
 import { ResourceRoutingModule } from './resource-routing.module';
@@ -14,7 +13,7 @@ import { ResourceService } from './resource.service';
 import { ViewResourceComponent } from './view-resource/view-resource.component';
 
 @NgModule({
-    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, FlexLayoutModule, ResourceRoutingModule, NgbModule.forRoot()],
+    imports: [CommonModule, FormsModule, ReactiveFormsModule, MaterialModule, ResourceRoutingModule, NgbModule.forRoot()],
     declarations: [AddResourceComponent, ViewResourceComponent],
     providers: [ResourceService]
 })

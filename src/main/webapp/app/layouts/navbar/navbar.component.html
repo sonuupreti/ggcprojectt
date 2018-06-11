@@ -1,11 +1,13 @@
 <nav class="navbar navbar-dark navbar-expand-md jh-navbar">
     <div class="jh-logo-container float-left">
-        <a class="jh-navbar-toggler d-lg-none float-right" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
+        <a class="jh-navbar-toggler d-lg-none float-right" href="javascript:void(0);" data-toggle="collapse" data-target="#navbarResponsive"
+            aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation" (click)="toggleNavbar()">
             <i class="fa fa-bars"></i>
         </a>
         <a class="navbar-brand logo float-left" routerLink="/" (click)="collapseNavbar()">
             <!-- <span class="logo-img"></span> -->
-            <span class="navbar-title">iTrack</span> <span class="navbar-version"></span>
+            <span class="navbar-title">iTrack</span>
+            <span class="navbar-version"></span>
         </a>
     </div>
     <div class="navbar-collapse collapse" id="navbarResponsive" [ngbCollapse]="isNavbarCollapsed" [ngSwitch]="isAuthenticated()">
@@ -19,55 +21,50 @@
                 </a>
             </li>
             <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                    <a class="nav-link" routerLink="/listaccounts" (click)="collapseNavbar()">
-                        <span>
-                            <span>Accounts</span>
-                        </span>
-                    </a>
-                </li>
-
-                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <a class="nav-link" routerLink="/resource/add-resource" (click)="collapseNavbar()">
-                            <span>
-                                <span>Resources</span>
-                            </span>
-                        </a>
-                    </li>
-                 <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                    <a class="nav-link" routerLink="/timesheet-view" (click)="collapseNavbar()">
-                        <span>
-                            <span>Time Sheet</span>
-                        </span>
-                    </a>
-                </li>
-                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                        <a class="nav-link" routerLink="/timesheet-approvals" (click)="collapseNavbar()">
-                            <span>
-                                <span>Timesheet Requests</span>
-                            </span>
-                        </a>
-                    </li>
-                <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                    <a class="nav-link" routerLink="/projects/list-projects" (click)="collapseNavbar()">
-                        <span>
-                            <span>Projects</span>
-                        </span>
-                    </a>
-                </li>
-            <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
-            <li *ngSwitchCase="true" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
-                <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="entity-menu">
+                <a class="nav-link" routerLink="/listaccounts" (click)="collapseNavbar()">
                     <span>
-                        <i class="fa fa-th-list" aria-hidden="true"></i>
-                        <span>
-                            Entities
-                        </span>
+                        <span>Accounts</span>
                     </span>
                 </a>
-                <ul class="dropdown-menu" ngbDropdownMenu>
-                    <!-- jhipster-needle-add-entity-to-menu - JHipster will add entities to the menu here -->
-                </ul>
             </li>
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="/projects/list-projects" (click)="collapseNavbar()">
+                    <span>
+                        <span>Projects</span>
+                    </span>
+                </a>
+            </li>
+
+            <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                    <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
+                        Timesheet 
+                    </a>
+                    <ul class="dropdown-menu" ngbDropdownMenu>
+                        <li>
+                            <a class="dropdown-item" routerLink="/timesheet-view">
+                                    Submit 
+                            </a>
+                        </li>
+                        <li>
+                            <a class="dropdown-item" routerLink="/timesheet-approvals">
+                                Approve
+                            </a>
+                        </li>
+                    </ul>
+                </li>
+
+            <li class="nav-item" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                <a class="nav-link" routerLink="/resource/add-resource" (click)="collapseNavbar()">
+                    <span>
+                        <span>Resources</span>
+                    </span>
+                </a>
+            </li>
+
+            
+
+            <!-- jhipster-needle-add-element-to-menu - JHipster will add new menu items here -->
+
             <li *jhiHasAnyAuthority="'ROLE_ADMIN'" ngbDropdown class="nav-item dropdown pointer" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="admin-menu">
                     <span>
@@ -117,15 +114,15 @@
             </li>
             <li ngbDropdown class="nav-item dropdown pointer" placement="bottom-right" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
                 <a class="nav-link dropdown-toggle" ngbDropdownToggle href="javascript:void(0);" id="account-menu">
-                  <span *ngIf="!getImageUrl()">
-                    <i class="fa fa-user" aria-hidden="true"></i>
-                    <span>
-                      Account
+                    <span *ngIf="!getImageUrl()">
+                        <i class="fa fa-user" aria-hidden="true"></i>
+                        <span>
+                            User Name
+                        </span>
                     </span>
-                  </span>
-                  <span *ngIf="getImageUrl()">
-                      <img [src]="getImageUrl()" class="profile-image img-circle" alt="Avatar">
-                  </span>
+                    <span *ngIf="getImageUrl()">
+                        <img [src]="getImageUrl()" class="profile-image img-circle" alt="Avatar">
+                    </span>
                 </a>
                 <ul class="dropdown-menu" ngbDropdownMenu>
                     <li *ngSwitchCase="true">
