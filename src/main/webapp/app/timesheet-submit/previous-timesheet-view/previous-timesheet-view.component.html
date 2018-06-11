@@ -3,7 +3,7 @@
     
             <ng-container matColumnDef="weekOf">
                 <mat-header-cell *matHeaderCellDef> Week of </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekOf}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.weekStartDate | date:'MMM dd'}} - {{timesheet.weekDetails.weekEndDate | date:'dd'}} </mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="status">
@@ -13,17 +13,34 @@
     
             <ng-container matColumnDef="submittedOn">
                 <mat-header-cell *matHeaderCellDef> Submitted On </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.submittedOn}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.submittedDate}} </mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="approverAction">
                 <mat-header-cell *matHeaderCellDef> Approver's Action </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.approverAction}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet" 
+                    [ngClass]="{
+                        'apprvr-action-danger':timesheet.approverAction === 'Declined' || timesheet.approverAction === 'PartiallyDeclined',
+                        'apprvr-action-success':timesheet.approverAction === 'Approved' || timesheet.approverAction === 'PartiallyApproved',
+                        'apprvr-action-submitted':timesheet.approverAction === 'submitted'
+                    }">
+                    {{timesheet.approverAction}} 
+                </mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="comments">
                 <mat-header-cell *matHeaderCellDef> Comments </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.comments}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet">
+                    <span id='apprvrComments' 
+                        placement="top"
+                        [ngbPopover]="tipContent" 
+                        triggers="mouseenter:mouseleave"
+                        *ngIf="timesheet.approverComments.length>50;else noTooltip">
+                        {{timesheet.approverComments | ellipsis:50}}
+                    </span>
+                    <ng-template #noTooltip>{{timesheet.approverComments}}</ng-template>
+                    <ng-template #tipContent>{{timesheet.approverComments}}</ng-template>
+                </mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="quickLinks">
@@ -41,9 +58,9 @@
             </ng-container>
     
             <ng-container matColumnDef="expandedDetail">
-                <mat-cell *matCellDef="let timesheet"> 
+                <mat-cell *matCellDef="let timesheet">
                   <!-- Detail Row View -->
-                  <ng-template expand-row></ng-template>
+                  <ng-template expandRow></ng-template>
                 </mat-cell>
               </ng-container>
             

@@ -1,1 +1,46 @@
-<div>Trying for dynamic loading</div>
+<table id='detailedRow'>
+    <thead>
+        <tr class='text-center'>
+            <th class='timesheet-cell project-cell text-left'>
+                Projects
+            </th>
+            <th class='timesheet-cell' 
+                *ngFor="let days of data.weekDetails.dailyDetails" 
+                [ngClass]="{
+                    'weekend-day':days.type.code === 'WE',
+                    'holiday':days.type.code === 'HD'
+                }"
+            >
+                {{days.date | date: 'EEE'}} <br/> {{days.date | date: 'MMM'}} {{days.date | date: 'dd'}}
+            </th>
+            <th class='timesheet-cell resource-total-hrs'>
+                Total Hours
+            </th>
+            <th class='timesheet-cell'>
+                Approver's Status
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr *ngFor="let timesheet of data.projects" class='text-center'>
+            <td class='timesheet-cell project-cell text-left'>
+                {{timesheet.project.key}} - {{timesheet.project.value}}
+            </td>
+            <td *ngFor="let day of timesheet.dailyEntries" class='timesheet-cell'>
+                {{day.timeEntries.hours}}
+            </td>
+            <td class='timesheet-cell resource-total-hrs'>
+                {{timesheet.totalSubmittedHrs}}
+            </td>
+            <td 
+                class='timesheet-cell'
+                [ngClass]="{
+                    'apprvr-action-danger':timesheet.actions.isApproved,
+                    'apprvr-action-success':timesheet.actions.isCancelled}"
+                    >
+                <span *ngIf='timesheet.actions.isApproved'>Approved</span>
+                <span *ngIf='timesheet.actions.isCancelled'>Declined</span>
+            </td>
+        </tr>
+    </tbody>
+</table>

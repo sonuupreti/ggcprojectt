@@ -1,7 +1,7 @@
 import { Directive, ViewContainerRef, ElementRef } from '@angular/core';
 @Directive({
-    selector: '[expand-row]'
+    selector: '[expandRow]'
 })
-export class timeSheetsDetailedViewDirective {
+export class TimeSheetsDetailedViewDirective {
     constructor(public viewContainerRef: ViewContainerRef) {}
 }
