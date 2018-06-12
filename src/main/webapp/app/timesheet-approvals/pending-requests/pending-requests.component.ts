@@ -31,7 +31,7 @@ export class PendingRequestsComponent implements OnInit {
                 dailyStandardHours: 8,
                 weeklyStandardHours: 40,
                 flexibleWeekends: false,
-                totalWeekSubmitedHours: 40,
+                totalWeekSubmitedHours: 41,
                 dailyDetails: [
                     {
                         date: '2018-05-21',
@@ -55,7 +55,7 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: null,
                         timeEntries: {
-                            hours: 8,
+                            hours: 9,
                             comments: 'Spent time to investigate the issues related to admin module'
                         }
                     },
@@ -142,7 +142,7 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 24,
+                    totalSubmittedHrs: 25,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
@@ -154,7 +154,7 @@ export class PendingRequestsComponent implements OnInit {
                         {
                             date: '2018-05-22',
                             timeEntries: {
-                                hours: 8,
+                                hours: 9,
                                 comments: 'Worked on project ITRACK - recent timesheets module to displaying the recent timesheet data'
                             }
                         },
@@ -162,7 +162,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on My timesheet submission with adding leaves data'
+                                comments: ''
                             }
                         },
                         {
@@ -352,7 +352,7 @@ export class PendingRequestsComponent implements OnInit {
                 dailyStandardHours: 8,
                 weeklyStandardHours: 40,
                 flexibleWeekends: false,
-                totalWeekSubmitedHours: 40,
+                totalWeekSubmitedHours: 42,
                 dailyDetails: [
                     {
                         date: '2018-05-28',
@@ -376,7 +376,7 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: null,
                         timeEntries: {
-                            hours: 8,
+                            hours: 9,
                             comments: 'Worked on Projects module in Itrack Application'
                         }
                     },
@@ -402,8 +402,8 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: 'Diwali',
                         timeEntries: {
-                            hours: 8,
-                            comments: 'Worked on Project ITRACk'
+                            hours: 9,
+                            comments: 'Worked on Project ITRACk - recent timesheets with mock json response'
                         }
                     },
                     {
@@ -463,7 +463,7 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 20,
+                    totalSubmittedHrs: 25,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
@@ -489,8 +489,8 @@ export class PendingRequestsComponent implements OnInit {
                         {
                             date: '2018-05-24',
                             timeEntries: {
-                                hours: 4,
-                                comments: 'Worked on Project ITRACk'
+                                hours: 5,
+                                comments: 'Worked on Project ITRACk -  recent time sheets'
                             }
                         },
                         {
@@ -531,19 +531,19 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 20,
+                    totalSubmittedHrs: 9,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on Project ITRACk'
+                                comments: ''
                             }
                         },
                         {
                             date: '2018-05-22',
                             timeEntries: {
-                                hours: 0,
+                                hours: 1,
                                 comments: ''
                             }
                         },
@@ -558,14 +558,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'Worked on Project ITRACk'
+                                comments: 'Worked on Project ITRACk - resouce allocation with mock response'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'Worked on Project ITRACk'
+                                comments: 'Worked on Project ITRACk -  project allocation to the resouce'
                             }
                         },
                         {
@@ -619,7 +619,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 8,
-                                comments: 'Worked on Project ITRACk'
+                                comments: 'PTO- due to personal work'
                             }
                         },
                         {
@@ -675,7 +675,7 @@ export class PendingRequestsComponent implements OnInit {
                 dailyStandardHours: 8,
                 weeklyStandardHours: 40,
                 flexibleWeekends: false,
-                totalWeekSubmitedHours: 40,
+                totalWeekSubmitedHours: 41,
                 dailyDetails: [
                     {
                         date: '2018-05-21',
@@ -699,8 +699,8 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: null,
                         timeEntries: {
-                            hours: 8,
-                            comments: 'Worked on Project ITRACk'
+                            hours: 9,
+                            comments: 'Worked on Project ITRACk - admin module'
                         }
                     },
                     {
@@ -786,7 +786,7 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 24,
+                    totalSubmittedHrs: 25,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
@@ -798,15 +798,15 @@ export class PendingRequestsComponent implements OnInit {
                         {
                             date: '2018-05-22',
                             timeEntries: {
-                                hours: 8,
-                                comments: 'Worked on Project ITRACk'
+                                hours: 9,
+                                comments: 'Worked on Project ITRACk - admin module with mock response'
                             }
                         },
                         {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on Project ITRACk'
+                                comments: ''
                             }
                         },
                         {
@@ -860,7 +860,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on Project ITRACk'
+                                comments: ''
                             }
                         },
                         {
@@ -881,14 +881,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'Worked on Project ITRACk'
+                                comments: 'Worked on Project ITRACk - worked on the services for project re allocation'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'Worked on Project ITRACk'
+                                comments: 'Worked on Project ITRACk - worked on managing resources for reporting manager'
                             }
                         },
                         {
@@ -996,7 +996,7 @@ export class PendingRequestsComponent implements OnInit {
                 dailyStandardHours: 8,
                 weeklyStandardHours: 40,
                 flexibleWeekends: false,
-                totalWeekSubmitedHours: 40,
+                totalWeekSubmitedHours: 42,
                 dailyDetails: [
                     {
                         date: '2018-05-28',
@@ -1020,8 +1020,8 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: null,
                         timeEntries: {
-                            hours: 8,
-                            comments: 'Worked on Project ITRACk'
+                            hours: 9,
+                            comments: 'Worked on Project ITRACk - data submission part'
                         }
                     },
                     {
@@ -1046,8 +1046,8 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: 'Diwali',
                         timeEntries: {
-                            hours: 8,
-                            comments: 'Worked on Project ITRACk'
+                            hours: 9,
+                            comments: 'Worked on Project ITRACk - Comments section part'
                         }
                     },
                     {
@@ -1107,7 +1107,7 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 20,
+                    totalSubmittedHrs: 26,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
@@ -1119,7 +1119,7 @@ export class PendingRequestsComponent implements OnInit {
                         {
                             date: '2018-05-22',
                             timeEntries: {
-                                hours: 8,
+                                hours: 9,
                                 comments: ''
                             }
                         },
@@ -1133,7 +1133,7 @@ export class PendingRequestsComponent implements OnInit {
                         {
                             date: '2018-05-24',
                             timeEntries: {
-                                hours: 4,
+                                hours: 5,
                                 comments: 'Worked on Project ITRACk - Key clock authentication'
                             }
                         },
@@ -1175,13 +1175,13 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 20,
+                    totalSubmittedHrs: 8,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on Project ITRACk - implementing the services for the timesheet'
+                                comments: ''
                             }
                         },
                         {
@@ -1319,7 +1319,7 @@ export class PendingRequestsComponent implements OnInit {
                 dailyStandardHours: 8,
                 weeklyStandardHours: 40,
                 flexibleWeekends: false,
-                totalWeekSubmitedHours: 40,
+                totalWeekSubmitedHours: 41,
                 dailyDetails: [
                     {
                         date: '2018-05-21',
@@ -1343,7 +1343,7 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: null,
                         timeEntries: {
-                            hours: 8,
+                            hours: 9,
                             comments: 'Worked on Project ITRACk -  approved time sheet requests'
                         }
                     },
@@ -1430,7 +1430,7 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 24,
+                    totalSubmittedHrs: 25,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
@@ -1442,7 +1442,7 @@ export class PendingRequestsComponent implements OnInit {
                         {
                             date: '2018-05-22',
                             timeEntries: {
-                                hours: 8,
+                                hours: 9,
                                 comments: 'Worked on Project ITRACk - REjected time sheet requests'
                             }
                         },
@@ -1450,7 +1450,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on Project ITRACk - postgres pgAdmin to creating the schemas'
+                                comments: ''
                             }
                         },
                         {
@@ -1504,7 +1504,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on Project ITRACk - developing the java services for approved time sheet'
+                                comments: ''
                             }
                         },
                         {
@@ -1640,7 +1640,7 @@ export class PendingRequestsComponent implements OnInit {
                 dailyStandardHours: 8,
                 weeklyStandardHours: 40,
                 flexibleWeekends: false,
-                totalWeekSubmitedHours: 40,
+                totalWeekSubmitedHours: 41,
                 dailyDetails: [
                     {
                         date: '2018-05-28',
@@ -1665,7 +1665,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: null,
                         timeEntries: {
                             hours: 8,
-                            comments: 'Worked on Project ITRACk -  pending timesheet approved and reject action for UI'
+                            comments: ''
                         }
                     },
                     {
@@ -1690,7 +1690,7 @@ export class PendingRequestsComponent implements OnInit {
                         },
                         remarks: 'Diwali',
                         timeEntries: {
-                            hours: 8,
+                            hours: 9,
                             comments:
                                 'Worked on Project ITRACk - creating the json formatted structure which suits for the resource allocation'
                         }
@@ -1752,7 +1752,7 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 20,
+                    totalSubmittedHrs: 25,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
@@ -1778,7 +1778,7 @@ export class PendingRequestsComponent implements OnInit {
                         {
                             date: '2018-05-24',
                             timeEntries: {
-                                hours: 4,
+                                hours: 5,
                                 comments: 'Worked on Project ITRACk - pending requests module week filter implementation'
                             }
                         },
@@ -1820,13 +1820,13 @@ export class PendingRequestsComponent implements OnInit {
                     },
                     proportion: 50,
                     customerTimeTracking: false,
-                    totalSubmittedHrs: 20,
+                    totalSubmittedHrs: 8,
                     dailyEntries: [
                         {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'Worked on Project ITRACk - Team wise filter for all the timesheet requests'
+                                comments: ''
                             }
                         },
                         {
