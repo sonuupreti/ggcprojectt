@@ -17,8 +17,10 @@
         </div>
         <div class="col-sm-9">
             <div class="row">
-                <div class="col-lg-6 mx-auto" *ngIf="tabRequest!=='approved'">
-                    <h6>All Requests</h6>
+                <div class="col-lg-6 mx-auto">
+                    <h6 *ngIf="tabRequest==='pending'">All Requests</h6>
+                    <h6 *ngIf="tabRequest==='approved'">All Approved Requests</h6>
+                    <h6 *ngIf="tabRequest==='rejected'">All Rejected Requests</h6>
                 </div>
                 <div class="col-sm-6 text-right mx-auto">
                     <span>
@@ -94,11 +96,24 @@
                                         <td class="tableContent text-center resourceTableWhite" [ngStyle]="{'background': getColor(projectData.project.key)}">
                                             {{projectData.totalSubmittedHrs}}
                                         </td>
-                                        <td class="text-center">
-
+                                        <td class="text-center actionTd" *ngIf="getActions(projectData.project.key)">
+                                            <a *ngIf="!projectData.actions.isRejected && !projectData.actions.isApproved">
+                                                <img class="actions" src="../../assets/Tick-Mark-Outline.png"/>
+                                            </a>
+                                            <a *ngIf="projectData.actions.isApproved">
+                                                <img class="actions" src="../../assets/Tick-Mark-Fill.png"/>
+                                            </a>
+                                            <a *ngIf="projectData.actions.isRejected">
+                                                <img class="actions" src="../../assets/Cross-Fill.png"/>
+                                            </a>
                                         </td>
-                                        <td>
-                                            <i class="fafile-image"></i>
+                                        <td class="text-center actionTd" *ngIf="getActions(projectData.project.key)">
+                                            <a *ngIf="!projectData.actions.isRejected && !projectData.actions.isApproved;else showCancel">
+                                                <img class="actions" src="../../assets/Cross-Outline.png"/>
+                                            </a>
+                                            <ng-template #showCancel>
+                                                   <a>cancel</a>
+                                            </ng-template>
                                         </td>
                                     </tr>
                                     <tr class="weekendsColor">

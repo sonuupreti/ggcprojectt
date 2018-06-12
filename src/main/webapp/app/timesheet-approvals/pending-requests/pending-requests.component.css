@@ -67,3 +67,10 @@
 .requestFilters{
   margin: 1em;
 }
+.actions{
+  width:50%;
+}
+
+.actionTd{
+  width:6%;
+}
