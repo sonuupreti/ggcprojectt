@@ -16,7 +16,6 @@ import { Itrack2CoreModule } from 'app/core';
 import { Itrack2AppRoutingModule } from './app-routing.module';
 import { Itrack2HomeModule } from './home/home.module';
 import { Itrack2EntityModule } from './entities/entity.module';
-import { TimeSheetSubmitModule } from './timesheet-submit/timesheet-submit.module';
 import { PaginationConfig } from './blocks/config/uib-pagination.config';
 import { StateStorageService } from 'app/core/auth/state-storage.service';
 // jhipster-needle-angular-add-module-import JHipster will add new module here
@@ -41,8 +40,7 @@ import { RemoveAccountConfirmDialogComponent } from './dialog/remove-account-con
         Itrack2SharedModule,
         Itrack2CoreModule,
         Itrack2HomeModule,
-        Itrack2EntityModule,
-        TimeSheetSubmitModule
+        Itrack2EntityModule
         // jhipster-needle-angular-add-module JHipster will add new module here
     ],
     declarations: [
