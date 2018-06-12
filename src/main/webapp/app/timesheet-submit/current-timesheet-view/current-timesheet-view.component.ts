@@ -17,12 +17,14 @@ export class CurrentTimesheetView implements OnInit {
     private daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     private daysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     timesheetData: any = {};
+    leaveTypes = [];
+    selectedLeave;
+    isLeaveAdded = false;
 
     constructor(private timesheetService: TimesheetService) {}
 
     ngOnInit() {
-        this.currentDate = new Date();
-        //this.createWeekData(this.currentDate);
+        //this.currentDate = new Date();
         this.timesheetService.getGetInitialTimesheet().subscribe(timesheetData => {
             this.timesheetData = timesheetData;
             this.createInitialTimesheetData();
@@ -36,6 +38,9 @@ export class CurrentTimesheetView implements OnInit {
         this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dailyDetails);
         this.weekObj.status = 'NOT SUBMITTED';
         this.weekObj.actions = this.timesheetData.actions;
+        this.weekObj.startDate = this.timesheetData.weekDetails.weekStartDate;
+        this.weekObj.endDate = this.timesheetData.weekDetails.weekEndDate;
+        this.weekObj.leaves = [];
     }
 
     createDaysData(daysData) {
@@ -46,7 +51,7 @@ export class CurrentTimesheetView implements OnInit {
                 let splittedDateObj = dayObj.date.split('-');
                 dModel.date = splittedDateObj[2];
                 dModel.month = this.months[parseInt(splittedDateObj[1]) - 1];
-                dModel.day = dayObj.day;
+                dModel.day = dayObj.day.substr(0, 3);
                 dModel.remarks = dayObj.remarks;
                 dModel.code = dayObj.type.code;
                 daysViewModel.push(dModel);
@@ -61,8 +66,8 @@ export class CurrentTimesheetView implements OnInit {
         let currentProj = this.weekObj.projects;
         currentProj.forEach(proj => {
             let timeObj: any = {};
-            timeObj.comments = comment;
-            timeObj.hours = parseInt(proj.hours[i]);
+            timeObj.comments = proj.hours[i].comments;
+            timeObj.hours = parseInt(proj.hours[i].hour);
             timeObj.projectCode = proj.code;
             hoursPerDayModel.push(timeObj);
         });
@@ -85,14 +90,16 @@ export class CurrentTimesheetView implements OnInit {
 
     saveOrSubmit(action) {
         var totalHours = this.calculateTotalHours(this.weekObj.projects);
+        var dailyEntries = this.createHourEntriesModel();
+        var hoursValidation = false;
         if (action === 'SUBMIT' && totalHours < 40) {
             alert('Minimum 40 hours are reaquired per week');
-        } else {
+        } else if (action === 'SUBMIT' && totalHours === 40) {
             let data = {
                 action: action,
                 resourceCode: '20001',
                 week: {
-                    dailyEntries: this.createHourEntriesModel(),
+                    dailyEntries: dailyEntries,
                     weekStartDate: this.timesheetData.weekDetails.dailyDetails[0].date
                 },
                 weeklyTimeSheetId: 10
@@ -105,68 +112,85 @@ export class CurrentTimesheetView implements OnInit {
                     //this.weekObj.actions = this.timesheetData.actions;
                 }
             });
+        } else if (action === 'SUBMIT' && totalHours > 40) {
+            dailyEntries.forEach(function(data, index) {
+                var commentValidation = dailyEntries[index].timeEntries;
+                commentValidation.forEach(function(data, index) {
+                    if (commentValidation[index].hours > 8 && data.comments.length > 10) {
+                        hoursValidation = true;
+                    }
+                });
+            });
+            if (hoursValidation) {
+                let data = {
+                    action: action,
+                    resourceCode: '20001',
+                    week: {
+                        dailyEntries: dailyEntries,
+                        weekStartDate: this.timesheetData.weekDetails.dailyDetails[0].date
+                    },
+                    weeklyTimeSheetId: 10
+                };
+                this.timesheetService.saveSubmitTimesheet(data).subscribe(timesheetData => {
+                    if (timesheetData) {
+                        this.weekObj.status = timesheetData.status.code;
+                        alert('Timesheet  with comments' + this.weekObj.status + ' successfully');
+                        //this.weekObj.actions = this.timesheetData.actions;
+                    }
+                });
+            }
         }
-    }
-
-    createWeekData(d) {
-        let dd = d.getDate();
-        let wd = d.getDay();
-        let dy = d.getFullYear();
-        this.daysInMonths[1] = this.getFebDaysForYear(dy);
-
-        this.weekObj.weekNo = this.getWeek(d, 1);
-        this.weekObj.year = d.getFullYear();
-        this.weekObj.startDate = dd - (wd - 1);
-        this.weekObj.startMonth = d.getMonth();
-        this.weekObj.projects = this.createProjectsModel(this.projects);
-        this.weekObj.status = 'NOT SUBMITTED';
-        //this.weekObj.currentWeek = true;
     }
 
     createProjectsModel(projects) {
         let projectsModel = [];
         if (projects.length > 0) {
-            projects.forEach(function(project) {
+            projects.forEach(project => {
                 if (project.projectType.key != 'PDL' && project.projectType.key != 'UPL') {
                     let projObj = {
                         code: project.project.key,
                         name: project.project.key + ' - ' + project.project.value + ' ' + project.proportion + '%',
-                        hours: [0, 0, 0, 0, 0, 0, 0],
-                        attachment: project.customerTimeTracking
+                        hours: [
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' }
+                        ],
+                        attachment: project.customerTimeTracking,
+                        type: project.projectType.key
                     };
                     projectsModel.push(projObj);
+                } else {
+                    let projObj = {
+                        code: project.project.key,
+                        name: project.project.value,
+                        hours: [
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' },
+                            { hour: 0, comments: '' }
+                        ],
+                        type: project.projectType.key
+                        //attachment: project.customerTimeTracking
+                    };
+                    this.leaveTypes.push(projObj);
                 }
             });
         }
         return projectsModel;
     }
 
-    getFebDaysForYear(yr) {
-        if (yr % 4 === 0) {
-            return 29;
-        }
-        return 28;
-    }
-
-    getChangedMonthDate(d, m) {
-        if (d > this.daysInMonths[m]) {
-            return d - this.daysInMonths[m];
-        }
-        return d;
-    }
-
-    getChangedMonth(sDate, lDate, m) {
-        if (lDate < sDate) {
-            return m + 1;
-        }
-        return m;
-    }
-
     calculateProjectHours(a) {
         let hours = 0;
         if (a && a.length > 0) {
             for (let i = 0; i < a.length; i++) {
-                let h = parseInt(a[i]);
+                let h = parseInt(a[i].hour);
                 if (isNaN(h)) {
                     hours += 0;
                 } else {
@@ -180,7 +204,7 @@ export class CurrentTimesheetView implements OnInit {
         let hours = 0;
         if (p && p.length > 0) {
             for (let i = 0; i < p.length; i++) {
-                let h = parseInt(p[i].hours[indx]);
+                let h = parseInt(p[i].hours[indx].hour);
                 if (isNaN(h)) {
                     hours += 0;
                 } else {
@@ -196,7 +220,7 @@ export class CurrentTimesheetView implements OnInit {
             for (let i = 0; i < p.length; i++) {
                 if (p[i].hours.length > 0) {
                     for (let j = 0; j < p[i].hours.length; j++) {
-                        let h = parseInt(p[i].hours[j]);
+                        let h = parseInt(p[i].hours[j].hour);
                         if (isNaN(h)) {
                             hours += 0;
                         } else {
@@ -207,6 +231,17 @@ export class CurrentTimesheetView implements OnInit {
             }
         }
         return hours;
+    }
+
+    selectLeave(event) {
+        let leaveToAdd = this.leaveTypes.findIndex(l => {
+            return l.name === event.source.value;
+        });
+        this.weekObj.projects.push(this.leaveTypes[leaveToAdd]);
+        this.leaveTypes.splice(leaveToAdd, 1);
+        this.isLeaveAdded = true;
+        event.source.value = '';
+        this.selectedLeave = '';
     }
 
     // getWeek calculates the week no. for the current week
@@ -233,5 +268,16 @@ export class CurrentTimesheetView implements OnInit {
             weeknum = Math.floor((daynum + day - 1) / 7);
         }
         return weeknum;
+    }
+
+    clearLeave(project) {
+        let leavesToRemove = this.weekObj.projects.findIndex(l => {
+            return l.name === project.name;
+        });
+        this.weekObj.projects.splice(leavesToRemove, 1);
+        this.leaveTypes.push(project);
+        if (this.weekObj.projects.length === 2) {
+            this.isLeaveAdded = false;
+        }
     }
 }
