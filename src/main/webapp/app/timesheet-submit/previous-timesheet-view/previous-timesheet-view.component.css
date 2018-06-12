@@ -18,11 +18,11 @@
 .collapsed{
     height: 0px;
     min-height: 0;
-    visibility: 'hidden';
+    visibility:hidden;
 }
 .expanded{
     height: '*';
-    visibility: 'visible';
+    visibility:visible;
 }
 .contract-icon{
     display: inline-block;
@@ -39,10 +39,6 @@
 }
 .apprvr-action-submitted{
     color:#62B948;
-}
-#apprvrComments{
-    padding-right: 50px;
-    display: inline-block;
 }
 /deep/ .popover{
     border: 1px solid #ED2A2A;

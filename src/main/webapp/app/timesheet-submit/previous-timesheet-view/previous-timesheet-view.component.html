@@ -13,15 +13,15 @@
     
             <ng-container matColumnDef="submittedOn">
                 <mat-header-cell *matHeaderCellDef> Submitted On </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.submittedDate}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.submittedDate | date:'MM/dd/yyyy'}} </mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="approverAction">
                 <mat-header-cell *matHeaderCellDef> Approver's Action </mat-header-cell>
                 <mat-cell *matCellDef="let timesheet" 
                     [ngClass]="{
-                        'apprvr-action-danger':timesheet.approverAction === 'Declined' || timesheet.approverAction === 'PartiallyDeclined',
-                        'apprvr-action-success':timesheet.approverAction === 'Approved' || timesheet.approverAction === 'PartiallyApproved',
+                        'apprvr-action-danger':timesheet.approverAction === 'Declined' || timesheet.approverAction === 'Partially Declined',
+                        'apprvr-action-success':timesheet.approverAction === 'Approved' || timesheet.approverAction === 'Partially Approved',
                         'apprvr-action-submitted':timesheet.approverAction === 'submitted'
                     }">
                     {{timesheet.approverAction}} 
@@ -31,10 +31,10 @@
             <ng-container matColumnDef="comments">
                 <mat-header-cell *matHeaderCellDef> Comments </mat-header-cell>
                 <mat-cell *matCellDef="let timesheet">
-                    <span id='apprvrComments' 
+                    <span 
                         placement="top"
-                        [ngbPopover]="tipContent" 
-                        triggers="mouseenter:mouseleave"
+                        [ngbPopover]="tipContent"
+                        triggers='mouseenter:mouseleave'
                         *ngIf="timesheet.approverComments.length>50;else noTooltip">
                         {{timesheet.approverComments | ellipsis:50}}
                     </span>

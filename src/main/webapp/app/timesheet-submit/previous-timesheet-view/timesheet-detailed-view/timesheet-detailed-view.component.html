@@ -35,8 +35,8 @@
             <td 
                 class='timesheet-cell'
                 [ngClass]="{
-                    'apprvr-action-danger':timesheet.actions.isApproved,
-                    'apprvr-action-success':timesheet.actions.isCancelled}"
+                    'apprvr-action-danger':timesheet.actions.isCancelled,
+                    'apprvr-action-success':timesheet.actions.isApproved}"
                     >
                 <span *ngIf='timesheet.actions.isApproved'>Approved</span>
                 <span *ngIf='timesheet.actions.isCancelled'>Declined</span>

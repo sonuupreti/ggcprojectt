@@ -56,8 +56,8 @@ export class PreviousTimesheetViewComponent implements OnInit {
 }
 const timesheets = [
     {
-        status: 'Not Submitted',
-        approverAction: 'N/A',
+        status: 'Submitted',
+        approverAction: 'Partially Approved',
         approverComments: 'N/A',
         resource: {
             key: '20001',
@@ -316,8 +316,8 @@ const timesheets = [
                     value: 'Investment'
                 },
                 actions: {
-                    isApproved: false,
-                    isCancelled: true
+                    isApproved: true,
+                    isCancelled: false
                 },
                 proportion: 50,
                 customerTimeTracking: false,
@@ -367,6 +367,580 @@ const timesheets = [
                     },
                     {
                         date: '2018-05-27',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        status: 'Submitted',
+        approverAction: 'Declined',
+        approverComments: 'Client"s timesheet is not matching. Please recheck your loggedin hours and upload the current screenshot.',
+        resource: {
+            key: '20001',
+            value: 'Manoj Nautiyal'
+        },
+        weekDetails: {
+            weekStartDate: '2018-05-14',
+            weekEndDate: '2018-05-20',
+            submittedDate: '2018-05-20',
+            weekLength: 7,
+            week: 36,
+            weekStartDay: 'MONDAY',
+            weekEndDay: 'SUNDAY',
+            dailyStandardHours: 8,
+            weeklyStandardHours: 40,
+            flexibleWeekends: false,
+            totalWeekSubmitedHours: 60,
+            dailyDetails: [
+                {
+                    date: '2018-05-14',
+                    day: 'MONDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-15',
+                    day: 'TUESDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-16',
+                    day: 'WEDNESDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-17',
+                    day: 'THURSDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: 'null',
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-18',
+                    day: 'FRIDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-19',
+                    day: 'SATURDAY',
+                    type: {
+                        code: 'WE',
+                        value: 'Weekend'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-20',
+                    day: 'SUNDAY',
+                    type: {
+                        code: 'WE',
+                        value: 'Weekend'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                }
+            ]
+        },
+        projects: [
+            {
+                project: {
+                    key: 'INV0000004',
+                    value: 'iTrack'
+                },
+                projectType: {
+                    key: 'INV',
+                    value: 'Investment'
+                },
+                actions: {
+                    isApproved: true,
+                    isCancelled: false
+                },
+                proportion: 50,
+                customerTimeTracking: false,
+                totalSubmittedHrs: 20,
+                dailyEntries: [
+                    {
+                        date: '2018-05-14',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-15',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-16',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-17',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-18',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-19',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-20',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    }
+                ]
+            },
+            {
+                project: {
+                    key: 'INV0000005',
+                    value: 'sample'
+                },
+                projectType: {
+                    key: 'INV',
+                    value: 'Investment'
+                },
+                actions: {
+                    isApproved: false,
+                    isCancelled: true
+                },
+                proportion: 50,
+                customerTimeTracking: false,
+                totalSubmittedHrs: 20,
+                dailyEntries: [
+                    {
+                        date: '2018-05-14',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-15',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-16',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-17',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-18',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-19',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-20',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    }
+                ]
+            },
+            {
+                project: {
+                    key: 'INV0000001',
+                    value: 'UNPAID LEAVE'
+                },
+                projectType: {
+                    key: 'INV',
+                    value: 'Investment'
+                },
+                actions: {
+                    isApproved: false,
+                    isCancelled: true
+                },
+                proportion: 50,
+                customerTimeTracking: false,
+                totalSubmittedHrs: 20,
+                dailyEntries: [
+                    {
+                        date: '2018-05-14',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-15',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-16',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-17',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-18',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-19',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-20',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        status: 'Submitted',
+        approverAction: 'Approved',
+        approverComments: 'N/A',
+        resource: {
+            key: '20001',
+            value: 'Manoj Nautiyal'
+        },
+        weekDetails: {
+            weekStartDate: '2018-05-7',
+            weekEndDate: '2018-05-13',
+            submittedDate: '2018-05-13',
+            weekLength: 7,
+            week: 36,
+            weekStartDay: 'MONDAY',
+            weekEndDay: 'SUNDAY',
+            dailyStandardHours: 8,
+            weeklyStandardHours: 40,
+            flexibleWeekends: false,
+            totalWeekSubmitedHours: 60,
+            dailyDetails: [
+                {
+                    date: '2018-05-07',
+                    day: 'MONDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-08',
+                    day: 'TUESDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-09',
+                    day: 'WEDNESDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-10',
+                    day: 'THURSDAY',
+                    type: {
+                        code: 'HD',
+                        value: 'Holiday'
+                    },
+                    remarks: 'Diwali',
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-11',
+                    day: 'FRIDAY',
+                    type: {
+                        code: 'WD',
+                        value: 'Regular Working Day'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-12',
+                    day: 'SATURDAY',
+                    type: {
+                        code: 'WE',
+                        value: 'Weekend'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                },
+                {
+                    date: '2018-05-13',
+                    day: 'SUNDAY',
+                    type: {
+                        code: 'WE',
+                        value: 'Weekend'
+                    },
+                    remarks: null,
+                    timeEntries: {
+                        hours: 8,
+                        comments: 'iTrack standup'
+                    }
+                }
+            ]
+        },
+        projects: [
+            {
+                project: {
+                    key: 'INV0000004',
+                    value: 'iTrack'
+                },
+                projectType: {
+                    key: 'INV',
+                    value: 'Investment'
+                },
+                actions: {
+                    isApproved: true,
+                    isCancelled: false
+                },
+                proportion: 50,
+                customerTimeTracking: false,
+                totalSubmittedHrs: 20,
+                dailyEntries: [
+                    {
+                        date: '2018-05-07',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-08',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-09',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-10',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-11',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-12',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-13',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    }
+                ]
+            },
+            {
+                project: {
+                    key: 'INV0000005',
+                    value: 'sample'
+                },
+                projectType: {
+                    key: 'INV',
+                    value: 'Investment'
+                },
+                actions: {
+                    isApproved: true,
+                    isCancelled: false
+                },
+                proportion: 50,
+                customerTimeTracking: false,
+                totalSubmittedHrs: 20,
+                dailyEntries: [
+                    {
+                        date: '2018-05-07',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-08',
+                        timeEntries: {
+                            hours: 0,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-09',
+                        timeEntries: {
+                            hours: 8,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-10',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-11',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-12',
+                        timeEntries: {
+                            hours: 4,
+                            comments: 'iTrack standup'
+                        }
+                    },
+                    {
+                        date: '2018-05-13',
                         timeEntries: {
                             hours: 4,
                             comments: 'iTrack standup'
