@@ -5,7 +5,7 @@
       <mat-card class="example-card">
         <mat-card-header>
           <mat-card-title>
-            <b>Project Details</b>
+            <b>Resource Details</b>
           </mat-card-title>
           <div style="margin-left: auto;order: 2;">
             <button [hidden]="!isViewMode" mat-button (click)="enableEditMode();" color="primary">
@@ -19,6 +19,11 @@
           <form [formGroup]="resourceForm" novalidate (submit)="saveData($event)">
             <div class="row">
               <div class="col-sm-5">
+                  <p>
+                      <mat-form-field>
+                        <input matInput placeholder="resource ID" formControlName="resourceCode" [disabled]="true">
+                      </mat-form-field>
+                    </p>
                 <p>
                   <mat-form-field>
                     <input matInput placeholder="Resource Name" formControlName="resourceName" required>
@@ -62,15 +67,18 @@
     
     
                 <p>
-                  <label class="time-tracking-label" style="color:rgba(0,0,0,.54);">Employee Type</label>
-                  <mat-radio-group formControlName="employeeType" required>
-                    <mat-radio-button value="1">FTE</mat-radio-button>
+                  <label class="time-tracking-label"  [ngClass]="{'float-label-color': isViewMode }">Employee Type</label>
+                  <mat-radio-group [hidden]="isViewMode" formControlName="employeeType" required>
+                    <mat-radio-button value="FTE">FTE</mat-radio-button>
                     <mat-radio-button value="2">Contractor</mat-radio-button>
                     <mat-radio-button value="3">Sub-Contractor</mat-radio-button>
                     <mat-error *ngIf="resourceForm.get('employeeType').hasError('required')">This is required field</mat-error>
                   </mat-radio-group>
+                  <label [hidden]="!isViewMode">
+                      <b>{{ resourceForm.get('employeeType').value }} </b>
+                    </label>
                 </p>
-                <div *ngIf="resourceForm.get('employeeType').value === '1'">
+                <div *ngIf="resourceForm.get('employeeType').value === 'FTE'">
     
                   <p>
                     <mat-form-field>
@@ -87,7 +95,7 @@
                       <input matInput placeholder="Salary" formControlName="anualPackage" required>
                       <mat-hint>(Please enter cost per hour)</mat-hint>
     
-                      <div matSuffix [ngbPopover]="popContent" placement="top">
+                      <div [hidden]="isViewMode" matSuffix [ngbPopover]="popContent" placement="top">
                         <i class="fa fa-question-circle"></i>
                       </div>
                       <ng-template #popContent>
@@ -114,7 +122,7 @@
                     </p>
                 </div>
     
-                <div *ngIf="resourceForm.get('employeeType').value === '2' || resourceForm.get('employeeType').value === '3'">
+                <div *ngIf="resourceForm.get('employeeType').value === 'contractor' || resourceForm.get('employeeType').value === 'contractor'">
                   <p>
                     <mat-form-field>
                       <mat-select placeholder="Currency" formControlName="currency" required>
@@ -200,7 +208,7 @@
                       {{ list.value }}
                     </mat-option>
                   </mat-autocomplete>
-                  <span matSuffix>
+                  <span [hidden]="isViewMode" matSuffix>
                     <mat-icon>search</mat-icon>
                   </span>
                   <mat-error *ngIf="resourceForm.get('technology').hasError('required')">This is required field</mat-error>

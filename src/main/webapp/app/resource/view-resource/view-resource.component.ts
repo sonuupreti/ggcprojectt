@@ -40,6 +40,7 @@ export class ViewResourceComponent implements OnInit {
 
     filteredTechnologies: Array<any>;
 
+    isViewMode: boolean = true;
     @ViewChild('technologyInput') technologyInput: ElementRef;
 
     constructor(
@@ -77,6 +78,7 @@ export class ViewResourceComponent implements OnInit {
             joiningDate: new FormControl('', [Validators.required]),
             baseLocation: new FormControl('', []),
             employeeType: new FormControl('', []),
+            resourceCode: new FormControl('', [Validators.required]),
             technology: new FormControl('', [Validators.required])
         });
 
@@ -124,14 +126,14 @@ export class ViewResourceComponent implements OnInit {
 
         this.resourceForm.get('employeeType').valueChanges.subscribe(value => {
             let self = this;
-            if (value === '1') {
+            if (value === 'FTE') {
                 this.contractorFields.map(index => {
                     this.resourceForm.removeControl(index.name);
                 });
                 this.FTEFields.map(index => {
                     self.resourceForm.addControl(index.name, new FormControl('', index.validators));
                 });
-            } else if (value === '2' || value === '3') {
+            } else if (value === 'contractor' || value === 'contractor') {
                 this.FTEFields.map(index => {
                     this.resourceForm.removeControl(index.name);
                 });
@@ -141,7 +143,7 @@ export class ViewResourceComponent implements OnInit {
             }
         });
 
-        this.resourceForm.get('employeeType').setValue('1');
+        this.resourceForm.get('employeeType').setValue('FTE');
         const resourceCode = this.activatedRoute.snapshot.params.resourceCode;
         this.resourceService.initAddResource().subscribe(response => {
             this.companiesList = response.companiesList;
@@ -152,6 +154,7 @@ export class ViewResourceComponent implements OnInit {
             this.primarySkillList = response.technologiesPairs;
 
             this.resourceService.getResourceDetails(resourceCode).subscribe(response => {
+                this.resourceForm.get('resourceCode').setValue(response.resourceCode);
                 this.resourceForm.get('resourceName').setValue(response.name);
                 this.resourceForm.get('designation').setValue(this.getSelected(this.designationList, response.designationId));
                 this.resourceForm.get('joiningDate').setValue(response.expectedJoiningDate);
@@ -172,6 +175,8 @@ export class ViewResourceComponent implements OnInit {
                 } catch (e) {
                     this.primarySkill = [];
                 }
+
+                this.resourceForm.disable();
 
                 // this.projectForm
                 //     .get('offshoreManagerCode')
@@ -273,5 +278,11 @@ export class ViewResourceComponent implements OnInit {
         this.resourceForm.reset();
         this.resourceForm.get('technology').setValue('');
         this.primarySkill = [];
+    }
+
+    enableEditMode() {
+        this.isViewMode = false;
+        this.resourceForm.enable();
+        this.resourceForm.get('resourceCode').disable();
     }
 }

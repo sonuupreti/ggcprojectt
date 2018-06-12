@@ -51,7 +51,7 @@ export class AddResourceComponent implements OnInit {
         config.triggers = 'hover';
         this.primarySkillCtrl.valueChanges.subscribe(x => {
             console.log(this.primarySkillCtrl);
-            var self = this;
+            const self = this;
             this.filteredTechnologies = this.technologyList.filter(function(index) {
                 if (self.primarySkillCtrl.value) {
                     if (typeof self.primarySkillCtrl.value === 'object') {
@@ -166,8 +166,7 @@ export class AddResourceComponent implements OnInit {
             primarySkills: JSON.stringify(this.primarySkill),
             employmentTypeCode: 'FTE', //this.resourceForm.get('employeeType').value,
             gender: 'MALE',
-            expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE),
-            emailId: 'sanjeet.ykdd@gmail.com'
+            expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE)
         };
 
         this.resourceService.saveResourceDetails(data).subscribe(response => {
@@ -212,7 +211,7 @@ export class AddResourceComponent implements OnInit {
     selected(event: MatAutocompleteSelectedEvent): void {
         this.resourceForm.get('technology').setValue('field');
         this.primarySkill.push({ key: event.option.value.key, value: event.option.value.value });
-        let self = this;
+        const self = this;
         let index = self.technologyList.indexOf(event.option.value);
         this.technologyList.splice(index, 1);
         this.technologyInput.nativeElement.value = '';
