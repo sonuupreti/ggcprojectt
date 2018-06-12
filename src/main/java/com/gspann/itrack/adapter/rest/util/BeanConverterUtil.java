@@ -11,6 +11,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gspann.itrack.domain.model.business.Account;
+import com.gspann.itrack.domain.model.business.payments.CostRateType;
+import com.gspann.itrack.domain.model.business.payments.NonFTECost;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ProjectDTO;
@@ -117,6 +119,9 @@ public class BeanConverterUtil {
 		resourceDTO.setResourceCode(resource.code());
 		resourceDTO.setSecondarySkills(resource.secondarySkills());
 		resourceDTO.setVersion(resource.version());
+		resourceDTO.setCompanyId(resource.designation().department().company().id());
+		resourceDTO.setDepartmentId(resource.designation().department().id());
+		
 		return resourceDTO;
 	}
 

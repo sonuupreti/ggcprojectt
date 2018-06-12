@@ -227,6 +227,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 	}
 	
 	@Override
+	@Transactional(readOnly = true)
 	public ResourceDTO findById(String id) {
 		log.debug("Request to get Resource : {}", id);
 		Optional<Resource> resource= resourceRepository.findById(id);
