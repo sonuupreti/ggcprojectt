@@ -52,7 +52,8 @@ import {
         MatTableModule,
         MatTooltipModule,
         MatChipsModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatDividerModule
     ],
     exports: [
         CommonModule,
@@ -70,7 +71,8 @@ import {
         MatTableModule,
         MatTooltipModule,
         MatChipsModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatDividerModule
     ]
 })
 export class MaterialModule {}
