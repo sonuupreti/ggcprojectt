@@ -69,7 +69,7 @@ public class HolidayCalendarRepositoryImpl implements HolidayCalendarRepositoryJ
 		Join<Holiday, HolidayLocation> holidayLocation = holiday.join(Holiday_.locationOcassions);
 		query.select(holiday);
 		Predicate weekRangePredicate = criteriaBuilder.between(holiday.get(Holiday_.date), week.startingFrom(), week.endingOn());
-		Predicate locationIdpredicate = criteriaBuilder.equal(holidayLocation.get(HolidayLocation_.location), location.id());
+		Predicate locationIdpredicate = criteriaBuilder.equal(holidayLocation.get(HolidayLocation_.location), location);
 		query.where(criteriaBuilder.and(locationIdpredicate, weekRangePredicate));
 				
 		return entityManager.createQuery(query).getResultList();
