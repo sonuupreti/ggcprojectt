@@ -153,7 +153,7 @@ td input{
 }
 
 /deep/ #mat-select-8{
-    width:10%;
+    /* width:10%; */
 }
 /deep/ .popover{
     border: 2px solid #0EB3F7;
