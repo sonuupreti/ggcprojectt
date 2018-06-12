@@ -56,7 +56,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: null,
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Spent time to investigate the issues related to admin module'
                         }
                     },
                     {
@@ -155,14 +155,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-22',
                             timeEntries: {
                                 hours: 8,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on project ITRACK - recent timesheets module to displaying the recent timesheet data'
                             }
                         },
                         {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on My timesheet submission with adding leaves data'
                             }
                         },
                         {
@@ -216,7 +216,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on recoureces allocation for the project in Itrack'
                             }
                         },
                         {
@@ -237,14 +237,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Macys - My Account home page'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on  Macys -  StarRewards loyality program'
                             }
                         },
                         {
@@ -377,7 +377,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: null,
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Worked on Projects module in Itrack Application'
                         }
                     },
                     {
@@ -403,7 +403,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: 'Diwali',
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Worked on Project ITRACk'
                         }
                     },
                     {
@@ -490,7 +490,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
@@ -537,7 +537,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
@@ -558,14 +558,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
@@ -619,7 +619,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 8,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
@@ -700,7 +700,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: null,
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Worked on Project ITRACk'
                         }
                     },
                     {
@@ -799,14 +799,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-22',
                             timeEntries: {
                                 hours: 8,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
@@ -860,7 +860,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
@@ -881,14 +881,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk'
                             }
                         },
                         {
@@ -1021,7 +1021,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: null,
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Worked on Project ITRACk'
                         }
                     },
                     {
@@ -1047,7 +1047,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: 'Diwali',
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Worked on Project ITRACk'
                         }
                     },
                     {
@@ -1134,7 +1134,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - Key clock authentication'
                             }
                         },
                         {
@@ -1181,7 +1181,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - implementing the services for the timesheet'
                             }
                         },
                         {
@@ -1202,14 +1202,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - implementing the services for resource allocation'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - developing the database for itrack'
                             }
                         },
                         {
@@ -1263,7 +1263,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 8,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - worked on pending approvals timesheet'
                             }
                         },
                         {
@@ -1344,7 +1344,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: null,
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Worked on Project ITRACk -  approved time sheet requests'
                         }
                     },
                     {
@@ -1443,14 +1443,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-22',
                             timeEntries: {
                                 hours: 8,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - REjected time sheet requests'
                             }
                         },
                         {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - postgres pgAdmin to creating the schemas'
                             }
                         },
                         {
@@ -1504,7 +1504,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - developing the java services for approved time sheet'
                             }
                         },
                         {
@@ -1525,14 +1525,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - implementing the get services for pending approvals'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk -  developing the post service for approving the timesheet'
                             }
                         },
                         {
@@ -1665,7 +1665,7 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: null,
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments: 'Worked on Project ITRACk -  pending timesheet approved and reject action for UI'
                         }
                     },
                     {
@@ -1691,7 +1691,8 @@ export class PendingRequestsComponent implements OnInit {
                         remarks: 'Diwali',
                         timeEntries: {
                             hours: 8,
-                            comments: 'iTrack standup'
+                            comments:
+                                'Worked on Project ITRACk - creating the json formatted structure which suits for the resource allocation'
                         }
                     },
                     {
@@ -1778,7 +1779,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - pending requests module week filter implementation'
                             }
                         },
                         {
@@ -1825,7 +1826,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-21',
                             timeEntries: {
                                 hours: 0,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - Team wise filter for all the timesheet requests'
                             }
                         },
                         {
@@ -1846,14 +1847,14 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-24',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk -  week wise filter for approved timesheets'
                             }
                         },
                         {
                             date: '2018-05-25',
                             timeEntries: {
                                 hours: 4,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - week wise filter reject timesheets'
                             }
                         },
                         {
@@ -1907,7 +1908,7 @@ export class PendingRequestsComponent implements OnInit {
                             date: '2018-05-23',
                             timeEntries: {
                                 hours: 8,
-                                comments: 'iTrack standup'
+                                comments: 'Worked on Project ITRACk - displaying comment for all the timesheets'
                             }
                         },
                         {
