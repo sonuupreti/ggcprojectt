@@ -120,9 +120,8 @@ td input{
 }
 
 /deep/ .mat-select-panel{
-    margin-left: 110px;
+    /* margin-left: 110px; */
     border: 2px solid #0EB3F7 !important;
-    width: 20px;
 }
 
 .leave-section{

@@ -71,4 +71,7 @@ mat-table .mat-header-cell{
 .mat-chip:not(.mat-basic-chip){
     border-radius: 10px !important;;
 }
+.mat-card-header .mat-card-header-text{
+    margin: 0;
+}
 

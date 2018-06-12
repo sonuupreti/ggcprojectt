@@ -81,7 +81,7 @@ export class ViewResourceComponent implements OnInit {
             resourceCode: new FormControl('', [Validators.required]),
             technology: new FormControl('', [Validators.required])
         });
-
+        this.resourceForm.disable();
         this.FTEFields = [
             {
                 name: 'anualPackage',
@@ -133,7 +133,7 @@ export class ViewResourceComponent implements OnInit {
                 this.FTEFields.map(index => {
                     self.resourceForm.addControl(index.name, new FormControl('', index.validators));
                 });
-            } else if (value === 'contractor' || value === 'contractor') {
+            } else if (value === 'contractor' || value === 'sub-contractor') {
                 this.FTEFields.map(index => {
                     this.resourceForm.removeControl(index.name);
                 });
