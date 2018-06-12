@@ -1,34 +1,78 @@
 <mat-card id='main-container'>
-    <div id='status'>STATUS:{{weekObj.status}} </div>
-	<!--  <h3>Week:{{weekObj.weekNo}}</h3>
-	<h6>{{currentDate}}</h6>-->
-	<table>
-	  <tr class="weekdays">
-		  <td class="first-child">Projects</td>
-		  <td *ngFor="let day of weekObj.daysData; let i = index" [ngClass]="[day.code === 'HD' ? 'holiday' : '']">{{day.day}} <br>{{day.month+ ' '+ day.date}}</td>
-		  <td >Total Hours</td>
-		  <td >Attach File*</td>
-	  </tr>
-	  <tr *ngFor="let project of weekObj.projects" class= 'project-row'>
-	    <td class="first-child">{{project.name}}</td>
-	    <td *ngFor="let dayHour of project.hours; let j = index; trackBy:trackByIndex;" [ngClass]="[weekObj.daysData[j].code === 'HD' ? 'holiday' : '']">
-	       <input matInput class='hours-input' maxlength="2" [(ngModel)]="project.hours[j]" [ngModelOptions]="{updateOn: 'blur'}" >
-	    </td>
-	    <td><input class='hours-input' maxlength="2"  value="{{calculateProjectHours(project.hours)}}" disabled="true"></td>
-	    <td><i class="material-icons" [hidden]="!project.attachment">attach_file</i></td>
-	  </tr>
-	  <tr class= 'total-row'>
-	    <td class="first-child">Total Hours Per Day</td>
-	    <td *ngFor="let day of weekObj.daysData; let k = index; trackBy:trackByIndex;">
-	       <input class='hours-input' maxlength="2"  value="{{calculateDayHours(weekObj.projects,k)}}" disabled="true" >
-	    </td>
-	    <td><input class='hours-input' maxlength="2"  value="{{calculateTotalHours(weekObj.projects)}}" disabled="true"></td>
-	    <td></td>
-	  </tr>
-   </table>
-	<div id='button-container'>
-	    <button mat-raised-button id='save-button' (click)="saveOrSubmit('SAVE')">Save</button>
-	    <button mat-raised-button id='submit-button' (click)="saveOrSubmit('SUBMIT')">Submit</button>
-	</div>
+		<div id='status'>
+			<h6>
+				<span>STATUS:</span>
+				<span class="submit-status">{{weekObj.status}} </span>
+			</h6>
+		</div>
+		<div>
+			<i class="fa fa-angle-left fat-arrow"></i>
+			<span class="week-date">{{weekObj.startDate | date:'LLL dd'}}{{ weekObj.startDate | date: "d" }} - {{ weekObj.endDate | date:'dd'}}{{ weekObj.endDate
+				| date: "d" }}, {{ weekObj.endDate | date:'yyyy'}}</span>
+			<i class="fa fa-angle-right fat-arrow"></i>
+		</div>
 	
-</mat-card>
+		<!--  <h3>Week:{{weekObj.weekNo}}</h3>
+	<h6>{{currentDate}}</h6>-->
+		<table>
+			<tr class="weekdays">
+				<td class="first-child">Projects</td>
+				<td *ngFor="let day of weekObj.daysData; let i = index" [ngClass]="[day.code === 'HD' ? 'holiday' : '']">{{day.day}}
+					<br>{{day.month+ ' '+ day.date}}</td>
+				<td>Total Hours</td>
+				<td>Attach File*</td>
+			</tr>
+			<tr *ngFor="let project of weekObj.projects" class='project-row' [hidden]="project.type === 'PDL' || project.type === 'UPL'">
+				<td class="first-child">{{project.name}}</td>
+				<td *ngFor="let dayHour of project.hours; let j = index; trackBy:trackByIndex;" [ngClass]="[weekObj.daysData[j].code === 'HD' ? 'holiday' : '']">
+					<input matInput class='hours-input' maxlength="2" [(ngModel)]="dayHour.hour" [ngModelOptions]="{updateOn: 'blur'}" >
+				</td>
+				<td>
+					<input class='hours-input' maxlength="2" value="{{calculateProjectHours(project.hours)}}" disabled="true">
+				</td>
+				<td>
+					<i class="material-icons" [hidden]="!project.attachment">attach_file</i>
+				</td>
+			</tr>
+			<tr class='empty-leave-row' [hidden]="!isLeaveAdded">
+				<td colspan='10'>Leaves</td>
+			</tr>
+			<tr *ngFor="let project of weekObj.projects" class='leave-row' [hidden]="project.type != 'PDL' && project.type != 'UPL'">
+				<td class="first-child">
+					{{project.code+'-'+project.name}}
+					<i class="fa fa-times" aria-hidden="true" (click)="clearLeave(project)"></i>
+				</td>
+				<td *ngFor="let dayHour of project.hours; let j = index; trackBy:trackByIndex;" [ngClass]="[weekObj.daysData[j].code === 'HD' ? 'holiday' : '']">
+					<input matInput class='hours-input' maxlength="2" [(ngModel)]="dayHour.hour" [ngModelOptions]="{updateOn: 'blur'}" >
+				</td>
+				<td>
+					<input class='hours-input' maxlength="2" value="{{calculateProjectHours(project.hours)}}" disabled="true">
+				</td>
+				<td>
+					<i class="material-icons" [hidden]="!project.attachment">attach_file</i>
+				</td>
+			</tr>
+			<tr class='total-row'>
+				<td class="first-child">Total Hours Per Day</td>
+				<td *ngFor="let day of weekObj.daysData; let k = index; trackBy:trackByIndex;">
+					<input class='hours-input' maxlength="2" value="{{calculateDayHours(weekObj.projects,k)}}" disabled="true">
+				</td>
+				<td>
+					<input class='hours-input' maxlength="2" value="{{calculateTotalHours(weekObj.projects)}}" disabled="true">
+				</td>
+				<td></td>
+			</tr>
+		</table>
+	
+		<div class="leave-section">
+			<mat-select placeholder="Add Leaves" [(value)]="selectedLeave" (selectionChange)="selectLeave($event)" class="pending-entries">
+				<mat-option *ngFor="let leave of leaveTypes;" [value]="leave.name">{{leave.name}}</mat-option>
+			</mat-select>
+		</div>
+		<mat-divider></mat-divider>
+	
+		<div id='button-container'>
+			<button mat-raised-button id='save-button' (click)="saveOrSubmit('SAVE')">SAVE</button>
+			<button mat-raised-button id='submit-button' (click)="saveOrSubmit('SUBMIT')">Submit</button>
+		</div>
+	</mat-card>

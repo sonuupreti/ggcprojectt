@@ -51,7 +51,8 @@ import {
         MatTabsModule,
         MatTableModule,
         MatChipsModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatDividerModule
     ],
     exports: [
         CommonModule,
@@ -68,7 +69,8 @@ import {
         MatTabsModule,
         MatTableModule,
         MatChipsModule,
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatDividerModule
     ]
 })
 export class MaterialModule {}
