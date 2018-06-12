@@ -73,7 +73,7 @@ export class AddResourceComponent implements OnInit {
             department: new FormControl('', [Validators.required]),
             designation: new FormControl('', [Validators.required]),
             joiningDate: new FormControl('', [Validators.required]),
-            baseLocation: new FormControl('', []),
+            baseLocation: new FormControl('', [Validators.required]),
             employeeType: new FormControl('', []),
             technology: new FormControl('', [Validators.required])
         });

@@ -68,4 +68,7 @@ mat-table .mat-header-cell{
 .mat-form-field-can-float.mat-form-field-should-float .mat-form-field-label{
     color: #0EB3F7;
 }
+.mat-chip:not(.mat-basic-chip){
+    border-radius: 10px !important;;
+}
 

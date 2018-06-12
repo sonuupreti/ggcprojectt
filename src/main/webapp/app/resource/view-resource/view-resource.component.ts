@@ -274,12 +274,6 @@ export class ViewResourceComponent implements OnInit {
         });
     }
 
-    reset() {
-        this.resourceForm.reset();
-        this.resourceForm.get('technology').setValue('');
-        this.primarySkill = [];
-    }
-
     enableEditMode() {
         this.isViewMode = false;
         this.resourceForm.enable();

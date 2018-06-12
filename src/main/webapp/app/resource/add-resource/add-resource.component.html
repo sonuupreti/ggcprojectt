@@ -166,15 +166,14 @@
 
             <p>
               <mat-form-field>
-                <mat-select placeholder="Base Locaton" formControlName="baseLocation">
+                <mat-select placeholder="Base Locaton" formControlName="baseLocation" required>
                   <mat-option *ngFor="let list of locationsList" [value]="list">
                     {{list.value}}
                   </mat-option>
                 </mat-select>
+                <mat-error *ngIf="resourceForm.get('baseLocation').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
-
-
             <mat-form-field class="demo-chip-list">
               <mat-chip-list ngDefaultControl #chipList formControlName="technology" required>
                 <mat-chip *ngFor="let list of primarySkill" [selectable]="selectable" [removable]="removable" (removed)="remove(list)">
