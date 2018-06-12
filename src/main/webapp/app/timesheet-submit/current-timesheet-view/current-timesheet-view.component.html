@@ -7,8 +7,7 @@
 		</div>
 		<div>
 			<i class="fa fa-angle-left fat-arrow"></i>
-			<span class="week-date">{{weekObj.startDate | date:'LLL dd'}}{{ weekObj.startDate | date: "d" }} - {{ weekObj.endDate | date:'dd'}}{{ weekObj.endDate
-				| date: "d" }}, {{ weekObj.endDate | date:'yyyy'}}</span>
+			<span class="week-date">{{weekObj.startDate | date:'LLL dd'}}{{ weekObj.startDate | date: "d" | dateSuffix }} - {{ weekObj.endDate | date:'dd'}}{{ weekObj.endDate | date: "d" | dateSuffix }}, {{ weekObj.endDate | date:'yyyy'}}</span>
 			<i class="fa fa-angle-right fat-arrow"></i>
 		</div>
 	

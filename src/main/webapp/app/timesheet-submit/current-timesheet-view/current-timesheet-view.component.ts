@@ -16,19 +16,235 @@ export class CurrentTimesheetView implements OnInit {
     private months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
     private daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
     private daysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    timesheetData: any = {};
+    // timesheetData: any = {};
     leaveTypes = [];
     selectedLeave;
     isLeaveAdded = false;
+    timesheetData = {
+        resourceAllocationSummary: {
+            resource: {
+                key: '20001',
+
+                value: 'Manoj Nautiyal'
+            },
+
+            projects: [
+                {
+                    project: {
+                        key: 'INV0000004',
+
+                        value: 'iTrack'
+                    },
+
+                    projectType: {
+                        key: 'INV',
+
+                        value: 'Investment'
+                    },
+
+                    proportion: 50,
+
+                    customerTimeTracking: false
+                },
+
+                {
+                    project: {
+                        key: 'INV0000005',
+
+                        value: 'FinalSelect'
+                    },
+
+                    projectType: {
+                        key: 'INV',
+
+                        value: 'Investment'
+                    },
+
+                    proportion: 50,
+
+                    customerTimeTracking: true
+                },
+
+                {
+                    project: {
+                        key: 'PDL0000001',
+
+                        value: 'Paid Leave'
+                    },
+
+                    projectType: {
+                        key: 'PDL',
+
+                        value: 'Paid Leave'
+                    },
+
+                    proportion: 100,
+
+                    customerTimeTracking: false
+                },
+
+                {
+                    project: {
+                        key: 'UPL0000002',
+
+                        value: 'Unpaid Leave'
+                    },
+
+                    projectType: {
+                        key: 'UPL',
+
+                        value: 'Unpaid Leave'
+                    },
+
+                    proportion: 100,
+
+                    customerTimeTracking: false
+                }
+            ]
+        },
+
+        weekDetails: {
+            weekStartDate: '2018-05-28',
+
+            weekEndDate: '2018-06-03',
+
+            weekLength: 7,
+
+            weekStartDay: 'MONDAY',
+
+            weekEndDay: 'SUNDAY',
+
+            dailyStandardHours: 8,
+
+            weeklyStandardHours: 40,
+
+            flexibleWeekends: false,
+
+            dailyDetails: [
+                {
+                    date: '2018-05-28',
+
+                    day: 'MONDAY',
+
+                    type: {
+                        code: 'WD',
+
+                        value: 'Regular Working Day'
+                    },
+
+                    remarks: null
+                },
+
+                {
+                    date: '2018-05-29',
+
+                    day: 'TUESDAY',
+
+                    type: {
+                        code: 'WD',
+
+                        value: 'Regular Working Day'
+                    },
+
+                    remarks: null
+                },
+
+                {
+                    date: '2018-05-30',
+
+                    day: 'WEDNESDAY',
+
+                    type: {
+                        code: 'WD',
+
+                        value: 'Regular Working Day'
+                    },
+
+                    remarks: null
+                },
+
+                {
+                    date: '2018-05-31',
+
+                    day: 'THURSDAY',
+
+                    type: {
+                        code: 'HD',
+
+                        value: 'Holiday'
+                    },
+
+                    remarks: 'Diwali'
+                },
+
+                {
+                    date: '2018-06-01',
+
+                    day: 'FRIDAY',
+
+                    type: {
+                        code: 'WD',
+
+                        value: 'Regular Working Day'
+                    },
+
+                    remarks: null
+                },
+
+                {
+                    date: '2018-06-02',
+
+                    day: 'SATURDAY',
+
+                    type: {
+                        code: 'WE',
+
+                        value: 'Weekend'
+                    },
+
+                    remarks: null
+                },
+
+                {
+                    date: '2018-06-03',
+
+                    day: 'SUNDAY',
+
+                    type: {
+                        code: 'WE',
+
+                        value: 'Weekend'
+                    },
+
+                    remarks: null
+                }
+            ]
+        },
+
+        actions: [
+            {
+                code: 'SAVE',
+
+                description: 'Save Timesheet'
+            },
+
+            {
+                code: 'SUBMIT',
+
+                description: 'Submit Timesheet'
+            }
+        ]
+    };
 
     constructor(private timesheetService: TimesheetService) {}
 
     ngOnInit() {
+        this.createInitialTimesheetData();
         //this.currentDate = new Date();
-        this.timesheetService.getGetInitialTimesheet().subscribe(timesheetData => {
-            this.timesheetData = timesheetData;
-            this.createInitialTimesheetData();
-        });
+        // this.timesheetService.getGetInitialTimesheet().subscribe(timesheetData => {
+        //     this.timesheetData = timesheetData;
+        //     // this.createInitialTimesheetData();
+        // });
     }
     trackByIndex(index: number, obj: any): any {
         return index;

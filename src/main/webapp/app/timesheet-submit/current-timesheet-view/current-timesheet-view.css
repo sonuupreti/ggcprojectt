@@ -18,7 +18,8 @@ i{
 }
 #main-container{
 	margin:20px auto;
-	width:95%;
+    width:95%;
+    overflow: hidden;
 }
 mat-form-field{
 	margin:inherit;
