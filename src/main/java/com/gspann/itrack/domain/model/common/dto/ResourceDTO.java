@@ -61,6 +61,10 @@ public class ResourceDTO {
 	
 	/*@NotNull
 	private EmploymentType employmentType;*/
+	//TODO: need to change once javamoney poc is done
 	private BigDecimal annualSalary;
+	private BigDecimal comission;
+	private BigDecimal bonus;
+	private String currencyCode;
 
 }

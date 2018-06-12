@@ -12,6 +12,7 @@ import org.slf4j.LoggerFactory;
 
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.business.payments.CostRateType;
+import com.gspann.itrack.domain.model.business.payments.FTECost;
 import com.gspann.itrack.domain.model.business.payments.NonFTECost;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.Pair;
@@ -121,7 +122,13 @@ public class BeanConverterUtil {
 		resourceDTO.setVersion(resource.version());
 		resourceDTO.setCompanyId(resource.designation().department().company().id());
 		resourceDTO.setDepartmentId(resource.designation().department().id());
-		
+		//TODO: need to be change once salary changed to javamoney
+		FTECost fteCost = (FTECost)resource.costings().get(0);
+		resourceDTO.setAnnualSalary(fteCost.annualSalary().getNumberStripped());
+		resourceDTO.setComission(fteCost.commission().getNumberStripped());
+		resourceDTO.setBonus(fteCost.bonus().getNumberStripped());
+		resourceDTO.setCurrencyCode(fteCost.annualSalary().getCurrency().getCurrencyCode());
+	
 		return resourceDTO;
 	}
 
