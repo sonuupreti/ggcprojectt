@@ -153,6 +153,9 @@ export class AddResourceComponent implements OnInit {
     saveData(event) {
         event.preventDefault();
         let datePipe = new DatePipe('en-US');
+        // if(){
+
+        // }
         const data = {
             name: this.resourceForm.get('resourceName').value,
             annualSalary: this.resourceForm.get('anualPackage').value,
@@ -160,10 +163,11 @@ export class AddResourceComponent implements OnInit {
             companyId: this.resourceForm.get('companyName').value.key,
             departmentId: this.resourceForm.get('department').value.key,
             designationId: this.resourceForm.get('designation').value.key,
-            primarySkills: 'sdf',
-            employmentTypeCode: this.resourceForm.get('employeeType').value,
+            primarySkills: JSON.stringify(this.primarySkill),
+            employmentTypeCode: 'FTE', //this.resourceForm.get('employeeType').value,
             gender: 'MALE',
-            expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE)
+            expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE),
+            emailId: 'sanjeet.yk@gmail.com'
         };
 
         this.resourceService.saveResourceDetails(data).subscribe(response => {
