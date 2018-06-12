@@ -1,0 +1,31 @@
+#detailedRow{
+    width:100%;
+    margin-bottom:24px;
+}
+.timesheet-cell{
+    background: #F4F6F9;
+    border:solid 1px #E0E0E0;
+    height:32px;
+    font-weight: normal;
+}
+.project-cell{
+    padding-left:10px; 
+}
+.header-row{
+    font-weight:normal;
+}
+.resource-total-hrs{
+    color:#0EB3F7;
+}
+.apprvr-action-danger{
+    color:#ED2A2A;
+}
+.apprvr-action-success{
+    color:#62B948;
+}
+.weekend-day{
+    background-color:#ebf3db;
+}
+.holiday{
+    background-color:#fce6e4;
+}

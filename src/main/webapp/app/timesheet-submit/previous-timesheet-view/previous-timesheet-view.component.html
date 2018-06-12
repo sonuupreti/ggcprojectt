@@ -1,1 +1,82 @@
-<h3>My Timesheet previous</h3>
+<mat-card id="prevTSView">
+        <mat-table #table [dataSource]="timesheets" id="prevTS">
+    
+            <ng-container matColumnDef="weekOf">
+                <mat-header-cell *matHeaderCellDef> Week of </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.weekStartDate | date:'MMM dd'}}{{timesheet.weekDetails.weekStartDate | date:'dd' | dateSuffix}} - {{timesheet.weekDetails.weekEndDate | date:'dd'}}{{timesheet.weekDetails.weekEndDate | date:'dd' | dateSuffix}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.status}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="submittedOn">
+                <mat-header-cell *matHeaderCellDef> Submitted On </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.submittedDate | date:'MM/dd/yyyy'}} </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="approverAction">
+                <mat-header-cell *matHeaderCellDef> Approver's Action </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet" 
+                    [ngClass]="{
+                        'apprvr-action-danger':timesheet.approverAction === 'Declined' || timesheet.approverAction === 'Partially Declined',
+                        'apprvr-action-success':timesheet.approverAction === 'Approved' || timesheet.approverAction === 'Partially Approved',
+                        'apprvr-action-submitted':timesheet.approverAction === 'submitted'
+                    }">
+                    {{timesheet.approverAction}} 
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="comments">
+                <mat-header-cell *matHeaderCellDef> Comments </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet">
+                    <span 
+                        placement="top"
+                        [ngbPopover]="tipContent"
+                        triggers='mouseenter:mouseleave'
+                        *ngIf="timesheet.approverComments.length>50;else noTooltip">
+                        {{timesheet.approverComments | ellipsis:50}}
+                    </span>
+                    <ng-template #noTooltip>{{timesheet.approverComments}}</ng-template>
+                    <ng-template #tipContent>{{timesheet.approverComments}}</ng-template>
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="quickLinks">
+                <mat-header-cell *matHeaderCellDef> Quick Links </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet;let i=index;" id="quickLinks">
+                    <i class="fa fa-eye quick-link-icon"></i>
+                    <i class="quick-link-icon"
+                        (click)="expandRow($event,timesheet,i/2)"
+                        [class.fa]="expandedElement != timesheet"
+                        [class.fa-arrows-alt]="expandedElement != timesheet"
+                        [class.contract-icon]="expandedElement == timesheet"
+                        [class.expanded]="expandedElement == timesheet">
+                    </i>
+                </mat-cell>
+            </ng-container>
+    
+            <ng-container matColumnDef="expandedDetail">
+                <mat-cell *matCellDef="let timesheet">
+                  <!-- Detail Row View -->
+                  <ng-template expandRow></ng-template>
+                </mat-cell>
+              </ng-container>
+            
+            <mat-header-row *matHeaderRowDef="displayedColumns" id="prevTS-header"></mat-header-row>
+    
+            <mat-row *matRowDef="let row; columns: displayedColumns;let i=index;"
+                [ngStyle]="{'border-bottom-style':expandedElement == row ? 'none':'solid'}">
+            </mat-row>
+    
+            <mat-row 
+                *matRowDef="let row; columns: ['expandedDetail']; when: isExpansionDetailRow"
+                [class.expanded]="row.element == expandedElement" 
+                [class.collapsed]="row.element != expandedElement"
+                style="overflow: hidden"> 
+            </mat-row>
+        </mat-table>
+    </mat-card>
+    
+      

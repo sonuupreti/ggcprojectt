@@ -16,4 +16,7 @@ export class TimesheetService {
             return response;
         });
     }
+    getReturnTimesheets(): Observable<any> {
+        return this.http.get('src/main/webapp/app/mockResponse/timeSeetResponse.json');
+    }
 }
