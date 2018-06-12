@@ -243,7 +243,7 @@
 <!-- 					uniqueConstraintName="unq_resources_login_id" /> -->
 <!-- 			</column> -->
 			<column name="email_id" type="varchar(255)">
-				<constraints unique="true" nullable="false"
+				<constraints unique="true" nullable="true"
 					uniqueConstraintName="unq_resources_email_id" />
 			</column>
 			<column name="greyt_hr_id" type="varchar(100)">
