@@ -17,4 +17,7 @@ export class ResourceService {
             return response;
         });
     }
+    getResourceDetails(resourceCode): Observable<any> {
+        return this.http.get(SERVER_API_URL + 'api/resource/' + resourceCode);
+    }
 }

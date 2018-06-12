@@ -42,7 +42,7 @@ export class ViewAccountComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.viewAccountService.getLocationAndAccountManagerList().subscribe(data => {
+        this.viewAccountService.getLocationAndAccountManagerList(this.route.snapshot.params.accountCode).subscribe(data => {
             this.locationList = data.locationsList;
             this.accountManagerList = data.accountManagerList;
             this.viewAccountService.viewAccountDetails(this.route.snapshot.params.accountCode).subscribe(response => {

@@ -167,12 +167,12 @@ export class AddResourceComponent implements OnInit {
             employmentTypeCode: 'FTE', //this.resourceForm.get('employeeType').value,
             gender: 'MALE',
             expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE),
-            emailId: 'sanjeet.yk@gmail.com'
+            emailId: 'sanjeet.ykdd@gmail.com'
         };
 
         this.resourceService.saveResourceDetails(data).subscribe(response => {
             localStorage.setItem('previousUrl', 'addProject');
-            this.router.navigate(['projects/view-project/' + response.projectCode]);
+            this.router.navigate(['resource/view-resource/' + response.resourceCode]);
         });
     }
 

@@ -10,8 +10,8 @@ export class ViewAccountService {
     viewAccountDetails(accountCode): Observable<any> {
         return this.http.get(SERVER_API_URL + 'api/accounts/' + accountCode);
     }
-    getLocationAndAccountManagerList(): Observable<any> {
-        return this.http.get(SERVER_API_URL + 'api/initAddAccount');
+    getLocationAndAccountManagerList(accountCode): Observable<any> {
+        return this.http.get(SERVER_API_URL + 'api/initEditAccount/' + accountCode);
     }
     updateAccountDetails(data): Observable<any> {
         return this.http.put(SERVER_API_URL + 'api/accounts', data, {}).map((response: HttpResponse<any>) => {
