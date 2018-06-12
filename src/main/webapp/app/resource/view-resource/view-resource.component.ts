@@ -159,11 +159,8 @@ export class ViewResourceComponent implements OnInit {
                 this.resourceForm.get('designation').setValue(this.getSelected(this.designationList, response.designationId));
                 this.resourceForm.get('joiningDate').setValue(response.expectedJoiningDate);
                 this.resourceForm.get('baseLocation').setValue(this.getSelected(this.locationsList, response.baseLocationId));
-                //this.resourceForm.get('projectName').setValue(response.projectName);
-                //this.resourceForm.get('projectTypeCode').setValue(this.getSelected(this.projectTypeList, response.projectTypeCode));
-                // this.resourceForm.get('cityId').setValue(this.getSelected(this.locationsList, response.cityId));
-                // this.resourceForm.get('startDate').setValue(response.startDate);
-                // this.resourceForm.get('endDate').setValue(response.endDate);
+                this.resourceForm.get('companyName').setValue(this.getSelected(this.companiesList, response.companyId));
+                this.resourceForm.get('department').setValue(this.getSelected(this.departmentList, response.departmentId));
 
                 try {
                     this.primarySkill = JSON.parse(response.primarySkills);
@@ -175,37 +172,14 @@ export class ViewResourceComponent implements OnInit {
                 } catch (e) {
                     this.primarySkill = [];
                 }
-
                 this.resourceForm.disable();
-
-                // this.projectForm
-                //     .get('offshoreManagerCode')
-                //     .setValue(this.getSelected(this.resourceManagerList, response.offshoreManagerCode));
-                // this.projectForm
-                //     .get('onshoreManagerCode')
-                //     .setValue(this.getSelected(this.resourceManagerList, response.onshoreManagerCode));
-                // this.projectForm.get('projectStatusCode').setValue(this.getSelected(this.statusList, response.projectStatusCode));
-
-                // this.technologies = response.technologyList;
-
-                // let self = this;
-                // this.technologies.map(index => {
-                //     const idx = self.technologyList.findIndex(x => x.value === index.value);
-                //     self.technologyList.splice(idx, 1);
-                // });
-
-                // this.projectForm.get('practices').setValue(response.practiceList);
-                // this.projectForm.disable();
-                // this.projectForm.get('technology').setValue('field');
             });
         });
     }
     saveData(event) {
         event.preventDefault();
         let datePipe = new DatePipe('en-US');
-        // if(){
 
-        // }
         const data = {
             name: this.resourceForm.get('resourceName').value,
             annualSalary: this.resourceForm.get('anualPackage').value,
@@ -216,18 +190,13 @@ export class ViewResourceComponent implements OnInit {
             primarySkills: JSON.stringify(this.primarySkill),
             employmentTypeCode: 'FTE', //this.resourceForm.get('employeeType').value,
             gender: 'MALE',
-            expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE),
-            emailId: 'sanjeet.yk@gmail.com'
+            expectedJoiningDate: datePipe.transform(this.resourceForm.get('joiningDate').value, DATE_FORMATE)
         };
 
         this.resourceService.saveResourceDetails(data).subscribe(response => {
             localStorage.setItem('previousUrl', 'addProject');
             this.router.navigate(['projects/view-project/' + response.projectCode]);
         });
-    }
-
-    navigateTo() {
-        this.router.navigate(['./resource/view-resource']);
     }
 
     add(event: MatChipInputEvent): void {
