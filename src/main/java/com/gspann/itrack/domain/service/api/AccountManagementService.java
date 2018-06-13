@@ -11,6 +11,7 @@ import com.gspann.itrack.domain.model.common.dto.AddAccountPageVM;
 
 
 
+
 public interface AccountManagementService {
 	
     /**
@@ -51,6 +52,9 @@ public interface AccountManagementService {
 
 
 	public AddAccountPageVM getAddAccountPageVM();
+
+
+	public AddAccountPageVM getEditAccountVM(String accountCode);
 	
 
 }

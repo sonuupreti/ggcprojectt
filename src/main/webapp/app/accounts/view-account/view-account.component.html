@@ -1,7 +1,7 @@
 <div class="view-account view-mode">
-  <h4 *ngIf="showMessage" style="color: lightgreen;margin-bottom: 25px;">{{actionMessage}}</h4>
-  <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-    <div fxFlex="80%">
+  <h4 *ngIf="showMessage" class="success-message" style="margin-bottom: 25px;">{{actionMessage}}</h4>
+  <div class="row">
+    <div class="col-sm-10">
       <mat-card class="example-card">
         <mat-card-header>
           <mat-card-title>
@@ -18,8 +18,8 @@
 
         </mat-card-header>
         <mat-card-content>
-          <div class="" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-            <div fxFlex="45%">
+          <div class="row">
+            <div class="col-sm-5">
               <p>
                 <mat-form-field>
                   <input matInput placeholder="Account Code" [(ngModel)]="accountCode" [disabled]="true">
@@ -60,10 +60,10 @@
                 </label>
               </p>
             </div>
-            <div fxFlex="10%">
+            <div class="col-sm-1">
 
             </div>
-            <div fxFlex="45%">
+            <div class="col-sm-5">
               <p>
                 <mat-form-field>
                   <input matInput placeholder="Customer Name" [(ngModel)]="customerName" [disabled]="isViewMode">
@@ -98,7 +98,7 @@
       </mat-card>
 
     </div>
-    <div fxFlex="20%" class="quick-actions">
+    <div class="col-sm-2 quick-actions">
       <p>
         <b>Quick Actions</b>
       </p>

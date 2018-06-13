@@ -11,12 +11,17 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.gspann.itrack.domain.model.business.Account;
+import com.gspann.itrack.domain.model.business.payments.CostRateType;
+import com.gspann.itrack.domain.model.business.payments.FTECost;
+import com.gspann.itrack.domain.model.business.payments.NonFTECost;
 import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ProjectDTO;
+import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
 import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
+import com.gspann.itrack.domain.model.staff.Resource;
 
 public class BeanConverterUtil {
 
@@ -90,9 +95,41 @@ public class BeanConverterUtil {
 		projectDTO.setProjectTypeDescription(project.type().description());
 		projectDTO.setStartDate(project.dateRange().fromDate());
 		projectDTO.setEndDate(project.dateRange().tillDate());
+
 		projectDTO.setTechnologyList(technologiesList);
 
 		return projectDTO;
+	}
+	
+	public static ResourceDTO resourceEntitytoDto(Resource resource) {
+		ResourceDTO resourceDTO = new ResourceDTO();
+		resourceDTO.setEmailId(resource.emailId());
+		resourceDTO.setActualJoiningDate(resource.actualJoiningDate());
+		resourceDTO.setBaseLocationId(resource.baseLocation().id());
+		resourceDTO.setDeputedLocationId(resource.deputedLocation().id());
+		resourceDTO.setDesignationId(resource.designation().id());
+		resourceDTO.setEmployeeStatusCode(resource.employmentStatus().code());
+		resourceDTO.setEmploymentTypeCode(resource.employmentType().code());
+		resourceDTO.setExitDate(resource.exitDate());
+		resourceDTO.setExpectedJoiningDate(resource.expectedJoiningDate());
+		resourceDTO.setGender(resource.gender());
+		resourceDTO.setGreytHRId(resource.greytHRID());
+		//resourceDTO.setImageId(resource.image().id());
+		resourceDTO.setName(resource.name());
+		resourceDTO.setPrimarySkills(resource.primarySkills());
+		resourceDTO.setResourceCode(resource.code());
+		resourceDTO.setSecondarySkills(resource.secondarySkills());
+		resourceDTO.setVersion(resource.version());
+		resourceDTO.setCompanyId(resource.designation().department().company().id());
+		resourceDTO.setDepartmentId(resource.designation().department().id());
+		//TODO: need to be change once salary changed to javamoney
+		FTECost fteCost = (FTECost)resource.costings().get(0);
+		resourceDTO.setAnnualSalary(fteCost.annualSalary().getNumberStripped());
+		resourceDTO.setComission(fteCost.commission().getNumberStripped());
+		resourceDTO.setBonus(fteCost.bonus().getNumberStripped());
+		resourceDTO.setCurrencyCode(fteCost.annualSalary().getCurrency().getCurrencyCode());
+	
+		return resourceDTO;
 	}
 
 }

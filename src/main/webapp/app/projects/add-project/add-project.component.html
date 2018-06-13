@@ -8,14 +8,8 @@
     </mat-card-header>
     <mat-card-content>
       <form [formGroup]="projectForm" novalidate (submit)="save($event)">
-        <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-          <div fxFlex="45%">
-            <p>
-              <mat-form-field>
-                <input matInput placeholder="Project ID" [disabled]="true">
-                <mat-hint>(This will be auto generated)</mat-hint>
-              </mat-form-field>
-            </p>
+        <div class="row">
+          <div class="col-sm-5">
             <p>
               <mat-form-field>
                 <mat-select placeholder="Account Name" formControlName="accountCode" required>
@@ -23,6 +17,8 @@
                     {{list.value}}
                   </mat-option>
                 </mat-select>
+                <mat-hint>Select an account under which you want to add a project</mat-hint>
+                
                 <mat-error *ngIf="projectForm.get('accountCode').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
@@ -39,7 +35,7 @@
             </p>
             <p>
               <mat-form-field>
-                <input matInput placeholder="Project Name" formControlName="projectName" required>
+                <input matInput placeholder="Customer Project Name" formControlName="projectName" required>
                 <mat-error *ngIf="projectForm.get('projectName').hasError('required')">This is required field</mat-error>
               </mat-form-field>
             </p>
@@ -64,13 +60,13 @@
               </mat-form-field>
             </p>
             <p>
-              <mat-form-field style="width: 40%;float: left;margin-right: 10px;">
+              <mat-form-field style="width: 50%;float: left;margin-right: 10px;">
                 <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="startDate" required>
                 <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker></mat-datepicker>
                 <mat-error *ngIf="projectForm.get('startDate').hasError('required')">This is required field</mat-error>
               </mat-form-field>
-              <mat-form-field style="width: 40%;">
+              <mat-form-field style="width:calc(50% - 10px)">
                 <input matInput [matDatepicker]="picker1" placeholder="End Date" formControlName="endDate" required>
                 <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                 <mat-datepicker #picker1></mat-datepicker>
@@ -78,10 +74,10 @@
               </mat-form-field>
             </p>
           </div>
-          <div fxFlex="10%">
+          <div class="col-sm-1">
 
           </div>
-          <div fxFlex="45%">
+          <div class="col-sm-5">
             <p>
               <mat-form-field>
                 <mat-select placeholder="Project Offshore Manager" formControlName="offshoreManagerCode" required>
@@ -148,8 +144,8 @@
             </mat-form-field>
           </div>
         </div>
-        <button type="submit" mat-raised-button color="primary">Create Account</button>
-        <button mat-raised-button color="primary">Reset All</button>
+        <button type="submit" mat-raised-button color="primary">Create Project</button>
+        <button type="button" mat-raised-button color="primary" (click)="reset();">Reset All</button>
       </form>
     </mat-card-content>
   </mat-card>

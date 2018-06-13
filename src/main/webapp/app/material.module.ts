@@ -50,6 +50,7 @@ import {
         MatIconModule,
         MatTabsModule,
         MatTableModule,
+        MatTooltipModule,
         MatChipsModule,
         MatAutocompleteModule,
         MatDividerModule
@@ -68,6 +69,7 @@ import {
         MatIconModule,
         MatTabsModule,
         MatTableModule,
+        MatTooltipModule,
         MatChipsModule,
         MatAutocompleteModule,
         MatDividerModule

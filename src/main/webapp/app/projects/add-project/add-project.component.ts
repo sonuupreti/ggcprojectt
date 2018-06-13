@@ -182,4 +182,10 @@ export class AddProjectComponent implements OnInit {
             return index.key === code;
         });
     }
+
+    reset() {
+        this.projectForm.reset();
+        this.projectForm.get('technology').setValue('');
+        this.technologies = [];
+    }
 }

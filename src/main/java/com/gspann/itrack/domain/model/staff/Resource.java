@@ -86,7 +86,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 
 	@Email(message = MESSAGE_EMAIL_INVALID)
 	@NaturalId(mutable = false)
-	@Column(name = "EMAIL_ID", nullable = false, length = 255)
+	@Column(name = "EMAIL_ID", nullable = true, length = 255)
 	private String emailId;
 
 	@Pattern(regexp = REGEX_GREYT_HR_ID, message = MESSAGE_GREYT_HR_ID_INVALID)
@@ -525,18 +525,21 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface GenderBuilder {
+		
+		public DesignationBuilder withGender(final Gender gender);
+		
 		public DesignationBuilder male();
 
 		public DesignationBuilder female();
 	}
 
 	public interface DesignationBuilder {
-		public EmailBuilder onDesignation(final Designation designation);
+		public ResourcePrimarySkillsBuilder onDesignation(final Designation designation);
 	}
 
-	public interface EmailBuilder {
+	/*public interface EmailBuilder {
 		public ResourcePrimarySkillsBuilder withEmail(final String emailId);
-	}
+	}*/
 
 	public interface ResourcePrimarySkillsBuilder {
 		public ResourcePracticeBuilder withPrimarySkills(final String primarySkills);
@@ -557,11 +560,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		public Buildable<Resource> withGreytHRID(final String greytHRID);
 
 		public Buildable<Resource> withSecondarySkills(final String secondarySkills);
+		
+		public Buildable<Resource> withEmail(final String emailId);
 	}
 
 	public static class ResourceBuilder implements BaseLocationBuilder, EmployementTypeBuilder, AnnualSalaryBuilder,
 			CommissionBuilder, BonusBuilder, OtherCostBuilder, NonFTECostBuilder, NameBuilder, GenderBuilder,
-			DesignationBuilder, EmailBuilder, ResourcePrimarySkillsBuilder, ResourcePracticeBuilder,
+			DesignationBuilder, ResourcePrimarySkillsBuilder, ResourcePracticeBuilder,
 			DeputedLocationBuilder, OptionalPropertiesBuilder, Buildable<Resource> {
 		private Resource resource;
 		private Money annualSalary;
@@ -668,6 +673,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			return this;
 		}
 
+
+		@Override
+		public DesignationBuilder withGender(Gender gender) {
+			this.resource.gender = gender;
+			return this;
+		}
+		
 		@Override
 		public DesignationBuilder male() {
 			this.resource.gender = Gender.MALE;
@@ -681,13 +693,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public EmailBuilder onDesignation(final Designation designation) {
+		public ResourcePrimarySkillsBuilder onDesignation(final Designation designation) {
 			this.resource.designation = designation;
 			return this;
 		}
 
 		@Override
-		public ResourcePrimarySkillsBuilder withEmail(String emailId) {
+		public Buildable<Resource> withEmail(String emailId) {
 			this.resource.emailId = emailId;
 			return this;
 

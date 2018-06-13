@@ -1,17 +1,14 @@
 <div class="list-project">
-  <div class="container"
-  fxLayout
-  fxLayout.xs="column"
-  fxLayoutAlign="center"
-  fxLayoutGap="10px"
-  fxLayoutGap.xs="0">
-<div fxFlex="50%">
+  <div class="row"
+  >
+<div class="col-sm-5">
       <h4>Projects</h4>
       <mat-form-field style="width:65%;">
         <input (keyup)="search($event.target.value)" matInput placeholder="Search project (type project name, project id, account name)">
       </mat-form-field>
 </div>
-<div fxFlex="50%" style="padding-top: 15px;">
+<div class="col-sm-4"></div>
+<div class="col-sm-3" style="padding-top: 15px;">
   <button class="add-project-button" mat-raised-button routerLink="/projects/add-project" color="primary"><mat-icon>add</mat-icon>Add Project</button>
 </div>
 </div>

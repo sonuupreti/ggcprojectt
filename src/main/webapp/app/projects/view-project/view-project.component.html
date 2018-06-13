@@ -1,7 +1,7 @@
 <div class="view-project view-mode">
-  <h4 *ngIf="showMessage" style="color: lightgreen;margin-bottom: 25px;">{{actionMessage}}</h4>
-  <div fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-    <div fxFlex="80%">
+  <h4 *ngIf="showMessage" class="success-message" style="margin-bottom: 25px;">{{actionMessage}}</h4>
+  <div class="row">
+    <div class="col-sm-10">
       <mat-card class="example-card">
         <mat-card-header>
           <mat-card-title>
@@ -12,19 +12,16 @@
               <span class="fa fa-pencil-square-o"></span> Edit</button>
             <button [hidden]="isViewMode" mat-button (click)="updateProjectDetails();" color="primary">
               <span class="fa fa-save"></span> Save</button>
-            <button mat-button (click)="remove();" color="primary">
-              <span class="fa fa-trash"></span> Remove</button>
           </div>
 
         </mat-card-header>
         <mat-card-content>
           <form [formGroup]="projectForm" novalidate>
-            <div class="container" fxLayout fxLayout.xs="column" fxLayoutAlign="center" fxLayoutGap="10px" fxLayoutGap.xs="0">
-              <div fxFlex="45%">
+            <div class="row">
+              <div class="col-sm-5">
                 <p>
                   <mat-form-field>
                     <input matInput placeholder="Project ID" formControlName="projectCode" [disabled]="true">
-                    <mat-hint>(This will be auto generated)</mat-hint>
                   </mat-form-field>
                 </p>
                 <p>
@@ -89,10 +86,10 @@
                   </mat-form-field>
                 </p>
               </div>
-              <div fxFlex="10%">
+              <div class="col-sm-1">
 
               </div>
-              <div fxFlex="45%">
+              <div class="col-sm-5">
                 <p>
                   <mat-form-field>
                     <mat-select placeholder="Project Offshore Manager" formControlName="offshoreManagerCode" required>
@@ -166,7 +163,7 @@
         </mat-card-content>
       </mat-card>
     </div>
-    <div fxFlex="20%" class="quick-actions">
+    <div class="col-sm-2 quick-actions">
       <p>
         <b>Quick Actions</b>
       </p>

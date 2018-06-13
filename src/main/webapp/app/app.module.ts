@@ -6,7 +6,6 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { Ng2Webstorage } from 'ngx-webstorage';
 import { JhiEventManager } from 'ng-jhipster';
 import { MaterialModule } from './material.module';
-import { FlexLayoutModule } from '@angular/flex-layout';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AuthExpiredInterceptor } from './blocks/interceptor/auth-expired.interceptor';
 import { ErrorHandlerInterceptor } from './blocks/interceptor/errorhandler.interceptor';
@@ -34,7 +33,6 @@ import { RemoveAccountConfirmDialogComponent } from './dialog/remove-account-con
         BrowserModule,
         BrowserAnimationsModule,
         MaterialModule,
-        FlexLayoutModule,
         Itrack2AppRoutingModule,
         Ng2Webstorage.forRoot({ prefix: 'jhi', separator: '-' }),
         Itrack2SharedModule,
