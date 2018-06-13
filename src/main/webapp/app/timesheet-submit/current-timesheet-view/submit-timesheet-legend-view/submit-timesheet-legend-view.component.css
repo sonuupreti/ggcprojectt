@@ -1,0 +1,39 @@
+#submitTSLegend{
+    display: flex;
+    flex-direction: row;
+}
+#submitTSLegend div{
+    margin-left:30px;
+    margin-right:30px;
+}
+.square-icon{
+    height: 12px;
+    width: 12px;
+    margin-top: 4px;
+    margin-right: 20px;
+    display: inline-block;
+}
+.legend-icons{
+    margin-right: 20px;
+}
+.week-off-icon{
+    background:#EBF3DB;
+}
+.holiday-icon{
+    background: #fce6e4;
+}
+.comment-icon{
+    color: #A2ADC2;
+}
+.clock-icon{
+    color: #0EB3F7;
+    font-size: 18px;
+    margin-right:0px !important;
+}
+#triangle-topright {
+    margin-right: 20px;
+    display: inline-block;
+    border-top: 12px solid #F7A70E;
+    border-left: 12px solid transparent;
+
+}

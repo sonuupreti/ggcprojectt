@@ -7,6 +7,7 @@ import { MaterialModule } from './../material.module';
 import { TimesheetViewComponent } from './timesheet-view.component';
 import { PreviousTimesheetViewComponent } from './previous-timesheet-view/previous-timesheet-view.component';
 import { CurrentTimesheetView } from './current-timesheet-view/current-timesheet-view.component';
+import { SubmitTimesheetLegendView } from './current-timesheet-view/submit-timesheet-legend-view/submit-timesheet-legend-view.component';
 import { TimesheetDetailedViewComponent } from './previous-timesheet-view/timesheet-detailed-view/timesheet-detailed-view.component';
 import { TimeSheetsDetailedViewDirective } from './previous-timesheet-view/timesheet-detailed-view/timesheet-detailed-view.directive';
 import { TimesheetService } from './timesheet.service';
@@ -29,6 +30,7 @@ const routes = [
         TimesheetViewComponent,
         PreviousTimesheetViewComponent,
         CurrentTimesheetView,
+        SubmitTimesheetLegendView,
         TimesheetDetailedViewComponent,
         TimeSheetsDetailedViewDirective,
         EllipsisPipe,

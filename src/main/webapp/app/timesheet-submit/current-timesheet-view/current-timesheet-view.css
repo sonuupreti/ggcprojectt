@@ -19,9 +19,8 @@
 i{
 	font-size: 16px;
 }
-#main-container{
+.main-container{
 	margin:20px auto;
-    width:95%;
     overflow: hidden;
 }
 mat-form-field{
