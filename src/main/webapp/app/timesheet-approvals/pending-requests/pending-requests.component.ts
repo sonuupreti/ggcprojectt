@@ -5,7 +5,7 @@ import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 @Component({
     selector: 'jhi-pending-requests',
     templateUrl: './pending-requests.component.html',
-    styleUrls: ['./pending-requests.component.css']
+    styleUrls: ['./pending-requests.component.scss']
 })
 export class PendingRequestsComponent implements OnInit {
     selected = 'RecentFirst';

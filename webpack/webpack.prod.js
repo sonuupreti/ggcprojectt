@@ -33,6 +33,11 @@ module.exports = webpackMerge(commonConfig({ env: ENV }), {
             use: [ '@ngtools/webpack' ]
         },
         {
+            test: /\.scss$/,
+            exclude: /node_modules/,
+            loaders: ['raw-loader', 'sass-loader'] // sass-loader not scss-loader
+        },
+        {
             test: /\.css$/,
             loaders: ['to-string-loader', 'css-loader'],
             exclude: /(vendor\.css|global\.css)/
