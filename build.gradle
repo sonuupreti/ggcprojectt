@@ -159,6 +159,7 @@ dependencies {
     /*compile ("io.dropwizard.metrics:metrics-servlets") {
     	exclude module: 'joda-time'
     }*/
+    compile  group:"org.zalando", name: "jackson-datatype-money", version: "1.0.2"
     compile "net.logstash.logback:logstash-logback-encoder"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-json-org"
     compile "com.fasterxml.jackson.datatype:jackson-datatype-hppc"
