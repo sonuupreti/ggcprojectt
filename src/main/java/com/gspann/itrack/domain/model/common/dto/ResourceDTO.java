@@ -1,17 +1,11 @@
 package com.gspann.itrack.domain.model.common.dto;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import javax.validation.constraints.NotNull;
 
-import org.codehaus.jackson.map.annotate.JsonSerialize;
 import org.javamoney.moneta.Money;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.gspann.itrack.domain.model.location.City;
-import com.gspann.itrack.domain.model.org.structure.Designation;
-import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.staff.Gender;
 
 import lombok.AllArgsConstructor;
@@ -59,12 +53,8 @@ public class ResourceDTO {
 	private short companyId;
 	private short departmentId;
 	
-	/*@NotNull
-	private EmploymentType employmentType;*/
-	//TODO: need to change once javamoney poc is done
-	private BigDecimal annualSalary;
-	private BigDecimal comission;
-	private BigDecimal bonus;
-	private String currencyCode;
+	private Money annualSalary;
+	private Money comission;
+	private Money bonus;
 
 }

@@ -122,12 +122,10 @@ public class BeanConverterUtil {
 		resourceDTO.setVersion(resource.version());
 		resourceDTO.setCompanyId(resource.designation().department().company().id());
 		resourceDTO.setDepartmentId(resource.designation().department().id());
-		//TODO: need to be change once salary changed to javamoney
 		FTECost fteCost = (FTECost)resource.costings().get(0);
-		resourceDTO.setAnnualSalary(fteCost.annualSalary().getNumberStripped());
-		resourceDTO.setComission(fteCost.commission().getNumberStripped());
-		resourceDTO.setBonus(fteCost.bonus().getNumberStripped());
-		resourceDTO.setCurrencyCode(fteCost.annualSalary().getCurrency().getCurrencyCode());
+		resourceDTO.setAnnualSalary(fteCost.annualSalary());
+		resourceDTO.setComission(fteCost.commission());
+		resourceDTO.setBonus(fteCost.bonus());
 	
 		return resourceDTO;
 	}
