@@ -20,3 +20,8 @@
 mat-tab-header.mat-tab-header {
     border-bottom: 0px;
 }
+
+.submitted{
+	border: 1px solid #62B948;
+	color : #62B948;
+}
