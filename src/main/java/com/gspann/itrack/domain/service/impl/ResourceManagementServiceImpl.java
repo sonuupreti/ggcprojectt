@@ -13,7 +13,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.gspann.itrack.adapter.persistence.repository.CompanyRepository;
 import com.gspann.itrack.adapter.persistence.repository.LocationRepository;
 import com.gspann.itrack.adapter.persistence.repository.OrganisationRepository;
 import com.gspann.itrack.adapter.persistence.repository.ProjectRepository;
@@ -21,7 +20,6 @@ import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
 import com.gspann.itrack.adapter.persistence.repository.SkillsRepository;
 import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
-import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.common.Toggle;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
@@ -70,9 +68,11 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		Resource resources = null;
 		if( null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.FULLTIME_EMPLOYEE.code())) {
 			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asFullTimeEmployee()
-					.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
-					.withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
+					 	.withAnnualSalary(resourceDTO.getAnnualSalary()).plusCommission(resourceDTO.getComission()).plusBonus(resourceDTO.getBonus()).noOtherCost()
+					 	.withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
+					 	.withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
 			
+					
 		}
 		else if(null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.DIRECT_CONTRACTOR.code())) {
 			resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asDirectContractor()
@@ -81,7 +81,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		}
 		else if(null != resourceDTO.getEmploymentTypeCode() && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.SUB_CONTRACTOR.code())) {
 		resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation).asFullTimeEmployee()
-				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
+				.withJustAnnualSalary(resourceDTO.getAnnualSalary()).withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get())
 				.withPrimarySkills(resourceDTO.getPrimarySkills()).addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
 	}
 		resourceRepository.saveAndFlush(resources);
