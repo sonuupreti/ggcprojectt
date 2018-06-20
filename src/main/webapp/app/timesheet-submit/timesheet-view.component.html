@@ -1,11 +1,21 @@
 <div id='main-cont'>
-	<h1 id='main-heading'>My Timesheet</h1>
-	<mat-tab-group class="demo-tab-group">
-	      <mat-tab label="RECENT TIMESHEETS">
-	         <jhi-previous-timesheet-view></jhi-previous-timesheet-view>
-	      </mat-tab>
-	      <mat-tab label="FILL TIMESHEET">
-	          <jhi-current-timesheet-view></jhi-current-timesheet-view>
-	      </mat-tab>
-	</mat-tab-group>
+		<div class="row">
+			<div class="col-sm-3">
+				<h1 id='main-heading'>My Timesheet</h1>
+			</div>
+			<div class="col-sm-6 alert alert-success text-center submitted" *ngIf="submitted">
+						<strong>Your Timesheet has been successfully submitted.</strong> 
+			</div>
+			<div class="col-sm-3">
+			</div>
+		</div>
+		</div>
+<mat-tab-group class="demo-tab-group">
+		<mat-tab label="RECENT TIMESHEETS">
+			 <jhi-previous-timesheet-view></jhi-previous-timesheet-view>
+		</mat-tab>
+		<mat-tab label="FILL TIMESHEET">
+				<jhi-current-timesheet-view (submittedToParent)="getOutputVal($event)"></jhi-current-timesheet-view>
+		</mat-tab>
+</mat-tab-group>
 </div>

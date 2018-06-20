@@ -9,6 +9,9 @@
     background: lightyellow;
     height: 30px;
 }
+.leave-row{
+    background: lightyellow;
+}
 
 .holiday{
 	background: #FCE6E4;
@@ -74,6 +77,45 @@ td input{
 .weekdays td:nth-child(7), .weekdays td:nth-child(8){
     background: #EBF3DB ;
 }
+	
+#save-button{
+	background-color: #0EB3F7;
+    color: white;
+    margin-right:20px;
+    margin-top: 20px;
+}
+
+#submit-button{
+	background-color: #62B948;
+    color: white;
+    margin-top: 20px;
+}
+table{
+    border-collapse: collapse;
+ }
+ td{
+    border: 1px solid lightgray;
+    color: #666;
+    text-align: center;
+    width: 9%;
+ }
+td input{
+    background-color: inherit;
+    height: 30px;
+    width: 95%;
+    border: white;
+    text-align:center;
+  }
+.total-row,.weekdays {
+	background-color: #F4F6F9;
+}
+.weekdays td{
+	padding:5px;
+	border:none;
+}	
+.weekdays td:nth-child(7),.weekdays td:nth-child(8){
+    background: #EBF3DB ;
+}
 
 #status{
     float:right;
@@ -133,7 +175,7 @@ td input{
 /deep/ .mat-tab-label{
 	font-size:12px;
 }
-./deep/ mat-tab-label-active{
+/deep/ mat-tab-label-active{
 	color:#0EB3F7;
 	background-color: inherit;
 }
