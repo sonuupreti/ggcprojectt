@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, HostListener, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, ViewChildren, HostListener, EventEmitter, Output, QueryList } from '@angular/core';
 //import { MatInputModule, MatButtonModule } from '@angular/material';
 //import { PROJECTS } from '../projects.service';
 import { TimesheetService } from '../timesheet.service';
@@ -26,7 +26,7 @@ export class CurrentTimesheetView implements OnInit {
     selectedLeave;
     isLeaveAdded = false;
     onSubmit: boolean = false;
-    @ViewChild('p') public popover: NgbPopover;
+    @ViewChildren('p') public popoverList: QueryList<NgbPopover>;
     @Output() submittedToParent = new EventEmitter<boolean>();
 
     timesheetData = {
@@ -727,9 +727,10 @@ export class CurrentTimesheetView implements OnInit {
     }
 
     public popupTrigger(): void {
-        const isOpen = this.popover.isOpen();
-        if (isOpen) {
-            this.popover.close();
-        }
+        this.popoverList.forEach(function(popover) {
+            if (popover.isOpen()) {
+                popover.close();
+            }
+        });
     }
 }

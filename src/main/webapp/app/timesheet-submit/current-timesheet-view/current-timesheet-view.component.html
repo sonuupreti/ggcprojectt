@@ -77,7 +77,7 @@
 			<tr class='total-row'>
 				<td class="first-child">Total Hours Per Day</td>
 				<td *ngFor="let day of weekObj.daysData; let k = index; trackBy:trackByIndex;">
-					<input class='hours-input' maxlength="2" value="{{calculateDayHours(weekObj.projects,k)}}" placement="top" [ngbPopover]="commentNeeded" #p="ngbPopover"  (document:click)="p.close()" (click)="$event.stopPropagation()">
+					<input class='hours-input' maxlength="2" value="{{calculateDayHours(weekObj.projects,k)}}" placement="top" [ngbPopover]="commentNeeded" #p="ngbPopover"  (click)="popupTrigger()" (document:click)="p.close()" (click)="$event.stopPropagation()">
 					<ng-template #commentNeeded>
 							<div><input matInput class=' ' maxlength="15" type="text" [(ngModel)]="day.comment" (click)="$event.stopPropagation()"></div>
 					</ng-template>
