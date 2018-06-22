@@ -5,6 +5,7 @@ import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.zalando.jackson.datatype.money.MoneyModule;
 import org.zalando.problem.ProblemModule;
 import org.zalando.problem.validation.ConstraintViolationProblemModule;
 
@@ -41,6 +42,10 @@ public class JacksonConfiguration {
     @Bean
     ConstraintViolationProblemModule constraintViolationProblemModule() {
         return new ConstraintViolationProblemModule();
+    }
+    @Bean
+    public MoneyModule moneyModule() {
+    	return new MoneyModule();
     }
 
 }
