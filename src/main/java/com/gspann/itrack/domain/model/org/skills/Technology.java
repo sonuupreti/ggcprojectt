@@ -2,6 +2,9 @@ package com.gspann.itrack.domain.model.org.skills;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -16,6 +19,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 import lombok.experimental.Accessors;
+import lombok.experimental.var;
 
 @Getter
 @Accessors(chain = true, fluent = true)
@@ -32,10 +36,11 @@ public class Technology extends AbstractIdentifiable<Integer> {
 	@Column(name = "NAME", nullable = false, length = 100)
 	private String name;
 	
-	public static Technology of(int id, String name) {
-		Technology technology = new Technology();
-		technology.id=id;
-		technology.name=name;
-				return technology;
+	public static Set<Technology> setOf(String ... technologyNames) {
+		Set<Technology> technologies = new HashSet<>();
+		for(var technology: technologyNames) {
+			technologies.add(Technology.of(technology));
+		}
+		return technologies;
 	}
 }

@@ -21,6 +21,7 @@ import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.domain.model.business.Account;
 import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
@@ -99,29 +100,29 @@ public class ProjectRepositoryTest {
 		Resource manager = resourceRepository.getOne("20001");
 		Project iTrack = Project.project().investment().asInProgress().namedAs("iTrack").locatedAt(gurgaon)
 				.inAccount(internal).startingIndefinatelyFrom(LocalDate.of(2018, Month.MAY, 1)).withPractices(practices)
-				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
+				.withTechnologies(Technology.setOf(new String[]{"Java", "J2E", "Spring Boot", "Restfil Web services", "Spring Data", "Hibernate JPA", "Angular 5"})).atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
 		systemUnderTest.saveAndFlush(iTrack);
 		Project finalSelect = Project.project().investment().asInProgress().namedAs("FinalSelect").locatedAt(gurgaon)
 				.inAccount(internal).startingIndefinatelyFrom(LocalDate.of(2018, Month.MAY, 1)).withPractices(practices)
-				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
+				.withTechnologies(Technology.setOf(new String[]{"Cucumber", "Neo4J", "Air Tables"})).atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
 		systemUnderTest.saveAndFlush(finalSelect);
 	}
 
-	@Test
+//	@Test
 	public void testfindByTypeCode() {
 		List<Project> invProjects = systemUnderTest.findByTypeCode(ProjectType.CODE.INVESTMENT.value());
 		System.out.println("Investment projects -->" + invProjects);
 	}
 
-	@Test
+//	@Test
 	public void findAllBenchProjects() {
 		List<Project> benchProjects = systemUnderTest.findAllBenchProjects();
 		System.out.println("Investment projects -->" + benchProjects);
 	}
 
-	@Test
+//	@Test
 	public void findAllLeaveProjects() {
 		List<Project> leaveProjects = systemUnderTest.findAllLeaveProjects();
 		System.out.println("Investment projects -->" + leaveProjects);

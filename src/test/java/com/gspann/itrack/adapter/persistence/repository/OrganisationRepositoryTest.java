@@ -68,12 +68,12 @@ public class OrganisationRepositoryTest {
 
 	@Test
 	public void test04SaveDepartment() {
-		List<Company> companies = systemUnderTest.findAllCompanies();
-		for (Company company : companies) {
-			systemUnderTest.saveDepartment(Department.of("Delivery", company));
-			systemUnderTest.saveDepartment(Department.of("SG&A", company));
-			systemUnderTest.saveDepartment(Department.of("Management", company));
-		}
+//		List<Company> companies = systemUnderTest.findAllCompanies();
+//		for (Company company : companies) {
+//			systemUnderTest.saveDepartment(Department.of("Delivery", company));
+//			systemUnderTest.saveDepartment(Department.of("SG&A", company));
+//			systemUnderTest.saveDepartment(Department.of("Management", company));
+//		}
 	}
 
 	@Test

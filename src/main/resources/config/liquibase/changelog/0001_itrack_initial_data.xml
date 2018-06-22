@@ -62,12 +62,12 @@
         </loadData>
         
        
-       <loadData encoding="UTF-8"
-                  file="config/liquibase/staticdata/009.technologies.csv"
-                  separator=","
-                  tableName="technologies"
-                  commentLineStartsWith="#">
-        </loadData>
+<!--        <loadData encoding="UTF-8" -->
+<!--                   file="config/liquibase/staticdata/009.technologies.csv" -->
+<!--                   separator="," -->
+<!--                   tableName="technologies" -->
+<!--                   commentLineStartsWith="#"> -->
+<!--         </loadData> -->
        
         
         <loadData encoding="UTF-8"
