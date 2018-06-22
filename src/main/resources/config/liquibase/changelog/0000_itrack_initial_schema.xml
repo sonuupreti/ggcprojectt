@@ -87,7 +87,7 @@
 					nullable="false" />
 			</column>
 		</createTable>
-		<addPrimaryKey constraintName="pk_company_location_map"
+		<addPrimaryKey constraintName="pk_composite_company_location_map"
 			columnNames="company_id, city_id" tableName="company_location_map" />
 		
 		<createTable tableName="departments">
@@ -865,6 +865,50 @@
 			</column>
 		</createTable>
 		
+		<createTable tableName="weekly_time_sheet_statuses">
+			<column name="id" type="bigint">
+				<constraints primaryKeyName="pk_weekly_time_sheet_status_id"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="version" type="bigint">
+				<constraints nullable="false" />
+			</column>
+			<column name="status" type="tinyint">
+				<constraints nullable="false" />
+			</column>
+			<column name="comments" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+			<column name="updated_on" type="timestamp" valueDate="${now}">
+				<constraints nullable="false" />
+			</column>
+		</createTable>
+
+		<createTable tableName="project_time_sheet_statuses">
+			<column name="weekly_time_sheet_status_id" type="bigint">
+				<constraints foreignKeyName="fk_project_time_sheet_statuses_weekly_time_sheet_status_id"
+					referencedColumnNames="id" referencedTableName="weekly_time_sheet_statuses"
+					nullable="false" />
+			</column>
+			<column name="project_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_project_time_sheet_statuses_project_code"
+					referencedColumnNames="code" referencedTableName="projects"
+					nullable="false" />
+			</column>
+			<column name="status" type="tinyint">
+				<constraints nullable="false" />
+			</column>
+			<column name="comments" type="varchar(255)">
+				<constraints nullable="true" />
+			</column>
+		</createTable>
+		<addPrimaryKey constraintName="pk_composite_project_time_sheet_statuses"
+			columnNames="weekly_time_sheet_status_id, project_code" tableName="project_time_sheet_statuses" />
+		<createIndex indexName="idx_project_time_sheet_statuses_project_code"
+			tableName="project_time_sheet_statuses" unique="false">
+			<column name="project_code" type="varchar(20)" />
+		</createIndex>
+
 		<createTable tableName="weekly_time_sheets">
 			<column name="id" type="bigint">
 				<constraints primaryKeyName="pk_weekly_time_sheet_id"
@@ -878,11 +922,14 @@
 					referencedColumnNames="code" referencedTableName="resources"
 					nullable="false" />
 			</column>
-			<column name="from_date" type="date">
+			<column name="week_start_date" type="date">
 				<constraints nullable="false" />
 			</column>
-			<column name="till_date" type="date">
-				<constraints nullable="true" />
+			<column name="week_end_date" type="date">
+				<constraints nullable="false" />
+			</column>
+			<column name="week_length" type="varchar(6)">
+				<constraints nullable="false" />
 			</column>
 			<column name="standard_hours" type="varchar(5)">
 				<constraints nullable="false" />
@@ -895,19 +942,28 @@
 					referencedColumnNames="id" referencedTableName="documents"
 					nullable="true" />
 			</column>
-			<column name="status" type="tinyint">
-				<constraints nullable="false" />
+			<column name="weekly_time_sheet_status_id" type="bigint">
+				<constraints foreignKeyName="weekly_time_sheet_status_id"
+					referencedColumnNames="id" referencedTableName="weekly_time_sheet_statuses"
+					nullable="false" unique="true"/>
 			</column>
 			<column name="use_as_template" type="boolean" defaultValueBoolean="false">
 				<constraints nullable="true" />
 			</column>
-			<column name="APPROVER_COMMENTS" type="varchar(255)">
-				<constraints nullable="true" />
-			</column>
 		</createTable>
+		<addUniqueConstraint columnNames="weekly_time_sheet_status_id"
+        	constraintName="unq_weekly_time_sheets_status_id" tableName="weekly_time_sheets" />
 		<createIndex indexName="idx_weekly_time_sheets_resource_code"
 			tableName="weekly_time_sheets" unique="false">
 			<column name="resource_code" type="varchar(20)" />
+		</createIndex>
+		<createIndex indexName="idx_weekly_time_sheets_week_start_date"
+			tableName="weekly_time_sheets" unique="false">
+			<column name="week_start_date" type="date" />
+		</createIndex>
+		<createIndex indexName="idx_weekly_time_sheets_week_end_date"
+			tableName="weekly_time_sheets" unique="false">
+			<column name="week_end_date" type="date" />
 		</createIndex>
 
 		<createTable tableName="daily_time_sheets">
@@ -968,9 +1024,6 @@
 				<constraints foreignKeyName="fk_time_sheet_entries_daily_time_sheet_id"
 					referencedColumnNames="id" referencedTableName="daily_time_sheets"
 					nullable="false" />
-			</column>
-			<column name="is_approved" type="boolean" defaultValueBoolean="false">
-				<constraints nullable="true" />
 			</column>
 		</createTable>
 		<addUniqueConstraint constraintName="unq_time_sheet_entries_project_entry"

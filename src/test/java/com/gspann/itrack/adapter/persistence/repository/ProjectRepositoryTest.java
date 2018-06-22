@@ -1,6 +1,7 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -97,12 +98,12 @@ public class ProjectRepositoryTest {
 
 		Resource manager = resourceRepository.getOne("20001");
 		Project iTrack = Project.project().investment().asInProgress().namedAs("iTrack").locatedAt(gurgaon)
-				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
+				.inAccount(internal).startingIndefinatelyFrom(LocalDate.of(2018, Month.MAY, 1)).withPractices(practices)
 				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
 		systemUnderTest.saveAndFlush(iTrack);
 		Project finalSelect = Project.project().investment().asInProgress().namedAs("FinalSelect").locatedAt(gurgaon)
-				.inAccount(internal).startingIndefinatelyFrom(LocalDate.now()).withPractices(practices)
+				.inAccount(internal).startingIndefinatelyFrom(LocalDate.of(2018, Month.MAY, 1)).withPractices(practices)
 				.withTechnologies("Java, J2E, Spring Boot, Restfil Web services, Spring Data, Hibernate JPA, Angular 5").atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)
 				.atCustomerEndManagedBy("None").build();
 		systemUnderTest.saveAndFlush(finalSelect);

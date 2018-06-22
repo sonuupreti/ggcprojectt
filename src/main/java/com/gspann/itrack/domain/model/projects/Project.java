@@ -56,6 +56,10 @@ import lombok.experimental.Accessors;
 // @formatter:on
 public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "ACCOUNT_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_ACCOUNT_CODE))
+	private Account account;
+
 	@NotNull
 	@Column(name = "NAME", nullable = false, length = 150)
 	private String name;
@@ -63,7 +67,6 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	public void updateName(final String name) {
 		this.name = name;
 	}
-	
 	
 	@NotNull
 	@OneToOne(fetch = FetchType.EAGER, optional = false)
@@ -169,10 +172,6 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 	@JoinColumn(name = "ONSHORE_MGR_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_ONSHORE_MGR_CODE))
 	private Resource onshoreManager;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "ACCOUNT_CODE", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_PROJECTS_ACCOUNT_CODE))
-	private Account account;
-
 	// Optional but unique
 	@Column(name = "CUSTOMER_PROJECT_ID", nullable = true, length = 150)
 	private String customerProjectId;
@@ -197,6 +196,10 @@ public class Project extends BaseAutoAssignableVersionableEntity<String, Long> {
 		this.customerManager = customerManager;
 	}
 
+	public boolean isLeaveType() {
+		return this.type.isLeaveType();
+	}
+	
 	@OneToMany(mappedBy = "project", fetch = FetchType.LAZY)
 	@Getter(value = AccessLevel.NONE)
 	private List<Allocation> allocations = new ArrayList<>();

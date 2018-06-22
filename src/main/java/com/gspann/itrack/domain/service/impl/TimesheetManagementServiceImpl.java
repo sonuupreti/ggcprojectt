@@ -3,11 +3,19 @@ package com.gspann.itrack.domain.service.impl;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
-import java.util.HashSet;
+import java.time.YearMonth;
+import java.time.temporal.TemporalAdjusters;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.transaction.Transactional;
 
@@ -18,17 +26,13 @@ import com.gspann.itrack.adapter.persistence.repository.AllocationRepository;
 import com.gspann.itrack.adapter.persistence.repository.ProjectRepository;
 import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
 import com.gspann.itrack.adapter.persistence.repository.TimeSheetRepository;
-import com.gspann.itrack.domain.model.common.dto.DayDTO;
-import com.gspann.itrack.domain.model.common.dto.DayVM;
-import com.gspann.itrack.domain.model.common.dto.ProjectSummary;
-import com.gspann.itrack.domain.model.common.dto.ResourceAllocationSummary;
-import com.gspann.itrack.domain.model.common.dto.ResourceProjectAllocationSummary;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetActionType;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetMetaDataVM;
-import com.gspann.itrack.domain.model.common.dto.WeekVM;
+import com.gspann.itrack.domain.model.allocations.ResourceAllocationSummary;
+import com.gspann.itrack.domain.model.allocations.ResourceProjectAllocationProjection;
+import com.gspann.itrack.domain.model.allocations.ResourceProjectSummary;
+import com.gspann.itrack.domain.model.common.DateRange;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.org.holidays.Holiday;
+import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 import com.gspann.itrack.domain.model.timesheets.DailyTimeSheet;
 import com.gspann.itrack.domain.model.timesheets.DayType;
@@ -36,6 +40,19 @@ import com.gspann.itrack.domain.model.timesheets.TimeSheetEntry;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
+import com.gspann.itrack.domain.model.timesheets.dto.DayDTO;
+import com.gspann.itrack.domain.model.timesheets.dto.TimeSheetDTO;
+import com.gspann.itrack.domain.model.timesheets.vm.DailyTotalEntry;
+import com.gspann.itrack.domain.model.timesheets.vm.ProjectWiseDailyEntryVM;
+import com.gspann.itrack.domain.model.timesheets.vm.ProjectWiseTimeSheetVM;
+import com.gspann.itrack.domain.model.timesheets.vm.ProjectWiseTimeSheetWeekVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetActionTypeVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetActorType;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetDayMetaDataVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetStatusTypeVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekMetaDataVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
 import com.gspann.itrack.domain.service.api.HolidayService;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
 import com.gspann.itrack.infra.config.ApplicationProperties;
@@ -66,60 +83,139 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		TIMESHEET_PROPERTIES = applicationProperties.timeSheet();
 	}
 
+	public TimeSheetWeekMetaDataVM getTimeSheetWeekMetaDataVM(final City deputedLocation) {
+		return getTimeSheetWeekMetaDataVM(
+				Week.current(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY()),
+				deputedLocation);
+	}
+
+	public TimeSheetWeekMetaDataVM getTimeSheetWeekMetaDataVM(Week week, final City deputedLocation) {
+		TimeSheetWeekMetaDataVM timeSheetWeekMetaDataVM = TimeSheetWeekMetaDataVM.ofWeek(week,
+				TIMESHEET_PROPERTIES.STANDARD_WEEKLY_HOURS(), TIMESHEET_PROPERTIES.STANDARD_DAILY_HOURS());
+
+		LocalDate weekStartDate = timeSheetWeekMetaDataVM.getWeekStartDate();
+		LocalDate weekEndDate = timeSheetWeekMetaDataVM.getWeekEndDate();
+
+		Set<Holiday> holidays = holidayService.getHolidaysByWeekAndLocation(week, deputedLocation);
+		LocalDate currentDate = weekStartDate;
+		while (!currentDate.isAfter(weekEndDate)) {
+			Optional<String> holidayOccassion = isHoliday(holidays, currentDate);
+			if (holidayOccassion.isPresent()) {
+				timeSheetWeekMetaDataVM.addDayVM(TimeSheetDayMetaDataVM.ofHoliday(currentDate, holidayOccassion.get()));
+			} else if (isWeekend(currentDate.getDayOfWeek())) {
+				timeSheetWeekMetaDataVM.addDayVM(TimeSheetDayMetaDataVM.ofWeekend(currentDate));
+			} else {
+				timeSheetWeekMetaDataVM.addDayVM(TimeSheetDayMetaDataVM.ofWorkingDay(currentDate));
+			}
+			currentDate = currentDate.plusDays(1);
+		}
+		return timeSheetWeekMetaDataVM;
+	}
+
 	@Override
-	public TimeSheetMetaDataVM getTimeSheetMetaData(String resourceCode) {
-		List<ResourceProjectAllocationSummary> allocationSummaries = allocationRepository
-				.findAllAllocationSummaries(resourceCode);
-		City deputedLocation = null;
-		if (allocationSummaries.size() > 0) {
-			ResourceAllocationSummary resourceAllocationSummary = ResourceAllocationSummary
-					.of(allocationSummaries.get(0).resourceCode(), allocationSummaries.get(0).resourceName());
-			deputedLocation = allocationSummaries.get(0).deputedLocation();
-			for (var allocationSummary : allocationSummaries) {
-				resourceAllocationSummary.addProjectAllocation(
-						ProjectSummary.of(allocationSummary.projectCode(), allocationSummary.projectName(),
-								allocationSummary.projectTypeCode(), allocationSummary.projectTypeName(),
-								allocationSummary.proportion(), allocationSummary.customerTimeTracking()));
+	public Optional<TimeSheetResource> getTimeSheetVMByResource(String resourceCode) {
+		return getTimeSheetVMByResourceAndWeek(resourceCode,
+				Week.current(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY()));
+	}
+
+	public ProjectWiseTimeSheetVM toProjectWiseTimeSheetVM(final ResourceAllocationSummary resourceAllocationSummary,
+			final WeeklyTimeSheet weeklyTimeSheet) {
+
+		Set<DailyTotalEntry> totalEntries = weeklyTimeSheet.dailyTimeSheets().stream()
+				.map(dailyEntry -> DailyTotalEntry.of(dailyEntry.date(), dailyEntry.totalHours(),
+						dailyEntry.dailyComments()))
+				.collect(Collectors.toCollection(() -> new TreeSet<>((x, y) -> x.getDate().compareTo(y.getDate()))));
+
+		Map<Project, Set<TimeSheetEntry>> projectWiseTimeEntriesMap = weeklyTimeSheet.projectWiseTimeEntriesMap();
+
+//		ProjectWiseTimeSheetVM projectWiseTimeSheetVM = ProjectWiseTimeSheetVM.of(weeklyTimeSheet.id(),
+//				TimeSheetStatusTypeVM.from(weeklyTimeSheet.weeklyStatus().status()), totalEntries);
+
+		ProjectWiseTimeSheetVM projectWiseTimeSheetVM = ProjectWiseTimeSheetVM.of(weeklyTimeSheet.id(),totalEntries);
+
+		Set<ProjectWiseTimeSheetWeekVM> projectWiseWeeklyTimeSheets = new TreeSet<>(
+				(x, y) -> x.projectName().compareTo(y.projectName()));
+
+		for (var mapEntry : projectWiseTimeEntriesMap.entrySet()) {
+			ProjectWiseTimeSheetWeekVM projectWiseTimeSheetWeekVM = ProjectWiseTimeSheetWeekVM.of(
+					resourceAllocationSummary.getProjectSummaryByProjectCode(mapEntry.getKey().code()),
+					TimeSheetStatusTypeVM
+							.from(weeklyTimeSheet.weeklyStatus(mapEntry.getKey()).get().projectWiseStatus()));
+			Set<ProjectWiseDailyEntryVM> projectWiseDailyEntries = new TreeSet<>(
+					(x, y) -> x.getDate().compareTo(y.getDate()));
+			for (var timeSheetEntry : mapEntry.getValue()) {
+				projectWiseDailyEntries.add(ProjectWiseDailyEntryVM.of(timeSheetEntry.dailyTimeSheet().date(),
+						timeSheetEntry.dailyTimeSheet().day(), timeSheetEntry.dailyTimeSheet().dayType(),
+						timeSheetEntry.hours(), timeSheetEntry.comments()));
 			}
+			projectWiseTimeSheetWeekVM.addDailyEntries(projectWiseDailyEntries);
+			projectWiseWeeklyTimeSheets.add(projectWiseTimeSheetWeekVM);
+		}
+		projectWiseTimeSheetVM.addProjectWiseWeeklyTimeSheets(projectWiseWeeklyTimeSheets);
 
-			WeekVM weekDTO = WeekVM.current(TIMESHEET_PROPERTIES.STANDARD_WEEKLY_HOURS(),
-					TIMESHEET_PROPERTIES.STANDARD_DAILY_HOURS(), TIMESHEET_PROPERTIES.WEEK_START_DAY(),
-					TIMESHEET_PROPERTIES.WEEK_END_DAY());
+		return projectWiseTimeSheetVM;
+	}
 
-//			LocalDate currentDate = LocalDate.now();
-			LocalDate weekStartDate = weekDTO.getWeekStartDate();
-			LocalDate weekEndDate = weekDTO.getWeekEndDate();
-			Week week = Week.of(weekStartDate);
+	@Override
+	public Optional<TimeSheetResource> getTimeSheetVMByResourceAndWeek(String resourceCode, Week week) {
+		Optional<ResourceAllocationSummary> resourceAllocationDetails = getResourceAllocationSummary(resourceCode,
+				week);
+		if (resourceAllocationDetails.isPresent()) {
+			ResourceAllocationSummary resourceAllocationSummary = resourceAllocationDetails.get();
 
-			Set<Holiday> holidays = holidayService.getHolidaysByWeekAndLocation(week, deputedLocation);
-			LocalDate currentDate = weekStartDate;
-			boolean isHoliday = false;
-			String holidayOccassions = null;
-			while (!currentDate.isEqual(weekEndDate)) {
-				for (var holiday : holidays) {
-					if (currentDate.equals(holiday.date())) {
-						isHoliday = true;
-						holidayOccassions = holiday.locationOcassions().stream().map(e -> e.occasion().name())
-								.reduce(", ", String::concat);
-					}
-				}
-				if (isHoliday) {
-					weekDTO.addDayVM(DayVM.ofHoliday(currentDate, holidayOccassions));
-				} else if (isWeekend(weekStartDate.getDayOfWeek())) {
-					weekDTO.addDayVM(DayVM.ofWeekend(currentDate));
-				} else {
-					weekDTO.addDayVM(DayVM.ofWorkingDay(currentDate));
-				}
-				currentDate = currentDate.plusDays(1);
+			Optional<WeeklyTimeSheet> existingTimesheet = timeSheetRepository.findByResourceCodeAndWeek(resourceCode,
+					week);
+			if (existingTimesheet.isPresent()) {
+				WeeklyTimeSheet weeklyTimeSheet = existingTimesheet.get();
+				return getTimeSheetVMForExistingTimeSheet(week, weeklyTimeSheet, resourceAllocationSummary);
+			} else {
+				// Create meta data for the week requested and return;
+				return getTimeSheetVMForNewTimeSheet(week, resourceAllocationSummary);
 			}
-
-			// Find any saved timesheet, pending for submission or create new if none is
-			// there for current week.
-
-			return TimeSheetMetaDataVM.of(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(), resourceAllocationSummary, weekDTO,
-					new TimeSheetActionType[] { TimeSheetActionType.SAVE, TimeSheetActionType.SUBMIT });
 		} else {
-			return null;
+			// TODO: Throw exception that resource is not allocated to any projects
+		}
+		return Optional.empty();
+	}
+
+	private Optional<TimeSheetResource> getTimeSheetVMForExistingTimeSheet(final Week week,
+			final WeeklyTimeSheet weeklyTimeSheet, final ResourceAllocationSummary resourceAllocationSummary) {
+		if (weeklyTimeSheet.weeklyStatus().status() == TimesheetStatus.SAVED) {
+			return Optional.of(TimeSheetResource.ofSaved(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(),
+					resourceAllocationSummary.getResource(), resourceAllocationSummary.getProjects(),
+					getTimeSheetWeekMetaDataVM(week, resourceAllocationSummary.getDeputedLocation()),
+					toProjectWiseTimeSheetVM(resourceAllocationSummary, weeklyTimeSheet), weeklyTimeSheet.weeklyStatus().updatedOn()));
+		} else if (weeklyTimeSheet.weeklyStatus().status() == TimesheetStatus.SUBMITTED) {
+			return Optional.of(TimeSheetResource.ofSubmitted(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(),
+					resourceAllocationSummary.getResource(),
+					toProjectWiseTimeSheetVM(resourceAllocationSummary, weeklyTimeSheet), TimeSheetActorType.RESOURCE, weeklyTimeSheet.weeklyStatus().updatedOn()));
+			// TODO: Get the role from logged in user details and pass the
+			// TimeSheetActorType accordingly
+		}
+		// TODO: Put in the code for other timesheet statuses
+		return Optional.empty();
+	}
+
+	private Optional<TimeSheetResource> getTimeSheetVMForNewTimeSheet(final Week week,
+			final ResourceAllocationSummary resourceAllocationSummary) {
+		return Optional.of(TimeSheetResource.ofNew(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(),
+				resourceAllocationSummary.getResource(), resourceAllocationSummary.getProjects(),
+				getTimeSheetWeekMetaDataVM(week, resourceAllocationSummary.getDeputedLocation())));
+	}
+
+	@Override
+	public Optional<TimeSheetResource> getTimeSheetVMByIdAndResourceCode(final long timesheetId, final String resourceCode) {
+//		Optional<WeeklyTimeSheet> existingTimesheet = getTimeSheetById(timesheetId);
+		Optional<WeeklyTimeSheet> existingTimesheet = getTimeSheetByIdAndResourceCode(timesheetId, resourceCode);
+		if (existingTimesheet.isPresent()) {
+			WeeklyTimeSheet weeklyTimeSheet = existingTimesheet.get();
+			Optional<ResourceAllocationSummary> resourceAllocationDetails = getResourceAllocationSummary(
+					weeklyTimeSheet.resource().code(), weeklyTimeSheet.week());
+			return getTimeSheetVMForExistingTimeSheet(weeklyTimeSheet.week(), weeklyTimeSheet,
+					resourceAllocationDetails.get());
+		} else {
+			// TODO: Throw exception that no timesheet with such ID exists
+			return Optional.empty();
 		}
 	}
 
@@ -127,42 +223,72 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		return TIMESHEET_PROPERTIES.WEEKENDS().contains(dayOfWeek);
 	}
 
+	private Optional<String> isHoliday(final Set<Holiday> holidays, final LocalDate date) {
+		for (var holiday : holidays) {
+			if (date.equals(holiday.date())) {
+				return Optional.of(holiday.locationOcassions().stream().map(e -> e.occasion().name()).reduce(", ",
+						String::concat));
+			}
+		}
+		return Optional.empty();
+	}
+
 	@Override
 	@Transactional
-	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet,
-			final Set<ProjectSummary> allocatedProjects) {
-		Resource resource = resourceRepository.findById(timesheet.getResourceCode()).get();
-
-		Optional<WeeklyTimeSheet> existingTimeSheet = null;
-		if (timesheet.getWeeklyTimeSheetId() != 0) {
-			existingTimeSheet = timeSheetRepository.findById(timesheet.getWeeklyTimeSheetId());
+	public Optional<ResourceAllocationSummary> getResourceAllocationSummary(final String resourceCode,
+			final Week week) {
+		List<ResourceProjectAllocationProjection> allocationSummaries = allocationRepository
+				.findAllAllocationSummaries(resourceCode, week);
+		if (allocationSummaries.size() > 0) {
+			ResourceAllocationSummary resourceAllocationSummary = ResourceAllocationSummary.of(
+					allocationSummaries.get(0).resourceCode(), allocationSummaries.get(0).resourceName(),
+					allocationSummaries.get(0).deputedLocation());
+			for (var allocationSummary : allocationSummaries) {
+				resourceAllocationSummary.addProjectAllocation(
+						ResourceProjectSummary.of(allocationSummary.projectCode(), allocationSummary.projectName(),
+								allocationSummary.projectTypeCode(), allocationSummary.projectTypeName(),
+								allocationSummary.fromDate(), allocationSummary.tillDate(),
+								allocationSummary.proportion(), allocationSummary.customerTimeTracking()));
+			}
+			return Optional.of(resourceAllocationSummary);
 		} else {
-			existingTimeSheet = timeSheetRepository
-					.findTimeSheetByWeekStartDate(timesheet.getWeek().getWeekStartDate());
+			return Optional.empty();
 		}
+	}
+
+	@Override
+	@Transactional
+	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet) {
 
 		LocalDate weekStartDate = timesheet.getWeek().getWeekStartDate();
 
-		Set<LocalDate> holidays = new HashSet<LocalDate>();
-		holidays.add(weekStartDate.plusDays(3));
+		Optional<WeeklyTimeSheet> existingTimeSheet = null;
+		if (timesheet.getTimesheetId() != 0) {
+			existingTimeSheet = getTimeSheetById(timesheet.getTimesheetId());
+		} else {
+			existingTimeSheet = getTimeSheetByResourceAndWeek(timesheet.getResourceCode(), Week.of(weekStartDate));
+		}
 
 		LocalDate weekDate = null;
-		// Map<LocalDate, DayDTO> dailyEntriesMap =
-		// timesheet.getWeek().dailyEntriesMap();
-		// for (LocalDate date : dailyEntriesMap.keySet())
-		// System.out.println("key: " + date);
 
 		Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>(7);
 		Set<DayDTO> dailyEntries = timesheet.getWeek().getDailyEntries();
+		Week week = Week.of(timesheet.getWeek().getWeekStartDate());
+		Optional<ResourceAllocationSummary> resourceAllocationSummary = getResourceAllocationSummary(
+				timesheet.getResourceCode(), week);
+
+		Set<Holiday> holidays = holidayService.getHolidaysByWeekAndLocation(week,
+				resourceAllocationSummary.get().getDeputedLocation());
 
 		for (var dayDTO : dailyEntries) {
 			weekDate = dayDTO.getDate();
 			DayOfWeek dayName = weekDate.getDayOfWeek();
+			Optional<String> holidayOccassion = isHoliday(holidays, weekDate);
 
 			DayType dayType = null;
 			if (isWeekend(dayName)) {
 				dayType = DayType.WEEK_END;
-			} else if (holidays.contains(weekDate)) {
+			} else if (holidayOccassion.isPresent()) {
 				dayType = DayType.HOLIDAY;
 			} else {
 				dayType = DayType.WORKING_DAY;
@@ -219,33 +345,154 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			weeklyTimeSheet.addAllDailyTimeSheets(dailyTimeSheets);
 		} else {
 			// Create new timesheet in DB
+			// Resource resource =
+			// resourceRepository.findById(timesheet.getResourceCode()).get();
+			Resource resource = resourceRepository.getOne(timesheet.getResourceCode());
 			weeklyTimeSheet = WeeklyTimeSheet.of(resource).forWeekOf(Week.of(timesheet.getWeek().getWeekStartDate()))
 					.withDefaultStandardHours().withDailyTimeSheets(dailyTimeSheets).build();
 		}
-		if (TimeSheetActionType.valueOf(timesheet.getAction()) == TimeSheetActionType.SAVE) {
+		if (TimeSheetActionTypeVM.valueOf(timesheet.getAction()) == TimeSheetActionTypeVM.SAVE) {
 			weeklyTimeSheet.save();
-		} else if (TimeSheetActionType.valueOf(timesheet.getAction()) == TimeSheetActionType.SUBMIT) {
+		} else if (TimeSheetActionTypeVM.valueOf(timesheet.getAction()) == TimeSheetActionTypeVM.SUBMIT) {
 			weeklyTimeSheet.submit();
 		}
 		return Optional.ofNullable(timeSheetRepository.save(weeklyTimeSheet));
 	}
 
 	@Override
-	public Optional<WeeklyTimeSheet> findTimeSheetById(long id) {
-		// TODO Auto-generated method stub
+	public Optional<WeeklyTimeSheet> getTimeSheetById(long id) {
 		return timeSheetRepository.findById(id);
 	}
 
 	@Override
-	public Optional<WeeklyTimeSheet> findTimeSheetByResourceCodeAndDate(String resourceCode, LocalDate date) {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<WeeklyTimeSheet> getTimeSheetByResourceAndWeek(String resourceCode, Week week) {
+		return timeSheetRepository.findByResourceCodeAndWeek(resourceCode, week);
 	}
 
 	@Override
-	public Optional<WeeklyTimeSheet> findTimeSheetByResourceCodeAndStatus(String resourceCode, TimesheetStatus status) {
-		// TODO Auto-generated method stub
-		return null;
+	public Optional<WeeklyTimeSheet> getTimeSheetByResourceAndDate(String resourceCode, LocalDate date) {
+		return timeSheetRepository.findByResourceCodeAndWeek(resourceCode,
+				Week.containingDate(date, TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY()));
 	}
 
+	@Override
+	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndStatus(String resourceCode, TimesheetStatus status) {
+		return timeSheetRepository.findByResourceCodeAndWeeklyStatusStatus(resourceCode, status);
+	}
+
+	@Override
+	public void approveTimesheet(final long timesheetId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void approveTimesheet(long timesheetId, String projectCode) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void rejectTimesheet(final long timesheetId) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void rejectTimesheet(long timesheetId, String projectCode) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndMonth(String resourceCode, YearMonth month) {
+		return listTimeSheetsByResourceAndDateRange(resourceCode,
+				DateRange.dateRange().startingOn(month.atDay(1)).endingOn(month.atEndOfMonth()));
+	}
+
+	@Override
+	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndDateRange(final String resourceCode,
+			final DateRange dateRange) {
+		return timeSheetRepository.findAllTimeSheetsByDateRange(resourceCode, dateRange,
+				TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY());
+	}
+
+	@Override
+	public List<WeeklyTimeSheet> listTimeSheetsByResourceSinceDate(String resourceCode, LocalDate date) {
+		return listTimeSheetsByResourceAndDateRange(resourceCode,
+				DateRange.dateRange().startingOn(date).endingOn(LocalDate.now()));
+	}
+
+	@Override
+	public List<WeeklyTimeSheet> listRecentTimeSheetsByResource(String resourceCode, int pageSize) {
+		LocalDate endDate = LocalDate.now().with(TemporalAdjusters.nextOrSame(TIMESHEET_PROPERTIES.WEEK_END_DAY()));
+		LocalDate startDate = endDate.minusDays(6 * pageSize).minusDays(pageSize - 1);
+		return listTimeSheetsByResourceAndDateRange(resourceCode,
+				DateRange.dateRange().startingOn(startDate).endingOn(endDate));
+	}
+
+	@Override
+	public Set<TimeSheetWeekStatusVM> getWeeklyStatusesByWeeks(String resourceCode, List<Week> weeks) {
+		// TODO Return a Map instead with week as key
+		return timeSheetRepository.findWeeklyStatusesByWeeks(resourceCode, weeks);
+	}
+
+	@Override
+	public Map<Week, TimeSheetWeekStatusVM> getWeeklyStatusesForNextAndPreviousWeeks(String resourceCode, Week week) {
+		Week previousWeek = week.previous();
+		Week nextWeek = week.next();
+
+		List<Week> forWeeks = new ArrayList<>(2);
+		Map<Week, TimeSheetWeekStatusVM> resultMap = new HashMap<>();
+		Week currentWeek = Week.current(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY());
+		if (nextWeek.startingFrom().isAfter(currentWeek.endingOn())
+				&& TIMESHEET_PROPERTIES.SYSTEM_START_DATE().isAfter(previousWeek.startingFrom())) {
+			return Collections.emptyMap();
+		} else if (nextWeek.startingFrom().isAfter(currentWeek.endingOn())) {
+			forWeeks.add(previousWeek);
+			Set<TimeSheetWeekStatusVM> results = getWeeklyStatusesByWeeks(resourceCode, forWeeks);
+			if (results.isEmpty()) {
+				resultMap.put(previousWeek, TimeSheetWeekStatusVM.ofWeekPendingForSubmission(previousWeek));
+			} else {
+				resultMap.put(previousWeek, results.iterator().next());
+			}
+		} else if (TIMESHEET_PROPERTIES.SYSTEM_START_DATE().isAfter(previousWeek.startingFrom())) {
+			forWeeks.add(nextWeek);
+			Set<TimeSheetWeekStatusVM> results = getWeeklyStatusesByWeeks(resourceCode, forWeeks);
+			if (results.isEmpty()) {
+				resultMap.put(nextWeek, TimeSheetWeekStatusVM.ofWeekPendingForSubmission(previousWeek));
+			} else {
+				resultMap.put(nextWeek, results.iterator().next());
+			}
+		} else {
+			forWeeks.add(previousWeek);
+			forWeeks.add(nextWeek);
+			Set<TimeSheetWeekStatusVM> results = getWeeklyStatusesByWeeks(resourceCode, forWeeks);
+			if (results.isEmpty()) {
+				resultMap.put(previousWeek, TimeSheetWeekStatusVM.ofWeekPendingForSubmission(previousWeek));
+				resultMap.put(nextWeek, TimeSheetWeekStatusVM.ofWeekPendingForSubmission(nextWeek));
+			} else if (results.size() == 1) {
+				TimeSheetWeekStatusVM timeSheetWeekStatusVM = results.iterator().next();
+				if (timeSheetWeekStatusVM.toWeek().equals(previousWeek)) {
+					resultMap.put(previousWeek, timeSheetWeekStatusVM);
+					resultMap.put(nextWeek, TimeSheetWeekStatusVM.ofWeekPendingForSubmission(nextWeek));
+				} else {
+					resultMap.put(nextWeek, timeSheetWeekStatusVM);
+					resultMap.put(previousWeek, TimeSheetWeekStatusVM.ofWeekPendingForSubmission(previousWeek));
+				}
+			} else if (results.size() == 2) {
+				Iterator<TimeSheetWeekStatusVM> resultItr = results.iterator();
+				while (resultItr.hasNext()) {
+					TimeSheetWeekStatusVM timeSheetWeekStatusVM = resultItr.next();
+					resultMap.put(timeSheetWeekStatusVM.toWeek(), timeSheetWeekStatusVM);
+				}
+			}
+		}
+		return Collections.unmodifiableMap(resultMap);
+	}
+
+	@Override
+	public Optional<WeeklyTimeSheet> getTimeSheetByIdAndResourceCode(long timesheetId, String resourceCode) {
+		return timeSheetRepository.findByIdAndResourceCode(timesheetId, resourceCode);
+	}
 }

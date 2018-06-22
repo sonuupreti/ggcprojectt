@@ -55,14 +55,24 @@ public class PersistenceConstant {
 
 		public static final String FK_TIME_SHEET_ENTRIES_PROJECT_CODE = "fk_time_sheet_entries_project_code";
 		public static final String PK_WEEKLY_TIME_SHEET_ID = "pk_weekly_time_sheet_id";
+		public static final String UNQ_WEEKLY_TIME_SHEETS_STATUS_ID = "UNQ_WEEKLY_TIME_SHEETS_STATUS_ID";
 		public static final String FK_WEEKLY_TIME_SHEETS_RESOURCE_CODE = "fk_weekly_time_sheets_resource_code";
+		public static final String FK_WEEKLY_TIME_SHEETS_STATUS_ID = "fk_weekly_time_sheets_status_id";
+		public static final String IDX_WEEKLY_TIME_SHEETS_RESOURCE_CODE = "idx_weekly_time_sheets_resource_code";
+		public static final String IDX_WEEKLY_TIME_SHEETS_WEEK_START_DATE = "idx_weekly_time_sheets_week_start_date";
+		public static final String IDX_WEEKLY_TIME_SHEETS_WEEK_END_DATE = "idx_weekly_time_sheets_week_end_date";
 		public static final String FK_DAILY_TIME_SHEETS_WEEKLY_TIME_SHEET_ID = "fk_daily_time_sheets_weekly_time_sheet_id";
 		public static final String FK_WEEKLY_TIME_SHEETS_CLIENT_TIMESHEET_SCREEN_SHOT_ID = "fk_weekly_time_sheets_client_timesheet_screen_shot_id";
-		public static final String IDX_WEEKLY_TIME_SHEETS_RESOURCE_CODE = "idx_weekly_time_sheets_resource_code";
 		public static final String PK_TIME_SHEET_ENTRY_ID = "pk_time_sheet_entry_id";
 		public static final String FK_TIME_SHEET_ENTRIES_DAILY_TIME_SHEET_ID = "fk_time_sheet_entries_daily_time_sheet_id";
 		public static final String UNQ_DAILY_TIME_SHEETS_DATE_ENTRY = "unq_daily_time_sheets_date_entry";
 		public static final String UNQ_TIME_SHEET_ENTRIES_PROJECT_ENTRY = "unq_time_sheet_entries_project_entry";
+
+		public static final String PK_WEEKLY_TIME_SHEET_STATUS_ID = "pk_weekly_time_sheet_status_id";
+		public static final String PK_COMPOSITE_PROJECT_TIME_SHEET_STATUSES = "pk_composite_project_time_sheet_statuses";
+		public static final String IDX_PROJECT_TIME_SHEET_STATUSES_PROJECT_CODE = "idx_project_time_sheet_statuses_project_code";
+		public static final String FK_PROJECT_TIME_SHEET_STATUSES_PROJECT_CODE = "fk_project_time_sheet_statuses_project_code";
+		public static final String FK_PROJECT_TIME_SHEET_STATUSES_WEEKLY_TIME_SHEET_STATUS_ID = "fk_project_time_sheet_statuses_weekly_time_sheet_status_id";
 
 		public static final String PK_PROJECT_CODE = "pk_project_code";
 		public static final String UNQ_PROJECTS_NAME = "unq_projects_name";
@@ -92,7 +102,7 @@ public class PersistenceConstant {
 		public static final String PK_COMPANY_ID = "pk_company_id";
 		public static final String UNQ_COMP_NAME = "unq_comp_name";
 
-		public static final String PK_COMPANY_LOCATION_MAP = "pk_company_location_map";
+		public static final String PK_COMPOSITE_COMPANY_LOCATION_MAP = "pk_composite_company_location_map";
 		public static final String FK_COMPANY_LOCATION_MAP_COMPANY_ID = "fk_company_location_map_company_id";
 		public static final String FK_COMPANY_LOCATION_MAP_CITY_ID = "fk_company_location_map_city_id";
 

@@ -1,6 +1,7 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import javax.money.Monetary;
 
@@ -60,7 +61,7 @@ public class ResourceRepositoryTest {
 		Designation projectManager = organisationRepository.findDesignationById((short) 6).get();
 		Designation teamLead = organisationRepository.findDesignationById((short) 5).get();
 		Designation srSoftwareEngineer = organisationRepository.findDesignationById((short) 4).get();
-		Resource manoj = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
+		Resource manoj = Resource.expectedToJoinOn(LocalDate.of(2018, Month.MAY, 1)).at(gurgaon).asFullTimeEmployee()
 				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName("Manoj Nautiyal")
 				.male().onDesignation(projectManager)
 				.withEmail("manoj.nautiyal@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
@@ -68,14 +69,14 @@ public class ResourceRepositoryTest {
 		systemUnderTest.saveAndFlush(manoj);
 //		admin.onboard(LocalDate.now(), iTrack);
 
-		Resource rajveer = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
+		Resource rajveer = Resource.expectedToJoinOn(LocalDate.of(2018, Month.MAY, 1)).at(gurgaon).asFullTimeEmployee()
 				.withJustAnnualSalary(Money.of(1000000, CurrencyCode.INR.name())).withName("Rajveer Singh")
 				.male().onDesignation(teamLead)
 				.withEmail("rajveer.singh@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
 				.deputeAtJoiningLocation().build();
 		systemUnderTest.saveAndFlush(rajveer);
 
-		Resource ankit = Resource.expectedToJoinOn(LocalDate.now()).at(gurgaon).asFullTimeEmployee()
+		Resource ankit = Resource.expectedToJoinOn(LocalDate.of(2018, Month.MAY, 1)).at(gurgaon).asFullTimeEmployee()
 				.withJustAnnualSalary(Money.of(1000000, CurrencyCode.INR.name())).withName("Ankit Bhardwaj")
 				.male().onDesignation(srSoftwareEngineer)
 				.withEmail("ankit.bhardwaj@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
