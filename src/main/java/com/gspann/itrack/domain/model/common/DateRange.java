@@ -15,7 +15,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
-@ToString
+@ToString(includeFieldNames = true)
 @EqualsAndHashCode
 @Embeddable
 public class DateRange {
@@ -26,11 +26,11 @@ public class DateRange {
 
 	@Column(name = "TILL_DATE", nullable = true)
 	private LocalDate tillDate;
-	
+
 	public void endOn(final LocalDate endDate) {
 		this.tillDate = endDate;
 	}
-	
+
 	public void startOn(final LocalDate endDate) {
 		this.tillDate = endDate;
 	}
@@ -75,8 +75,13 @@ public class DateRange {
 		}
 	}
 
-	public static void main(String[] args) {
-		dateRange().startingOn(LocalDate.now()).endingOn(LocalDate.now().plusDays(7));
-		dateRange().startIndefinitelyOn(LocalDate.now());
+	public boolean isOpenEnded() {
+		return this.tillDate == null;
+	}
+
+	public boolean contains(final LocalDate date) {
+		return isOpenEnded() ? date.equals(this.fromDate()) || date.isAfter(this.fromDate())
+				: (date.equals(this.fromDate()) || date.equals(this.tillDate()))
+						|| (date.isAfter(this.fromDate()) && date.isBefore(this.tillDate()));
 	}
 }

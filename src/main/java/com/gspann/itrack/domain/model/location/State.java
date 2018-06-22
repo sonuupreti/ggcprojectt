@@ -64,6 +64,8 @@ public class State extends AbstractIdentifiable<Integer> {
 		builder.append(id());
 		builder.append(", name=");
 		builder.append(name);
+		builder.append(", country=");
+		builder.append(country);
 		builder.append("}");
 		return builder.toString();
 	}

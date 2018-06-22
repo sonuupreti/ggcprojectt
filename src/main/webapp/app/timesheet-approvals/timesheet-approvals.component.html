@@ -1,0 +1,12 @@
+<h3>Timesheet Requests</h3>
+<mat-tab-group>
+    <mat-tab label="Pending Requests" matBadge="15" matBadgeColor="warn">
+        <jhi-pending-requests [tabRequest]="pending"></jhi-pending-requests>
+    </mat-tab>
+    <mat-tab label="Approved Requests">
+        <jhi-pending-requests [tabRequest]="approved"></jhi-pending-requests>       
+    </mat-tab>
+    <mat-tab label="Rejected Requests">
+        <jhi-pending-requests [tabRequest]="rejected"></jhi-pending-requests>        
+    </mat-tab>
+  </mat-tab-group>

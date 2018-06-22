@@ -1,0 +1,94 @@
+{
+  "realm" : "jhipster",
+  "users" : [ {
+    "id" : "00f601d7-faeb-493b-bb63-4ea64a8c2e68",
+    "createdTimestamp" : 1529053863694,
+    "username" : "20001",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Manoj",
+    "lastName" : "Nautiyal",
+    "email" : "manoj.nautiyal@gspann.com",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "9dNmWYWyD2D8qgx6m64g+nRcBdwFY4XPP4ev5NhOujvT074zuUWB/rWEVdfWSMbPBp6FeZRhTHJAGjX8HUH3LQ==",
+      "salt" : "95wMbJuqw2QsSx/fVrgagg==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1529054094959,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_ADMIN", "ROLE_USER", "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Admins", "/Users" ]
+  }, {
+    "id" : "94f668f6-fd2c-4d8a-98d5-98fb5eff9c74",
+    "createdTimestamp" : 1529054156042,
+    "username" : "20002",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Rajveer",
+    "lastName" : "Singh",
+    "email" : "rajveer.singh@gspann.com",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "/jfezx0t44RuJBJeGpsqzPRLenKRYY/j2L+uF/dfhLmnNVY275RP1pTqDlEPbW+ZhFgGOsu8VT/nuvJKi5d5aw==",
+      "salt" : "cL7OoPicGjFGWvvZwtl/fw==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1529054172759,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_ADMIN", "ROLE_USER", "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Admins", "/Users" ]
+  }, {
+    "id" : "53871b8b-52eb-4322-8236-700696818b51",
+    "createdTimestamp" : 1529054244692,
+    "username" : "20003",
+    "enabled" : true,
+    "totp" : false,
+    "emailVerified" : true,
+    "firstName" : "Ankit",
+    "lastName" : "Bhardwaj",
+    "email" : "ankit.bhardwaj@gspann.com",
+    "credentials" : [ {
+      "type" : "password",
+      "hashedSaltedValue" : "vtElRzOtZc9ELpPp/oybsAjCXJ/UFj/vpP2HgooYPlkNMEmRqsYrK4SzOYz2y0XFBTmrVtTgPyV3B9bGGWHb1g==",
+      "salt" : "nOvxZDafpO6zhsVL33HflA==",
+      "hashIterations" : 27500,
+      "counter" : 0,
+      "algorithm" : "pbkdf2-sha256",
+      "digits" : 0,
+      "period" : 0,
+      "createdDate" : 1529054262098,
+      "config" : { }
+    } ],
+    "disableableCredentialTypes" : [ "password" ],
+    "requiredActions" : [ ],
+    "realmRoles" : [ "ROLE_ADMIN", "ROLE_USER", "offline_access", "uma_authorization" ],
+    "clientRoles" : {
+      "account" : [ "view-profile", "manage-account" ]
+    },
+    "notBefore" : 0,
+    "groups" : [ "/Admins", "/Users" ]
+  } ]
+}

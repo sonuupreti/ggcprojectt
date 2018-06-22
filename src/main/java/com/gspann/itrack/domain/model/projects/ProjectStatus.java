@@ -29,6 +29,22 @@ public class ProjectStatus extends AbstractAssignable<String> {
     @Column(name = "DESCRIPTION", nullable = false, length = 100)
     private String description;
 	
+	public boolean isPending() {
+		return this.code().equals(CODE.PENDING.name());
+	}
+	
+	public boolean isInProgress() {
+		return this.code().equals(CODE.WIP.name());
+	}
+	
+	public boolean isOnHold() {
+		return this.code().equals(CODE.ON_HOLD.name());
+	}
+	
+	public boolean isClosed() {
+		return this.code().equals(CODE.CLOSED.name());
+	}
+	
     public static ProjectStatus of(String code, String description) {
     	ProjectStatus projectType = new ProjectStatus();
     	projectType.code = code;

@@ -40,6 +40,8 @@ public class ApplicationProperties {
 	@ToString
 //	@Component
 	public static class TimeSheet {
+
+		private LocalDate systemStartDate;
 		
 		@DurationUnit(ChronoUnit.HOURS)
 		private Duration standardDailyHours = ApplicationDefaults.TimeSheet.DEFAULT_STANDARD_DAILY_WORKING_HOURS;
@@ -47,13 +49,13 @@ public class ApplicationProperties {
 		@DurationUnit(ChronoUnit.HOURS)
 		private Duration standardWeeklyHours = ApplicationDefaults.TimeSheet.DEFAULT_STANDARD_WEEKLY_WORKING_HOURS;
 
-		private LocalDate systemStartDate;
-		
-		private DayOfWeek weekStartDay;
+		private DayOfWeek weekStartDay = ApplicationDefaults.TimeSheet.DEFAULT_WEEK_START_DAY;
 
-		private DayOfWeek weekEndDay;
+		private DayOfWeek weekEndDay = ApplicationDefaults.TimeSheet.DEFAULT_WEEK_END_DAY;
 		
 		private List<DayOfWeek> weekends = ApplicationDefaults.TimeSheet.DEFAULT_WEEK_ENDS;
+		
+		private int recentTimesheetsPageSize = ApplicationDefaults.TimeSheet.DEFAULT_RECENT_TIMESHEETS_PAGE_SIZE;
 		
 		public Duration STANDARD_DAILY_HOURS() {
 			return this.standardDailyHours;
@@ -77,6 +79,10 @@ public class ApplicationProperties {
 		
 		public List<DayOfWeek> WEEKENDS() {
 			return this.weekends;
+		}
+		
+		public int RECENT_TIMESHEETS_PAGE_SIZE() {
+			return this.recentTimesheetsPageSize;
 		}
 	}
 }

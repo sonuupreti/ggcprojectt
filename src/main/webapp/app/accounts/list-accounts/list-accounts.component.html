@@ -1,19 +1,16 @@
 
 
 <div class="list-account">
-  <div class="container"
-  fxLayout
-  fxLayout.xs="column"
-  fxLayoutAlign="center"
-  fxLayoutGap="10px"
-  fxLayoutGap.xs="0">
-<div fxFlex="50%">
+  <div class="row"
+  >
+<div class="col-sm-5">
       <h4>Accounts</h4>
       <mat-form-field style="width:65%;">
         <input (keyup)="search($event.target.value)" matInput placeholder="Search account (type customer name, account code)">
       </mat-form-field>
 </div>
-<div fxFlex="50%" style="padding-top: 15px;">
+<div class="col-sm-4"></div>
+<div class="col-sm-3" style="padding-top: 15px;">
   
   <button class="add-acount-button" mat-raised-button routerLink="/addaccount" color="primary"><mat-icon>add</mat-icon>Add Account</button>
 </div>

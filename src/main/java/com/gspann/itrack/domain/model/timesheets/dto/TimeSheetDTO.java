@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.model.common.dto;
+package com.gspann.itrack.domain.model.timesheets.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 public class TimeSheetDTO {
 	
-	private long weeklyTimeSheetId;
+	private long timesheetId;
 
 	private String resourceCode;
 	

@@ -1,0 +1,45 @@
+#prevTSView{
+    margin:20px auto;
+}
+#prevTS{
+    width:100%;
+}
+#prevTS-header{
+    background: #F4F6F9;
+    border:none;
+}
+#quickLinks{
+    color: #666;
+}
+.quick-link-icon{
+    margin:0 6px;
+    cursor:pointer;
+}
+.collapsed{
+    height: 0px;
+    min-height: 0;
+    visibility:hidden;
+}
+.expanded{
+    height: '*';
+    visibility:visible;
+}
+.contract-icon{
+    display: inline-block;
+    height: 14px;
+    width: 14px;
+    background-size: 14px 14px !important;
+    background: url('./../../../content/images/contarct-icon.png');
+}
+.apprvr-action-danger{
+    color:#ED2A2A;
+}
+.apprvr-action-success{
+    color:#1B5B08;
+}
+.apprvr-action-submitted{
+    color:#62B948;
+}
+/deep/ .popover{
+    border: 1px solid #ED2A2A;
+  }

@@ -5,6 +5,7 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMet
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -20,6 +21,7 @@ import org.hibernate.annotations.Immutable;
 
 import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 import com.gspann.itrack.domain.model.location.City;
+import com.gspann.itrack.domain.model.location.State;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,8 +38,12 @@ public class Company extends AbstractIdentifiable<Short> {
 	@NotNull
 	@Column(name = "NAME", nullable = false, length = 255)
 	private String name;
-
+	
+	@NotNull
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "company", fetch = FetchType.LAZY)
+	private Set<Department> departments = new HashSet<Department>();
 	@OneToMany(fetch = FetchType.EAGER)
+	
 	// @formatter:off
  	@JoinTable(
 	        name = "COMPANY_LOCATION_MAP",

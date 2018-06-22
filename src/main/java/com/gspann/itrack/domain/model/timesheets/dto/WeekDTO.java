@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.model.common.dto;
+package com.gspann.itrack.domain.model.timesheets.dto;
 
 import java.time.LocalDate;
 import java.util.Map;

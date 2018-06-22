@@ -2,6 +2,9 @@ package com.gspann.itrack.adapter.persistence.repository;
 
 import static org.junit.Assert.*;
 
+import java.time.LocalDate;
+import java.util.List;
+
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -15,6 +18,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.constants.ApplicationConstant;
+import com.gspann.itrack.domain.model.allocations.ResourceProjectAllocationProjection;
+import com.gspann.itrack.domain.model.timesheets.Week;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)
@@ -35,8 +40,8 @@ public class AllocationRepositoryTest {
 		String ankitResCode = "20003";
 		
 //		System.out.println(systemUnderTest.findAllAllocationSummaries(rajveerResCode));
-
-		System.out.println(systemUnderTest.findAllAllocationSummaries(manojResCode));
+		List<ResourceProjectAllocationProjection> allocations = systemUnderTest.findAllAllocationSummaries(manojResCode, Week.of(LocalDate.now()));
+		System.out.println(allocations);
 	}
 
 }

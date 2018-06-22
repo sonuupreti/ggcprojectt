@@ -1,0 +1,144 @@
+<mat-card>
+<div class="container">
+    
+</div>
+    <div class="row">
+        <div class="col-sm-3" id="viewBy">
+            <div class="container requestFilters">
+                <mat-radio-group class="example-radio-group requestFiltersRadio">
+                    <h5>View By</h5>
+                    <p></p>
+                    <mat-radio-button class="example-radio-group" checked="true" value="1" color="primary">All Requests</mat-radio-button>
+                    <mat-radio-button class="example-radio-group" value="2" color="primary">Week</mat-radio-button>
+                    <mat-radio-button class="example-radio-group" value="3" color="primary">Team Members</mat-radio-button>
+                    <mat-radio-button class="example-radio-group" value="4" color="primary">Projects</mat-radio-button>
+                </mat-radio-group>
+            </div>
+        </div>
+        <div class="col-sm-9">
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <h6 *ngIf="tabRequest==='pending'">All Requests</h6>
+                    <h6 *ngIf="tabRequest==='approved'">All Approved Requests</h6>
+                    <h6 *ngIf="tabRequest==='rejected'">All Rejected Requests</h6>
+                </div>
+                <div class="col-sm-6 text-right mx-auto">
+                    <span>
+                        <strong>SORT BY</Strong>
+                    </span>
+                    <span>
+                        <mat-form-field>
+                            <mat-select [(value)]="selected">
+                                <mat-option value="RecentFirst">Recent First</mat-option>
+                                <mat-option value="option2">Option 2</mat-option>
+                                <mat-option value="option3">Option 3</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container resourceTimeSheet" *ngFor="let timeSheetData of timeSheetData">
+                    <div class="row">
+                        <div class="col-sm-7">
+                            <strong>
+                                <span id="resourceName">{{timeSheetData.resource.value}} - </span>
+                                <span>
+                                    Week {{timeSheetData.weekDetails.week}} ({{timeSheetData.weekDetails.weekStartDate | date :'MMM'}} {{timeSheetData.weekDetails.weekStartDate
+                                    | date :'dd'}} - {{timeSheetData.weekDetails.weekEndDate | date : 'dd'}}, {{timeSheetData.weekDetails.weekEndDate
+                                    | date : 'yyyy'}})
+                                </span>
+                            </strong>
+                        </div>
+                        <div class="col-sm-3" id="recivedOn">
+                            <strong>Received on: {{timeSheetData.weekDetails.submittedDate | date}}</strong>
+                        </div>
+                        <div class="col-sm-2">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <table class="resourceTable">
+                                <thead class="weekendsColor">
+                                    <th class="tableContent resourceTableLightGray">
+                                        Projects
+                                    </th>
+                                    <th class="tableContent text-center resourceTableLightGray" *ngFor="let dates of timeSheetData.weekDetails.dailyDetails">
+                                        {{dates.date | date: 'EEE'}}
+                                        <br> {{dates.date | date: 'MMM'}} {{dates.date | date: 'dd'}}
+                                    </th>
+                                    <th class="tableContent text-center">
+                                        Total
+                                    </th>
+                                    <th colspan="2" class="text-center">
+                                        Action
+                                    </th>
+                                </thead>
+                                <tbody>
+                                    <tr *ngFor="let projectData of timeSheetData.projects" class="weekendsColor">
+                                        <td class="tableContent resourceTableLightGray" [ngStyle]="{'background': getColor(projectData.project.key)}">
+                                            {{projectData.project.key}} - {{projectData.project.value}}
+                                        </td>
+                                        <td class="tableContent text-center resourceTableWhite" [ngStyle]="{'background': getColor(projectData.project.key)}" *ngFor="let dailyEntries of projectData.dailyEntries">
+                                            <div>
+                                                <span>
+                                                    {{dailyEntries.timeEntries.hours}}
+                                                </span>
+                                                <span>
+                                                    <i [ngbPopover]="popContent" (click)="$event.stopPropagation()" placement="top" class="fa fa-comment commentLite" *ngIf="dailyEntries.timeEntries.comments"></i>
+                                                    <ng-template #popContent>
+                                                        {{dailyEntries.timeEntries.comments}}
+                                                    </ng-template>
+                                                </span>
+                                            </div>
+
+                                        </td>
+                                        <td class="tableContent text-center resourceTableWhite" [ngStyle]="{'background': getColor(projectData.project.key)}">
+                                            {{projectData.totalSubmittedHrs}}
+                                        </td>
+                                        <td class="text-center actionTd" *ngIf="getActions(projectData.project.key)">
+                                            <a *ngIf="!projectData.actions.isRejected && !projectData.actions.isApproved">
+                                                <img class="actions" src="../../assets/Tick-Mark-Outline.png"/>
+                                            </a>
+                                            <a *ngIf="projectData.actions.isApproved">
+                                                <img class="actions" src="../../assets/Tick-Mark-Fill.png"/>
+                                            </a>
+                                            <a *ngIf="projectData.actions.isRejected">
+                                                <img class="actions" src="../../assets/Cross-Fill.png"/>
+                                            </a>
+                                        </td>
+                                        <td class="text-center actionTd" *ngIf="getActions(projectData.project.key)">
+                                            <a *ngIf="!projectData.actions.isRejected && !projectData.actions.isApproved;else showCancel">
+                                                <img class="actions" src="../../assets/Cross-Outline.png"/>
+                                            </a>
+                                            <ng-template #showCancel>
+                                                   <a>cancel</a>
+                                            </ng-template>
+                                        </td>
+                                    </tr>
+                                    <tr class="weekendsColor">
+                                        <td class="tableContent resourceTableLightGray">Total Hours Per Day</td>
+                                        <td class="tableContent resourceTableLightGray text-center" *ngFor="let dates of timeSheetData.weekDetails.dailyDetails">
+                                            <div>
+                                                <span>
+                                                    {{dates.timeEntries.hours}}
+                                                </span>
+                                                <span>
+                                                    <i [ngbPopover]="totalDayComments" placement="top" class="fa fa-comment commentLite" *ngIf="dates.timeEntries.comments"></i>
+                                                    <ng-template #totalDayComments>
+                                                        {{dates.timeEntries.comments}}
+                                                    </ng-template>
+                                                </span>
+                                            </div>
+                                        </td>
+                                        <td class="tableContent resourceTableLightGray text-center">{{timeSheetData.weekDetails.totalWeekSubmitedHours}}</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</mat-card>

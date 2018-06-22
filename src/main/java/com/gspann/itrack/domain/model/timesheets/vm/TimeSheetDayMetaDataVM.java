@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.model.common.dto;
+package com.gspann.itrack.domain.model.timesheets.vm;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
@@ -16,7 +16,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode(of = "date")
-public class DayVM {
+public class TimeSheetDayMetaDataVM {
 
 	private LocalDate date;
 
@@ -26,24 +26,24 @@ public class DayVM {
 	
 	private String remarks;
 	
-	public static DayVM ofWorkingDay(final LocalDate date) {
-		DayVM dayVM = new DayVM();
+	public static TimeSheetDayMetaDataVM ofWorkingDay(final LocalDate date) {
+		TimeSheetDayMetaDataVM dayVM = new TimeSheetDayMetaDataVM();
 		dayVM.date = date;
 		dayVM.day = date.getDayOfWeek();
 		dayVM.type = DayType.WORKING_DAY;
 		return dayVM;
 	}
 	
-	public static DayVM ofWeekend(final LocalDate date) {
-		DayVM dayVM = new DayVM();
+	public static TimeSheetDayMetaDataVM ofWeekend(final LocalDate date) {
+		TimeSheetDayMetaDataVM dayVM = new TimeSheetDayMetaDataVM();
 		dayVM.date = date;
 		dayVM.day = date.getDayOfWeek();
 		dayVM.type = DayType.WEEK_END;
 		return dayVM;
 	}
 	
-	public static DayVM ofHoliday(final LocalDate date, final String occassion) {
-		DayVM dayVM = new DayVM();
+	public static TimeSheetDayMetaDataVM ofHoliday(final LocalDate date, final String occassion) {
+		TimeSheetDayMetaDataVM dayVM = new TimeSheetDayMetaDataVM();
 		dayVM.date = date;
 		dayVM.day = date.getDayOfWeek();
 		dayVM.type = DayType.HOLIDAY;

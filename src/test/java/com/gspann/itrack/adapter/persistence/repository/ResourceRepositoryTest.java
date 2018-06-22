@@ -64,23 +64,23 @@ public class ResourceRepositoryTest {
 		Resource manoj = Resource.expectedToJoinOn(LocalDate.of(2018, Month.MAY, 1)).at(gurgaon).asFullTimeEmployee()
 				.withJustAnnualSalary(Money.of(2000000, CurrencyCode.INR.name())).withName("Manoj Nautiyal")
 				.male().onDesignation(projectManager)
-				.withEmail("manoj.nautiyal@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
-				.deputeAtJoiningLocation().build();
+				.withPrimarySkills("Java, J2E").addPractice(Practice.adms())
+				.deputeAtJoiningLocation().withEmail("manoj.nautiyal@gspann.com").build();
 		systemUnderTest.saveAndFlush(manoj);
 //		admin.onboard(LocalDate.now(), iTrack);
 
 		Resource rajveer = Resource.expectedToJoinOn(LocalDate.of(2018, Month.MAY, 1)).at(gurgaon).asFullTimeEmployee()
 				.withJustAnnualSalary(Money.of(1000000, CurrencyCode.INR.name())).withName("Rajveer Singh")
 				.male().onDesignation(teamLead)
-				.withEmail("rajveer.singh@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
-				.deputeAtJoiningLocation().build();
+				.withPrimarySkills("Java, J2E").addPractice(Practice.adms())
+				.deputeAtJoiningLocation().withEmail("rajveer.singh@gspann.com").build();
 		systemUnderTest.saveAndFlush(rajveer);
 
 		Resource ankit = Resource.expectedToJoinOn(LocalDate.of(2018, Month.MAY, 1)).at(gurgaon).asFullTimeEmployee()
 				.withJustAnnualSalary(Money.of(1000000, CurrencyCode.INR.name())).withName("Ankit Bhardwaj")
 				.male().onDesignation(srSoftwareEngineer)
-				.withEmail("ankit.bhardwaj@gspann.com").withPrimarySkills("Java, J2E").addPractice(Practice.adms())
-				.deputeAtJoiningLocation().build();
+				.withPrimarySkills("Java, J2E").addPractice(Practice.adms())
+				.deputeAtJoiningLocation().withEmail("ankit.bhardwaj@gspann.com").build();
 		systemUnderTest.saveAndFlush(ankit);
 	}
 

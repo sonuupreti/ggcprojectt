@@ -8,6 +8,8 @@ import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -30,6 +32,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import lombok.experimental.var;
 
@@ -38,10 +41,11 @@ import lombok.experimental.var;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @EqualsAndHashCode(of = { "day", "weeklyTimeSheet" }, callSuper = false)
+@ToString(includeFieldNames = true, exclude = { "weeklyTimeSheet" })
 @Entity
 @Table(name = "DAILY_TIME_SHEETS")
 public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long> {
-	
+
 	@NotNull
 	@Column(name = "DATE", nullable = false)
 	private LocalDate date;
@@ -57,10 +61,6 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 
 	@NotNull
 	@Column(name = "TOTAL_HOURS", nullable = false, length = 5)
-	// @Column(name = "TOTAL_HOURS", nullable = false, length = 5, updatable =
-	// false, insertable = false)
-	// TODO: Set updatable and insertable as false and
-	// apply formula (SQL) to calculate total hours from time_sheet_Entries
 	private Duration totalHours;
 
 	@Enumerated(EnumType.ORDINAL)
@@ -84,8 +84,13 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 		return this;
 	}
 
-	public Map<String, TimeSheetEntry> projectWiseEntries() {
-		return null;
+	public Map<Project, Set<TimeSheetEntry>> projectWiseTimeEntriesMap() {
+		return this.entries.stream().collect(Collectors.groupingBy(TimeSheetEntry::project, Collectors.toCollection(
+				() -> new TreeSet<>((x, y) -> x.dailyTimeSheet().date().compareTo(y.dailyTimeSheet().date())))));
+	}
+
+	public Set<Project> projects() {
+		return this.entries.stream().map(TimeSheetEntry::project).collect(Collectors.toSet());
 	}
 
 	public static DailyTimeSheetDateBuilder withStandardHours(final Duration dailyStandardHours) {
@@ -99,7 +104,7 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 	public interface DailyTimeSheetDateBuilder {
 		public DailyTimeSheetDayTypeBuilder forDate(final LocalDate date);
 	}
-	
+
 	public interface DailyTimeSheetDayTypeBuilder {
 		public Buildable<DailyTimeSheet> forHoliday(final DayOfWeek dow, final Project... projects);
 
@@ -144,10 +149,10 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 		public DailyTimeSheetEntryBuilder and();
 	}
 
-	public static class DailyTimeSheetBuilder implements DailyTimeSheetDateBuilder, DailyTimeSheetDayTypeBuilder,
-			DailyTimeSheetEntryBuilder, DailyTimeSheetEntryCommentsBuilder, 
-			DailyTimeSheetEntryDurationBuilder, DailyTimeSheetDailyCommentsBuilder, DailyTimeSheetMoreEntryBuilder,
-			DailyTimeSheetDailyEntryCommentsBuilder, Buildable<DailyTimeSheet> {
+	public static class DailyTimeSheetBuilder
+			implements DailyTimeSheetDateBuilder, DailyTimeSheetDayTypeBuilder, DailyTimeSheetEntryBuilder,
+			DailyTimeSheetEntryCommentsBuilder, DailyTimeSheetEntryDurationBuilder, DailyTimeSheetDailyCommentsBuilder,
+			DailyTimeSheetMoreEntryBuilder, DailyTimeSheetDailyEntryCommentsBuilder, Buildable<DailyTimeSheet> {
 
 		private DailyTimeSheet dailyTimeSheet;
 		private Project project;
@@ -167,7 +172,7 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 			this.dailyTimeSheet.day = date.getDayOfWeek();
 			return this;
 		}
-		
+
 		@Override
 		public Buildable<DailyTimeSheet> forHoliday(final DayOfWeek dow, final Project... projects) {
 			this.dailyTimeSheet.day = dow;

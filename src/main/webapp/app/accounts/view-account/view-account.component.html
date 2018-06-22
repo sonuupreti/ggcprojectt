@@ -1,95 +1,90 @@
+<div class="view-account view-mode">
+  <h4 *ngIf="showMessage" class="success-message" style="margin-bottom: 25px;">{{actionMessage}}</h4>
+  <div class="row">
+    <div class="col-sm-10">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <mat-card-title>
+            <b>Account Details</b>
+          </mat-card-title>
+          <div style="margin-left: auto;order: 2;">
+            <button [hidden]="!isViewMode" mat-button (click)="enableEditMode();" color="primary">
+              <span class="fa fa-pencil-square-o"></span> Edit</button>
+            <button [hidden]="isViewMode" mat-button (click)="updateAccountDetails();" color="primary">
+              <span class="fa fa-save"></span> Save</button>
+            <button mat-button (click)="remove();" color="primary">
+              <span class="fa fa-trash"></span> Remove</button>
+          </div>
+
+        </mat-card-header>
+        <mat-card-content>
+          <div class="row">
+            <div class="col-sm-5">
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Account Code" [(ngModel)]="accountCode" [disabled]="true">
+                  <!-- <mat-hint>(This will be auto generated)</mat-hint> -->
+                </mat-form-field>
+
+              </p>
 
 
-<div class="view-account">
-    <h4 *ngIf="showMessage" style="color: lightgreen;margin-bottom: 25px;">{{actionMessage}}</h4>
-    <div
-    fxLayout
-    fxLayout.xs="column"
-    fxLayoutAlign="center"
-    fxLayoutGap="10px"
-    fxLayoutGap.xs="0">
-    <div fxFlex="80%">
-        <mat-card class="example-card">
-            <mat-card-header>
-              <mat-card-title><b>Account Details</b></mat-card-title>
-              <div style="margin-left: auto;order: 2;">
-                  <button [hidden]="!isViewMode" mat-button (click)="enableEditMode();" color="primary"><span class="fa fa-pencil-square-o"></span> Edit</button>
-                  <button [hidden]="isViewMode" mat-button (click)="updateAccountDetails();" color="primary"><span class="fa fa-save"></span> Save</button>
-                  <button mat-button (click)="remove();" color="primary"><span class="fa fa-trash"></span> Remove</button>
-              </div>
-             
-            </mat-card-header>
-            <mat-card-content>
-              <div class=""
-                 fxLayout
-                 fxLayout.xs="column"
-                 fxLayoutAlign="center"
-                 fxLayoutGap="10px"
-                 fxLayoutGap.xs="0">
-              <div fxFlex="45%">
-                  <p>
-                  <mat-form-field>
-                      <input matInput placeholder="Account Code" [(ngModel)]="accountCode" [disabled]="true">
-                      <!-- <mat-hint>(This will be auto generated)</mat-hint> -->
-                    </mat-form-field>
-                    
-                  </p>
-                
-        
-        <p>
-                    <mat-form-field>
-                        <input matInput placeholder="Customer Entity" [(ngModel)]="customerEntity" [disabled]="isViewMode">
-                      </mat-form-field>
-                    </p>
-        
-                   
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Customer Entity" [(ngModel)]="customerEntity" [disabled]="isViewMode">
+                </mat-form-field>
+              </p>
 
-                  
-                    
-                    
-                    <p>
-                        <mat-form-field>
-                            <mat-select [disabled]="isViewMode" placeholder="Account Manager" [(value)]="selectedAccountManager">
-                              <mat-option *ngFor="let list of accountManagerList" [value]="list.key">
-                                {{list.value}}
-                              </mat-option>
-                            </mat-select>
-                          </mat-form-field>
-                    </p>
-                    <p>
-                        <label class="time-tracking-label" style="color:rgba(0,0,0,.54);">Time Tracking System Available</label>
-                        <mat-radio-group [hidden]="isViewMode" [(ngModel)]="isTimeTrackingAvailable">
-                            <mat-radio-button value="1">Yes</mat-radio-button>
-                            <mat-radio-button value="0">NO</mat-radio-button>
-                          </mat-radio-group>
-                          <label [hidden]="!isViewMode"><b>{{ isTimeTrackingAvailable === 1 ? 'Yes' : 'No' }}  </b></label>
-                        </p>
-              </div>
-              <div fxFlex="10%">
-        
-              </div>
-              <div fxFlex="45%">
-                  <p>
-                      <mat-form-field>
-                          <input matInput placeholder="Customer Name" [(ngModel)]="customerName" [disabled]="isViewMode">
-                        </mat-form-field>
-          </p>  
-          <p>
-              <mat-form-field>
+
+
+
+
+
+              <p>
+                <mat-form-field>
+                  <mat-select [disabled]="isViewMode" placeholder="Account Manager" [(value)]="selectedAccountManager">
+                    <mat-option *ngFor="let list of accountManagerList" [value]="list.key">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </p>
+              <p>
+                <label class="time-tracking-label" style="color:rgba(0,0,0,.54);">Time Tracking System Available</label>
+                <mat-radio-group [hidden]="isViewMode" [(ngModel)]="isTimeTrackingAvailable">
+                  <mat-radio-button value="1">Yes</mat-radio-button>
+                  <mat-radio-button value="0">NO</mat-radio-button>
+                </mat-radio-group>
+                <label [hidden]="!isViewMode">
+                  <b>{{ isTimeTrackingAvailable === 1 ? 'Yes' : 'No' }} </b>
+                </label>
+              </p>
+            </div>
+            <div class="col-sm-1">
+
+            </div>
+            <div class="col-sm-5">
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Customer Name" [(ngModel)]="customerName" [disabled]="isViewMode">
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field>
                   <input matInput placeholder="Customer Reporting Manager" [(ngModel)]="customerReportingManager" [disabled]="isViewMode">
                 </mat-form-field>
-          </p>
-                <p>
-                 <mat-form-field>
-                        <mat-select [(value)]="selectedLocation"  [disabled]="isViewMode" placeholder="Location">
-                          <mat-option *ngFor="let list of locationList" [value]="list.key">
-                            {{list.value}}
-                          </mat-option>
-                        </mat-select>
-                      </mat-form-field>
-                    </p>
-                    
-                    <!-- <p>
+              </p>
+              <p>
+                <mat-form-field>
+                  <mat-select [(value)]="selectedLocation" [disabled]="isViewMode" placeholder="Location">
+                    <mat-option *ngFor="let list of locationList" [value]="list.key">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </p>
+
+              <!-- <p>
                         <label class="time-tracking-label" style="color:rgba(0,0,0,.54);">Time Tracking System Available</label>
                         <mat-radio-group [hidden]="isViewMode" [(ngModel)]="isTimeTrackingAvailable">
                             <mat-radio-button value="1">Yes</mat-radio-button>
@@ -97,28 +92,26 @@
                           </mat-radio-group>
                           <label [hidden]="!isViewMode"><b>{{ isTimeTrackingAvailable === 1 ? 'Yes' : 'No' }}  </b></label>
                         </p> -->
-              </div>
             </div>
-            </mat-card-content>
-          </mat-card>
-    
+          </div>
+        </mat-card-content>
+      </mat-card>
+
     </div>
-    <div fxFlex="20%" class="quick-actions">
-        <p>
-          <b>Quick Actions</b>
-        </p>
-        <p>
-          <button mat-raised-button  color="primary" >Add SOWs</button>
-        </p>
-        <p>
-          <button mat-raised-button  color="primary" routerLink="/projects/add-project">Add Projects</button>
-        </p>
+    <div class="col-sm-2 quick-actions">
+      <p>
+        <b>Quick Actions</b>
+      </p>
+      <p>
+        <button mat-raised-button color="primary">Add SOWs</button>
+      </p>
+      <p>
+        <button mat-raised-button color="primary" (click)="navigateToProjectPage();">Add Projects</button>
+      </p>
     </div>
     <div>
 
 
     </div>
-    </div>
-  <!-- <h4>Account Details</h4> -->
-  
+  </div>
 </div>

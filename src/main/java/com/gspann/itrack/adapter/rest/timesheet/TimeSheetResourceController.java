@@ -1,18 +1,18 @@
-package com.gspann.itrack.adapter.rest;
+package com.gspann.itrack.adapter.rest.timesheet;
+
+import static com.gspann.itrack.adapter.rest.timesheet.TimeSheetLinks.*;
+import static com.gspann.itrack.common.constants.RestConstant.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
-import java.util.LinkedHashSet;
-import java.util.List;
+import java.time.LocalDate;
+import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.validation.Valid;
 
-import org.springframework.core.env.Environment;
-import org.springframework.data.domain.Pageable;
+import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,107 +21,156 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.gspann.itrack.adapter.rest.util.HeaderUtil;
-import com.gspann.itrack.domain.model.common.dto.AccountDTO;
-import com.gspann.itrack.domain.model.common.dto.DayDTO;
-import com.gspann.itrack.domain.model.common.dto.TimeEntryDTO;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetDTO;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetMetaDataVM;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetStatusType;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetVM;
-import com.gspann.itrack.domain.model.common.dto.TimeSheetActionType;
-import com.gspann.itrack.domain.model.common.dto.WeekDTO;
-import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
+import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
+import com.gspann.itrack.domain.model.timesheets.dto.TimeSheetDTO;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
 import com.gspann.itrack.infra.config.ApplicationProperties;
 
-import lombok.experimental.var;
+import io.github.jhipster.web.util.ResponseUtil;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
  * REST controller for managing Time sheets.
  */
 @RestController
-@RequestMapping("/api/timesheets")
+@RequestMapping(TIMESHEET)
+@ExposesResourceFor(TimeSheetResource.class)
+@RequiredArgsConstructor
 @Slf4j
-public class TimeSheetResource {
+public class TimeSheetResourceController {
 
-	private static final String ENTITY_NAME = "timesheet";
-
+	@NonNull
 	private final TimesheetManagementService timesheetManagementService;
+
+	@NonNull
+	private final ApplicationProperties applicationProperties;
 	
-    private final Environment env;
+	@NonNull
+	private final TimeSheetLinks timesheetLinks;
 
-    private final ApplicationProperties applicationProperties;
+//	public TimeSheetResourceController(final TimesheetManagementService timesheetManagementService,
+//			final ApplicationProperties applicationProperties) {
+//		this.timesheetManagementService = timesheetManagementService;
+//		this.applicationProperties = applicationProperties;
+//	}
 
-	public TimeSheetResource(final TimesheetManagementService timesheetManagementService, final Environment env, final ApplicationProperties applicationProperties) {
-		this.timesheetManagementService = timesheetManagementService;
-		this.env = env;
-		this.applicationProperties = applicationProperties;
+	private Week getInputWeek(final Optional<LocalDate> date) {
+		Week currentWeek = Week.current(applicationProperties.timeSheet().WEEK_START_DAY(),
+				applicationProperties.timeSheet().WEEK_END_DAY());
+		LocalDate systemStartDate = applicationProperties.timeSheet().SYSTEM_START_DATE();
+
+		Week forWeek = null;
+		if (date.isPresent()) {
+			if (date.get().isAfter(currentWeek.endingOn()) || date.get().isBefore(systemStartDate)) {
+				throw new IllegalArgumentException("input date path variable : " + date.get() + " must be between : "
+						+ systemStartDate + " and " + currentWeek.endingOn() + ", both ends inclusive");
+			} else {
+				forWeek = Week.containingDate(date.get(), applicationProperties.timeSheet().WEEK_START_DAY(),
+						applicationProperties.timeSheet().WEEK_END_DAY());
+			}
+		} else {
+			forWeek = Week.current(applicationProperties.timeSheet().WEEK_START_DAY(),
+					applicationProperties.timeSheet().WEEK_END_DAY());
+		}
+		return forWeek;
 	}
 
-	@GetMapping("/initSubmission/{resourceCode}")
+	private void updateNextAndPreviousWeeks(final TimeSheetResource timeSheetResource) {
+		Week forWeek = Week.of(timeSheetResource.getWeekDetails().getWeekStartDate(),
+				timeSheetResource.getWeekDetails().getWeekEndDate());
+		Map<Week, TimeSheetWeekStatusVM> nextAndPreviousWeekTimesheetStatuses = timesheetManagementService
+				.getWeeklyStatusesForNextAndPreviousWeeks(timeSheetResource.getResource().getKey(),
+						forWeek);
+		timeSheetResource.setNextWeek(nextAndPreviousWeekTimesheetStatuses.get(forWeek.next()));
+		timeSheetResource.setPreviousWeek(nextAndPreviousWeekTimesheetStatuses.get(forWeek.previous()));
+	}
+
+	@GetMapping(TIMESHEET_WEEKLY)
 	@Timed
-	public ResponseEntity<TimeSheetMetaDataVM> initTimesheetSubmission(@PathVariable String resourceCode, final Principal principal) {
+	public ResponseEntity<TimeSheetResource> weekly(
+			@RequestParam(value = "date", required = false) final Optional<LocalDate> date, final Principal principal) {
+		System.out.println("????? " + principal.getName());
 		log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
-		System.out.println("????????????? -> " + applicationProperties);
-		return new ResponseEntity<TimeSheetMetaDataVM>(timesheetManagementService.getTimeSheetMetaData(resourceCode),
-				HttpStatus.OK);
+		String resourceCode = principal.getName();
+		Week forWeek = getInputWeek(date);
+		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService
+				.getTimeSheetVMByResourceAndWeek(resourceCode, forWeek);
+
+		if (timeSheetResource.isPresent()) {
+			// TODO: Think about making the call parallel
+			TimeSheetResource timesheet = timeSheetResource.get();
+			updateNextAndPreviousWeeks(timesheet);
+			try {
+				timesheet.add(timesheetLinks.getLinks(timesheet));
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+			return new ResponseEntity<TimeSheetResource>(timeSheetResource.get(), HttpStatus.OK);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
 	}
-	/*
-	 * public ResponseEntity<TimeSheetSubmissionPageVM>
-	 * getTimeSheetSubmissionPageVM(HttpServletRequest request) {
-	 * log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>"); String
-	 * manojResCode = "20001"; return new
-	 * ResponseEntity<TimeSheetSubmissionPageVM>(timesheetManagementService.
-	 * getTimeSheetSubmissionPageVM(manojResCode), HttpStatus.OK); }
-	 */
+
+	@GetMapping(TIMESHEET_WEEKLY + SLASH + PATH_VARIABLE_ID)
+	@Timed
+	public ResponseEntity<TimeSheetResource> weekly(@PathVariable final long id,
+			final Principal principal) {
+		log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
+		String resourceCode = principal.getName();
+
+		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id, resourceCode);
+		if (timeSheetResource.isPresent()) {
+			// TODO: Think about making the call parallel
+			TimeSheetResource timesheet = timeSheetResource.get();
+			updateNextAndPreviousWeeks(timesheet);
+			try {
+				timesheet.add(timesheetLinks.getLinks(timesheet));
+			} catch (URISyntaxException e) {
+				e.printStackTrace();
+			}
+			return new ResponseEntity<TimeSheetResource>(timeSheetResource.get(), HttpStatus.OK);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
 
 	@PostMapping
 	@Timed
-	public ResponseEntity<TimeSheetVM> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet)
+	public ResponseEntity<Void> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet)
 			throws URISyntaxException {
 		log.debug("REST request to  create TimeSheet : {}", timesheet);
 		System.out.println("input timeSheet -->" + timesheet);
-		for(var v: timesheet.getWeek().getDailyEntries()) {
-			System.out.println(v.getDate());
-		}
-		TimeSheetMetaDataVM timeSheetMetaDataVM = timesheetManagementService.getTimeSheetMetaData(timesheet.getResourceCode());
-		
-		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(timesheet, timeSheetMetaDataVM.getResourceAllocationSummary().getProjects());
+
+		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(timesheet);
 		if (weeklyTimeSheet.isPresent()) {
-			WeeklyTimeSheet createdTimesheet = weeklyTimeSheet.get();
-			TimeSheetVM timeSheetVM = new TimeSheetVM();
-			timeSheetVM.setWeeklyTimeSheetId(createdTimesheet.id());
-			timeSheetVM.setStatus(createdTimesheet.status() == TimesheetStatus.SAVED ? TimeSheetStatusType.SAVED
-					: TimeSheetStatusType.SUBMITTED);
-			Set<DayDTO> dailyEntries = new TreeSet<>((x, y) -> x.getDate().compareTo(y.getDate()));
-			
-			for (var dailyEntry : createdTimesheet.dailyTimeSheets()) {
-				Set<TimeEntryDTO> timeEntries = new LinkedHashSet<>(5);
-				for (var entry : dailyEntry.entries()) {
-					timeEntries.add(
-							TimeEntryDTO.of(entry.project().code(), (int) entry.hours.toHours(), entry.comments()));
-				}
-				dailyEntries.add(DayDTO.of(dailyEntry.date(), dailyEntry.dailyComments(), timeEntries));
-			}
-			WeekDTO weekDTO = WeekDTO.of(createdTimesheet.week().startingFrom(), dailyEntries);
-			timeSheetVM.setWeekDetails(weekDTO);
-			
-			timeSheetMetaDataVM.setActions(createdTimesheet.status() == TimesheetStatus.SUBMITTED
-					? new TimeSheetActionType[] { TimeSheetActionType.NONE }
-					: new TimeSheetActionType[] { TimeSheetActionType.SUBMIT });
-			timeSheetVM.setTimesheetMetaData(timeSheetMetaDataVM);
-			return ResponseEntity.created(new URI("/api/timesheets/" + timeSheetVM.getWeeklyTimeSheetId()))
-					.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "" + timeSheetVM.getWeeklyTimeSheetId()))
-					.body(timeSheetVM);
+			return ResponseEntity.created(new URI(TIMESHEET + SLASH + weeklyTimeSheet.get().id()))
+					.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "" + weeklyTimeSheet.get().id()))
+					.build();
 		} else {
 			return null;
 		}
+	}
+
+	@GetMapping(SLASH + PATH_VARIABLE_ID)
+	@Timed
+	public ResponseEntity<TimeSheetResource> getTimesheetById(@PathVariable long id,
+			final Principal principal) {
+		log.debug("REST request to getTimesheet : {}", id);
+		String resourceCode = principal.getName();
+		// TODO: Apply role here, only the timesheet owner resource or approver should be able to view
+		
+		return ResponseUtil.wrapOrNotFound(timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id, resourceCode));
+
 	}
 
 	/**
@@ -157,24 +206,16 @@ public class TimeSheetResource {
 	 * @return the ResponseEntity with status 200 (OK) and the list of accounts in
 	 *         body
 	 */
-	@GetMapping
-	@Timed
-	public ResponseEntity<List<AccountDTO>> listTimesheets(Pageable pageable) {
-		log.debug("REST request to get a page of Account");
-		// Page<AccountDTO> page = accountsManagementService.findAll(pageable);
-		// HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page,
-		// "/api/accounts");
-		// return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-
-		return null;
-	}
-
-	// @GetMapping("/accounts/{id}")
+	// @GetMapping
 	// @Timed
-	// public ResponseEntity<> getTimesheet(@PathVariable long id) {
-	// log.debug("REST request to get Accounts : {}", id);
-	// AccountDTO accountDTO = accountsManagementService.findOne(id);
-	// return ResponseUtil.wrapOrNotFound(Optional.ofNullable(accountDTO));
+	// public ResponseEntity<List<AccountDTO>> listTimesheets(Pageable pageable) {
+	// log.debug("REST request to get a page of Account");
+	// // Page<AccountDTO> page = accountsManagementService.findAll(pageable);
+	// // HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page,
+	// // "/api/accounts");
+	// // return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	//
+	// return null;
 	// }
+
 }

@@ -30,6 +30,10 @@ public class ProjectType extends AbstractAssignable<String> {
     @Column(name = "DESCRIPTION", nullable = false, length = 100)
     private String description;
 	
+	public boolean isLeaveType() {
+		return this.code.equals(CODE.PAID_LEAVE.value()) || this.code.equals(CODE.UNPAID_LEAVE.value());
+	}
+	
     public static ProjectType of(String code, String description) {
     	ProjectType projectType = new ProjectType();
     	projectType.code = code;

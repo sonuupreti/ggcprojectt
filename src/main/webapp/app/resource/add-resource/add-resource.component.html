@@ -1,0 +1,206 @@
+<div class="add-resource">
+  <h4>Add New Resource</h4>
+  <mat-card class="example-card">
+    <mat-card-header>
+      <mat-card-title>
+        <b>Please enter the details below </b>
+      </mat-card-title>
+    </mat-card-header>
+    <mat-card-content>
+      <form [formGroup]="resourceForm" novalidate (submit)="saveData($event)">
+        <div class="row">
+          <div class="col-sm-5">
+            <p>
+              <mat-form-field>
+                <input matInput placeholder="Resource Name" formControlName="resourceName" required>
+                <mat-error *ngIf="resourceForm.get('resourceName').hasError('required')">This is required field</mat-error>
+              </mat-form-field>
+            </p>
+
+            <p>
+              <mat-form-field>
+                <mat-select placeholder="Company Name" formControlName="companyName" required>
+                  <mat-option *ngFor="let list of companiesList" [value]="list">
+                    {{list.value}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="resourceForm.get('companyName').hasError('required')">This is required field</mat-error>
+              </mat-form-field>
+            </p>
+
+            <p>
+              <mat-form-field>
+                <mat-select placeholder="Department" formControlName="department" required>
+                  <mat-option *ngFor="let list of departmentList" [value]="list">
+                    {{list.value}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="resourceForm.get('department').hasError('required')">This is required field</mat-error>
+              </mat-form-field>
+            </p>
+
+
+            <p>
+              <mat-form-field>
+                <mat-select placeholder="Designation" formControlName="designation" required>
+                  <mat-option *ngFor="let list of designationList" [value]="list">
+                    {{list.value}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="resourceForm.get('designation').hasError('required')">This is required field</mat-error>
+              </mat-form-field>
+            </p>
+
+
+            <p>
+              <label class="time-tracking-label" style="color:rgba(0,0,0,.54);">Employee Type</label>
+              <mat-radio-group formControlName="employeeType" required>
+                <mat-radio-button value="1">FTE</mat-radio-button>
+                <mat-radio-button value="2">Contractor</mat-radio-button>
+                <mat-radio-button value="3">Sub-Contractor</mat-radio-button>
+                <mat-error *ngIf="resourceForm.get('employeeType').hasError('required')">This is required field</mat-error>
+              </mat-radio-group>
+            </p>
+            <div *ngIf="resourceForm.get('employeeType').value === '1'">
+
+              <p>
+                <mat-form-field>
+                  <mat-select placeholder="Currency" formControlName="currency" required>
+                    <mat-option *ngFor="let list of currencyList" [value]="list">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">This is required field</mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Salary" formControlName="anualPackage" required>
+                  <mat-hint>(Please enter cost per hour)</mat-hint>
+
+                  <div matSuffix [ngbPopover]="popContent" placement="top">
+                    <i class="fa fa-question-circle"></i>
+                  </div>
+                  <ng-template #popContent>
+                    {{rateMessage}}
+                  </ng-template>
+
+                  <mat-error *ngIf="resourceForm.get('anualPackage').hasError('required')">This is required field</mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Comission" formControlName="commision" required>
+                  <mat-error *ngIf="resourceForm.get('commision').hasError('required')">This is required field</mat-error>
+                </mat-form-field>
+
+              </p>
+
+              <p>
+                  <mat-form-field>
+                    <input matInput placeholder="bonus" formControlName="commision" required>
+                    <mat-error *ngIf="resourceForm.get('bonus').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+  
+                </p>
+            </div>
+
+            <div *ngIf="resourceForm.get('employeeType').value === '2' || resourceForm.get('employeeType').value === '3'">
+              <p>
+                <mat-form-field>
+                  <mat-select placeholder="Currency" formControlName="currency" required>
+                    <mat-option *ngFor="let list of currencyList" [value]="list">
+                      {{list.value}}
+                    </mat-option>
+                  </mat-select>
+                  <mat-error *ngIf="resourceForm.get('currency').hasError('required')">This is required field</mat-error>
+                </mat-form-field>
+              </p>
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Rate Per Hour" formControlName="ratePerHour" required>
+                  <mat-error *ngIf="resourceForm.get('ratePerHour').hasError('required')">This is required field</mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker3" placeholder="Start Date" formControlName="startDate" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker3"></mat-datepicker-toggle>
+                  <mat-datepicker #picker3></mat-datepicker>
+                  <mat-error *ngIf="resourceForm.get('startDate').hasError('required')">This is required field</mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field>
+                  <input matInput [matDatepicker]="picker4" placeholder="End Date" formControlName="endDate" required>
+                  <mat-datepicker-toggle matSuffix [for]="picker4"></mat-datepicker-toggle>
+                  <mat-datepicker #picker4></mat-datepicker>
+                  <mat-error *ngIf="resourceForm.get('endDate').hasError('required')">Required</mat-error>
+                </mat-form-field>
+              </p>
+
+              <p>
+                <mat-form-field>
+                  <input matInput placeholder="Remarks(if any)" formControlName="remarks">
+                </mat-form-field>
+              </p>
+
+            </div>
+
+
+          </div>
+          <div class="col-sm-1">
+          </div>
+          <div class="col-sm-5">
+            <p>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker1" placeholder="Expected Joining Date" formControlName="joiningDate" required>
+                <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                <mat-datepicker #picker1></mat-datepicker>
+                <mat-error *ngIf="resourceForm.get('joiningDate').hasError('required')">This is required field</mat-error>
+              </mat-form-field>
+            </p>
+
+
+            <p>
+              <mat-form-field>
+                <mat-select placeholder="Base Locaton" formControlName="baseLocation" required>
+                  <mat-option *ngFor="let list of locationsList" [value]="list">
+                    {{list.value}}
+                  </mat-option>
+                </mat-select>
+                <mat-error *ngIf="resourceForm.get('baseLocation').hasError('required')">This is required field</mat-error>
+              </mat-form-field>
+            </p>
+            <mat-form-field class="demo-chip-list">
+              <mat-chip-list ngDefaultControl #chipList formControlName="technology" required>
+                <mat-chip *ngFor="let list of primarySkill" [selectable]="selectable" [removable]="removable" (removed)="remove(list)">
+                  {{list.value}}
+                  <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                </mat-chip>
+                <input placeholder="Technologies" #technologyInput [formControl]="primarySkillCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)"
+                />
+                
+              </mat-chip-list>
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                <mat-option *ngFor="let list of filteredTechnologies" [value]="list">
+                  {{ list.value }}
+                </mat-option>
+              </mat-autocomplete>
+              <span matSuffix>
+                <mat-icon>search</mat-icon>
+              </span>
+              <mat-error *ngIf="resourceForm.get('technology').hasError('required')">This is required field</mat-error>
+            </mat-form-field>
+
+          </div>
+        </div>
+        <button type="submit" mat-raised-button color="primary">Create Resource</button>
+        <button type="button" mat-raised-button color="primary" (click)="reset();">Reset All</button>
+      </form>
+    </mat-card-content>
+  </mat-card>
+</div>

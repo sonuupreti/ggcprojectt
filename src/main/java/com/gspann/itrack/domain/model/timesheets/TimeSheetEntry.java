@@ -22,6 +22,7 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 
 @Getter
@@ -29,6 +30,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @EqualsAndHashCode(of = { "project", "dailyTimeSheet" }, callSuper = false)
+@ToString(includeFieldNames = true, exclude = "dailyTimeSheet")
 @Entity
 @Table(name = "TIME_SHEET_ENTRIES")
 public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long> {
@@ -40,7 +42,7 @@ public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long
 
 	@NotNull
 	@Column(name = "HOURS", nullable = false, length = 5)
-	public Duration hours;
+	private Duration hours;
 
 	@Column(name = "COMMENTS", nullable = true, length = 255)
 	private String comments;
@@ -53,17 +55,6 @@ public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long
 	public TimeSheetEntry setDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
 		this.dailyTimeSheet = dailyTimeSheet;
 		return this;
-	}
-
-	@Column(name = "IS_APPROVED", length = 1)
-	private boolean isApproved = false;
-
-	public void approve() {
-		this.isApproved = true;
-	}
-
-	public void reject() {
-		this.isApproved = false;
 	}
 
 	public static TimeSheetEntry forHoliday(final Project project) {

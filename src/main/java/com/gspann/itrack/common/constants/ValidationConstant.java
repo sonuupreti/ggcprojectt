@@ -1,5 +1,8 @@
 package com.gspann.itrack.common.constants;
 
+import lombok.Value;
+
+@Value
 public final class ValidationConstant {
 	
 	public static final class REGEX {

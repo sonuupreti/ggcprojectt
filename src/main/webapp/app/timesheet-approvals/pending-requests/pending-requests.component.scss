@@ -1,0 +1,76 @@
+.example-radio-group {
+  display: inline-flex;
+  flex-direction: column;
+  margin:0.2em; 
+}
+.requestFiltersRadio{
+  margin-top: 1em;
+}
+
+.example-radio-button {
+  margin: 5px;
+}
+
+.example-selected-value {
+  margin: 15px 0;
+}
+#viewBy{
+  background:#8ebfd636;
+}
+#resourceName{
+  color: #0EB3F7;
+}
+#recivedOn{
+  color: #2e303387;
+}
+.resourceTimeSheet{
+  margin: 1em;
+  border: 1px solid #0EB3F7;
+  padding: 1.5em;
+  background: #f4f6f97a;
+}
+
+.resourceTable{
+  width:100%;
+  margin-bottom: 1em;
+  margin-top: 1em;
+}
+.tableContent{
+  border: 1px solid #3333332e;
+  padding: 0.6em;
+}
+.resourceTableLightGray{
+  background:#F4F6F9;
+}
+.resourceTableWhite{
+  background:#FFFFFF;
+}
+.resourceTableYellow{
+  background: red;
+}
+.weekendsColor td:nth-child(7),.weekendsColor td:nth-child(8), .weekendsColor th:nth-child(7), .weekendsColor th:nth-child(8){
+  background: #EBF3DB;
+}
+.leffSideFilters{
+  margin: 1.5em;
+}
+/deep/ .popover{
+  border: 2px solid #0EB3F7;
+}
+/* /deep/ .bs-popover-auto[x-placement^=top] .arrow::before, .bs-popover-top .arrow::before{
+  border-top-color: #0EB3F7;
+}  */
+
+.commentLite{
+  opacity: 0.5;
+}
+.requestFilters{
+  margin: 1em;
+}
+.actions{
+  width:50%;
+}
+
+.actionTd{
+  width:6%;
+}

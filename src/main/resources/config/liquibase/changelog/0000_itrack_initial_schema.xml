@@ -149,6 +149,8 @@
 			</column>
 		</createTable>
 
+	
+		
 		<createTable tableName="holiday_calendars">
 			<column name="year" type="smallint">
 				<constraints primaryKeyName="pk_holiday_calendar_year"
@@ -241,7 +243,7 @@
 <!-- 					uniqueConstraintName="unq_resources_login_id" /> -->
 <!-- 			</column> -->
 			<column name="email_id" type="varchar(255)">
-				<constraints unique="true" nullable="false"
+				<constraints unique="true" nullable="true"
 					uniqueConstraintName="unq_resources_email_id" />
 			</column>
 			<column name="greyt_hr_id" type="varchar(100)">
@@ -330,6 +332,20 @@
 					nullable="true" />
 			</column>
 		</createTable>
+		
+			<createTable tableName="technologies">
+			<column name="id" type="int">
+				<constraints primaryKeyName="pk_technology_id"
+					primaryKey="true" nullable="false" />
+			</column>
+			<column name="name" type="varchar(255)">
+				<constraints unique="true" nullable="false"
+					uniqueConstraintName="unq_technology_name" />
+			</column>
+		</createTable>
+		
+		
+		
 
 		<createTable tableName="resource_practice_map">
 			<column name="resource_code" type="varchar(20)">
@@ -492,9 +508,6 @@
 			<column name="till_date" type="date">
 				<constraints nullable="true" />
 			</column>
-			<column name="technologies" type="varchar(255)">
-				<constraints nullable="false" />
-			</column>
 			<column name="account_code" type="varchar(20)">
 				<constraints foreignKeyName="fk_projects_account_code"
 					referencedColumnNames="code" referencedTableName="accounts"
@@ -537,6 +550,22 @@
 					nullable="false" />
 			</column>
 		</createTable>
+		
+		<createTable tableName="project_technology_map">
+			<column name="project_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_project_technology_map_project_code"
+					referencedColumnNames="code" referencedTableName="projects"
+					nullable="false" />
+			</column>
+				<column name="technology_id" type="int">
+				<constraints foreignKeyName="fk_project_technology_map_technology_id"
+					referencedColumnNames="id" referencedTableName="technologies"
+					nullable="false" />
+			</column>
+		</createTable>
+		<addPrimaryKey constraintName="pk_project_technology_map"
+			columnNames="project_code, technology_id" tableName="project_technology_map" />
+		
 		<addPrimaryKey constraintName="pk_project_practice_map"
 			columnNames="project_code, practice_code" tableName="project_practice_map" />
 

@@ -1,0 +1,177 @@
+<div class="view-project view-mode">
+  <h4 *ngIf="showMessage" class="success-message" style="margin-bottom: 25px;">{{actionMessage}}</h4>
+  <div class="row">
+    <div class="col-sm-10">
+      <mat-card class="example-card">
+        <mat-card-header>
+          <mat-card-title>
+            <b>Project Details</b>
+          </mat-card-title>
+          <div style="margin-left: auto;order: 2;">
+            <button [hidden]="!isViewMode" mat-button (click)="enableEditMode();" color="primary">
+              <span class="fa fa-pencil-square-o"></span> Edit</button>
+            <button [hidden]="isViewMode" mat-button (click)="updateProjectDetails();" color="primary">
+              <span class="fa fa-save"></span> Save</button>
+          </div>
+
+        </mat-card-header>
+        <mat-card-content>
+          <form [formGroup]="projectForm" novalidate>
+            <div class="row">
+              <div class="col-sm-5">
+                <p>
+                  <mat-form-field>
+                    <input matInput placeholder="Project ID" formControlName="projectCode" [disabled]="true">
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <mat-select placeholder="Account Name" formControlName="accountCode" required>
+                      <mat-option *ngFor="let list of accountList" [value]="list">
+                        {{list.value}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="projectForm.get('accountCode').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <input matInput placeholder="Customer Project ID" formControlName="customerProjectId">
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <input matInput placeholder="Customer Manager" formControlName="customerManager" required>
+                    <mat-error *ngIf="projectForm.get('customerManager').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <input matInput placeholder="Project Name" formControlName="projectName" required>
+                    <mat-error *ngIf="projectForm.get('projectName').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <mat-select placeholder="Project Type" formControlName="projectTypeCode" required>
+                      <mat-option *ngFor="let list of projectTypeList" [value]="list">
+                        {{list.value}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="projectForm.get('projectTypeCode').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <mat-select placeholder="Project Location" formControlName="cityId" required>
+                      <mat-option *ngFor="let list of locationsList" [value]="list">
+                        {{list.value}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="projectForm.get('cityId').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field style="width: 40%;float: left;margin-right: 10px;">
+                    <input matInput [matDatepicker]="picker" placeholder="Start Date" formControlName="startDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                    <mat-datepicker #picker></mat-datepicker>
+                    <mat-error *ngIf="projectForm.get('startDate').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                  <mat-form-field style="width: 40%;">
+                    <input matInput [matDatepicker]="picker1" placeholder="End Date" formControlName="endDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                    <mat-datepicker #picker1></mat-datepicker>
+                    <mat-error *ngIf="projectForm.get('endDate').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+              </div>
+              <div class="col-sm-1">
+
+              </div>
+              <div class="col-sm-5">
+                <p>
+                  <mat-form-field>
+                    <mat-select placeholder="Project Offshore Manager" formControlName="offshoreManagerCode" required>
+                      <mat-option *ngFor="let list of resourceManagerList" [value]="list">
+                        {{list.value}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="projectForm.get('endDate').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <mat-select placeholder="Project Onshore Manager" formControlName="onshoreManagerCode" required>
+                      <mat-option *ngFor="let list of resourceManagerList" [value]="list">
+                        {{list.value}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="projectForm.get('onshoreManagerCode').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <mat-select [compareWith]="compareFn" placeholder="Project Practices" [hidden]="isViewMode"  formControlName="practices" multiple required>
+                      <mat-option *ngFor="let list of practiceList" [value]="list">
+                        {{list.value}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="projectForm.get('practices').hasError('required')">This is required field</mat-error>
+                    <label class="custom-chip" *ngFor="let list of projectForm.get('practices').value" [hidden]="!isViewMode">
+                      {{list.value}}
+                  </label>
+                  </mat-form-field>
+                </p>
+                <p>
+                  <mat-form-field>
+                    <mat-select placeholder="Project Status" formControlName="projectStatusCode" >
+                      <mat-option *ngFor="let list of statusList" [value]="list">
+                        {{list.value}}
+                      </mat-option>
+                    </mat-select>
+                    <mat-error *ngIf="projectForm.get('projectStatusCode').hasError('required')">This is required field</mat-error>
+                  </mat-form-field>
+                </p>
+                <mat-form-field class="demo-chip-list">
+                  <mat-chip-list ngDefaultControl #chipList formControlName="technology" [hidden]="isViewMode" [disabled]="isViewMode" required>
+                    <mat-chip *ngFor="let list of technologies" [selectable]="selectable" [removable]="removable" (removed)="remove(list)">
+                      {{list.value}}
+                      <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                    </mat-chip>
+                    <input placeholder="Technologies" #technologyInput [formControl]="technologyCtrl" [matAutocomplete]="auto" [matChipInputFor]="chipList"
+                      [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur" (matChipInputTokenEnd)="add($event)"
+                    />
+                    
+                  </mat-chip-list>
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                    <mat-option *ngFor="let list of filteredTechnologies" [value]="list">
+                      {{ list.value }}
+                    </mat-option>
+                  </mat-autocomplete>
+                  <span matSuffix [hidden]="isViewMode">
+                    <mat-icon>search</mat-icon>
+                  </span>
+                  <label class="custom-chip" *ngFor="let list of technologies" [hidden]="!isViewMode">
+                      {{list.value}}
+                  </label>
+                  <mat-error *ngIf="projectForm.get('technology').hasError('required')">This is required field</mat-error>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </mat-card-content>
+      </mat-card>
+    </div>
+    <div class="col-sm-2 quick-actions">
+      <p>
+        <b>Quick Actions</b>
+      </p>
+      <p>
+        <button mat-raised-button color="primary">Allocate Resouces</button>
+      </p>
+    </div>
+    <div>
+    </div>
+  </div>
+</div>

@@ -92,8 +92,8 @@ public class AccountRepositoryTest {
 //			locationPairs.add(loc);
 //		}
 		
-		WeeklyTimeSheet timesheet = timeSheetRepository.findTimeSheetByWeekStartDate(LocalDate.of(2018, 5, 14)).get();
-		System.out.println(timesheet);
+//		WeeklyTimeSheet timesheet = timeSheetRepository.findTimeSheetByWeekStartDate(LocalDate.of(2018, 5, 14)).get();
+//		System.out.println(timesheet);
 	}
 
 	// @Test

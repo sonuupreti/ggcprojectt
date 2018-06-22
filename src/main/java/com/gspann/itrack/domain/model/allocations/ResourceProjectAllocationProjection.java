@@ -1,4 +1,6 @@
-package com.gspann.itrack.domain.model.common.dto;
+package com.gspann.itrack.domain.model.allocations;
+
+import java.time.LocalDate;
 
 import com.gspann.itrack.domain.model.location.City;
 
@@ -15,7 +17,7 @@ import lombok.experimental.Accessors;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
-public class ResourceProjectAllocationSummary {
+public class ResourceProjectAllocationProjection {
 
 	private String resourceCode;
 
@@ -26,6 +28,10 @@ public class ResourceProjectAllocationSummary {
 	private String projectCode;
 	
 	private String projectName;
+	
+	private LocalDate fromDate;
+
+	private LocalDate tillDate;
 	
 	private String projectTypeCode;
 

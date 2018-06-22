@@ -8,22 +8,25 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.gspann.itrack.domain.model.common.type.BaseIdentifiableVersionableEntity;
@@ -37,19 +40,41 @@ import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 import lombok.experimental.Accessors;
-import lombok.experimental.var;
 
 @Getter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
 @AllArgsConstructor(staticName = "of")
 @EqualsAndHashCode(of = { "week", "resource" }, callSuper = false)
+@ToString(includeFieldNames = true, exclude = { "resource", "clientTimeSheetScreenShot" })
 @Entity
-@Table(name = "WEEKLY_TIME_SHEETS")
+//@formatter:off
+@Table(name = "WEEKLY_TIME_SHEETS", 
+		uniqueConstraints = {
+				@UniqueConstraint(
+						name = UNQ_WEEKLY_TIME_SHEETS_STATUS_ID, 
+						columnNames = { "WEEKLY_TIME_SHEET_STATUS_ID" 
+						}
+				) 
+		}, 
+		indexes = {
+				@Index(name = IDX_WEEKLY_TIME_SHEETS_RESOURCE_CODE, columnList = "RESOURCE_CODE"),
+				@Index(name = IDX_WEEKLY_TIME_SHEETS_WEEK_START_DATE, columnList = "WEEK_START_DATE"),
+				@Index(name = IDX_WEEKLY_TIME_SHEETS_WEEK_END_DATE, columnList = "WEEK_END_DATE")  
+		}
+)
+//@formatter:on
 public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long> {
 
 	@NotNull
+	@AttributeOverrides({
+        @AttributeOverride(name="dateRange.fromDate",
+                           column=@Column(name="WEEK_START_DATE")),
+        @AttributeOverride(name="dateRange.tillDate",
+                           column=@Column(name="WEEK_END_DATE"))
+    })
 	private Week week;
 
 	@NotNull
@@ -58,14 +83,7 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 
 	@NotNull
 	@Column(name = "TOTAL_HOURS", nullable = false, length = 5)
-	// @Column(name = "TOTAL_HOURS", nullable = false, length = 5, updatable =
-	// false, insertable = false)
-	// TODO: Set updatable and insertable as false and
-	// apply formula (SQL) to calculate total hours from daily_timesheets
 	private Duration totalHours;
-
-//	@Column(name = "COMMENTS", nullable = true, length = 255)
-//	private String comments;
 
 	@NotNull
 	@ManyToOne
@@ -79,90 +97,110 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	private Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>();
 
 	@OneToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "CLIENT_TIMESHEET_SCREEN_SHOT_ID", unique = false, nullable = true, foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_CLIENT_TIMESHEET_SCREEN_SHOT_ID))
+	// @formatter:off
+	@JoinColumn(name = "CLIENT_TIMESHEET_SCREEN_SHOT_ID", unique = false, nullable = true, 
+			foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_CLIENT_TIMESHEET_SCREEN_SHOT_ID))
+	// @formatter:on
 	private Document clientTimeSheetScreenShot;
 
-	// @Column(name = "MATCHING_CUSTOMER_TIME_SHEET", length = 1)
-	// private boolean isMatchingCustomerTimeSheet = false;
-
-	@NotNull
-	@Enumerated(EnumType.ORDINAL)
-	@Column(name = "STATUS", nullable = false)
-	// TODO: Set updatable and insertable as false and
-	// apply formula (SQL) to calculate total hours from time_sheet_Entries
-	private TimesheetStatus status;
+	@OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER, optional = false)
+	// @formatter:off
+	@JoinColumn(name = "WEEKLY_TIME_SHEET_STATUS_ID", nullable = false, 
+			foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_STATUS_ID))
+	// @formatter:on
+	private WeeklyTimeSheetStatus weeklyStatus;
 
 	@Column(name = "USE_AS_TEMPLATE", length = 1)
 	private boolean useAsTemplate = false;
 
-	@Column(name = "APPROVER_COMMENTS", nullable = true, length = 255)
-	private String approverComments;
-	
 	public Set<DailyTimeSheet> dailyTimeSheets() {
 		return Collections.unmodifiableSet(this.dailyTimeSheets);
 	}
-	
+
+	public Optional<ProjectTimeSheetStatus> weeklyStatus(final Project project) {
+		return Optional.ofNullable(this.weeklyStatus.projectTimeSheetStatuses().get(project));
+	}
+
 	public void clearAllDailyTimeSheets() {
 		this.dailyTimeSheets.clear();
 	}
-	
+
 	public boolean addDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
 		return this.dailyTimeSheets.add(dailyTimeSheet);
 	}
-	
+
 	public boolean addAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
-		for(var dailyTimesheet: dailyTimeSheets) {
-			dailyTimesheet.setWeeklyTimeSheet(this);
-		}
+		dailyTimeSheets.forEach((dailyTimesheet) -> dailyTimesheet.setWeeklyTimeSheet(this));
 		return this.dailyTimeSheets.addAll(dailyTimeSheets);
 	}
 
 	public Map<DayOfWeek, DailyTimeSheet> dayWiseDailyTimeSheets() {
-		return dailyTimeSheets.stream()
-				.collect(Collectors.toMap(x -> x.day(), x -> x));
+		return dailyTimeSheets.stream().collect(Collectors.toMap(x -> x.day(), x -> x));
 	}
-	
+
+	public Map<Project, Set<TimeSheetEntry>> projectWiseTimeEntriesMap() {
+		return this.dailyTimeSheets().stream().flatMap(dailyEntry -> dailyEntry.entries().stream())
+				.collect(Collectors.groupingBy(TimeSheetEntry::project, Collectors.toCollection(() -> new TreeSet<>(
+						(x, y) -> x.dailyTimeSheet().date().compareTo(y.dailyTimeSheet().date())))));
+	}
+
+	public Set<Project> allProjects() {
+		if (this.dailyTimeSheets.isEmpty()) {
+			throw new IllegalStateException(
+					"A timesheet must have atleat one project, hence time entries for the same");
+		} else {
+			Set<Project> projects = new HashSet<>();
+			this.dailyTimeSheets.iterator().forEachRemaining((dailyTimeSheet) -> projects.addAll(dailyTimeSheet.projects()));
+			return projects;
+		}
+	}
+
+	public Set<Project> leaveProjects() {
+		if (this.dailyTimeSheets.isEmpty()) {
+			throw new IllegalStateException(
+					"A timesheet must have atleat one project, hence time entries for the same");
+		} else {
+			Set<Project> leaveProjects = allProjects();
+			leaveProjects.removeIf((project) -> !project.isLeaveType());
+			return leaveProjects;
+		}
+	}
+
+	public Set<Project> nonLeaveProjects() {
+		if (this.dailyTimeSheets.isEmpty()) {
+			throw new IllegalStateException(
+					"A timesheet must have atleat one project, hence time entries for the same");
+		} else {
+			Set<Project> nonLeaveProjects = allProjects();
+			nonLeaveProjects.removeIf((project) -> project.isLeaveType());
+			return nonLeaveProjects;
+		}
+	}
+
 	public void save() {
-		this.status = TimesheetStatus.SAVED;
+		this.weeklyStatus = WeeklyTimeSheetStatus.forSave(allProjects());
 	}
-	
+
 	public void submit() {
-		this.status = TimesheetStatus.SUBMITTED;
+		this.weeklyStatus = WeeklyTimeSheetStatus.forSubmit(allProjects());
 	}
-	
+
 	public void saveAsTemplate() {
 		this.useAsTemplate = true;
 	}
 
-	public void approve() {
-		this.status = TimesheetStatus.APPROVED;
+	// public void approve() {
+	// }
+
+	public void approve(final Project project, final String comments) {
+		this.weeklyStatus.approve(project, comments);
 	}
 
-	public void approve(final Project project) {
-		for(var dailyTimeSheet: dailyTimeSheets) {
-			for(var entry: dailyTimeSheet.entries()) {
-				if(entry.project().equals(project)) {
-					entry.approve();
-				}
-			}
-		}
-		this.status = TimesheetStatus.PARTIALLY_APPROVED;
-	}
+	// public void reject() {
+	// }
 
-	public void reject() {
-		this.status = TimesheetStatus.REJECTED;
-	}
-
-	public void reject(final Project project) {
-		for(var dailyTimeSheet: dailyTimeSheets) {
-			for(var entry: dailyTimeSheet.entries()) {
-				if(entry.project().equals(project)) {
-					entry.approve();
-				}
-			}
-		}
-		// TODO: Need to be decided, what would be the current status of weekly timesheet in this case
-		//this.status = TimesheetStatus.PARTIALLY_APPROVED;
+	public void reject(final Project project, final String comments) {
+		this.weeklyStatus.reject(project, comments);
 	}
 
 	public static WeeklyTimeSheetWeekBuilder of(final Resource resource) {
@@ -182,13 +220,14 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 
 	public interface WeeklyTimeSheetDailyTimeEntriesBuilder extends Buildable<WeeklyTimeSheet> {
 		public ScreenShotBuilder withDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets);
+
 		public TuesdayTimeEntriesBuilder forMonday(final DailyTimeSheet dailyTimesheet);
 	}
 
 	public interface TuesdayTimeEntriesBuilder extends Buildable<WeeklyTimeSheet> {
 		public WednesdayTimeEntriesBuilder forTuesday(final DailyTimeSheet dailyTimesheet);
 	}
-	
+
 	public interface WednesdayTimeEntriesBuilder extends Buildable<WeeklyTimeSheet> {
 		public ThursdayTimeEntriesBuilder forWednesday(final DailyTimeSheet dailyTimesheet);
 	}
@@ -223,7 +262,6 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 		public WeeklyTimeSheetBuilder(final Resource resource) {
 			this.weeklyTimeSheet = new WeeklyTimeSheet();
 			this.weeklyTimeSheet.resource = resource;
-			this.weeklyTimeSheet.status = TimesheetStatus.SAVED;
 		}
 
 		@Override
@@ -247,9 +285,7 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 		@Override
 		public ScreenShotBuilder withDailyTimeSheets(Set<DailyTimeSheet> dailyTimeSheets) {
 			this.weeklyTimeSheet.dailyTimeSheets = dailyTimeSheets;
-			for(var dailyTimesheet: dailyTimeSheets) {
-				dailyTimesheet.setWeeklyTimeSheet(this.weeklyTimeSheet);
-			}
+			dailyTimeSheets.forEach((dailyTimesheet) -> dailyTimesheet.setWeeklyTimeSheet(this.weeklyTimeSheet));
 			return this;
 		}
 
@@ -304,9 +340,9 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 		@Override
 		public WeeklyTimeSheet build() {
 			this.weeklyTimeSheet.totalHours = Duration.ZERO;
-			for (var dailyTimeSheet : this.weeklyTimeSheet.dailyTimeSheets) {
-				this.weeklyTimeSheet.totalHours = this.weeklyTimeSheet.totalHours.plus(dailyTimeSheet.totalHours());
-			}
+			this.weeklyTimeSheet.dailyTimeSheets
+					.forEach((dailyTimeSheet) -> this.weeklyTimeSheet.totalHours = this.weeklyTimeSheet.totalHours
+							.plus(dailyTimeSheet.totalHours()));
 			return this.weeklyTimeSheet;
 		}
 	}

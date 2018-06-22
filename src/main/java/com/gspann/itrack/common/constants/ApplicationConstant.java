@@ -1,7 +1,5 @@
 package com.gspann.itrack.common.constants;
 
-import java.time.DayOfWeek;
-import java.time.Duration;
 import java.time.ZoneId;
 import java.util.Locale;
 
@@ -49,14 +47,8 @@ public final class ApplicationConstant {
 //        System.setProperty(SPRING_CONFIG_LOCATION, CONFIG_DEFAULT);
         System.out.println("Configuration files --->>" +  System.getProperty(SPRING_CONFIG_LOCATION));
     }
-
-    public static final String API_VERSION_v1 = "/api/v1";
-
-    public static final String API_VERSION_v2 = "/api/v2";
-
-    public static final String API_VERSION = API_VERSION_v1;
     
-    private final static ZoneId DEFAULT_TIME_ZONE = ZoneId.systemDefault();
-    private final static Locale DEFAULT_LOCALE = Locale.getDefault();
+    public final static ZoneId DEFAULT_TIME_ZONE = ZoneId.systemDefault();
+    public final static Locale DEFAULT_LOCALE = Locale.getDefault();
     
 }

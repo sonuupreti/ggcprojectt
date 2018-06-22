@@ -123,6 +123,7 @@ public class Holiday extends AbstractIdentifiable<Integer> {
 
 		@Override
 		public HolidayOccasionBuilder regional(City city) {
+			this.holiday.type = HolidayType.REGIONAL;
 			this.city = city;
 			return this;
 		}

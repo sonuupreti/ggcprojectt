@@ -1,4 +1,4 @@
-package com.gspann.itrack.domain.model.common.dto;
+package com.gspann.itrack.domain.model.timesheets.vm;
 
 import org.hibernate.annotations.Immutable;
 
@@ -7,7 +7,7 @@ import com.gspann.itrack.common.enums.StringValuedEnum;
 
 @Immutable
 @JsonFormat(shape = JsonFormat.Shape.OBJECT)
-public enum TimeSheetActionType implements StringValuedEnum {
+public enum TimeSheetActionTypeVM implements StringValuedEnum {
 	
 	// @formatter:off
 	NONE("NONE", "No Action"), 
@@ -21,7 +21,7 @@ public enum TimeSheetActionType implements StringValuedEnum {
 	
 	private String description;
 
-	private TimeSheetActionType(final String code, final String description) {
+	private TimeSheetActionTypeVM(final String code, final String description) {
 		this.code = code;
 		this.description = description;
 	}
@@ -40,15 +40,15 @@ public enum TimeSheetActionType implements StringValuedEnum {
 	}
 
 	@Override
-	public TimeSheetActionType enumByValue(String description) {
-		for (TimeSheetActionType e : values())
+	public TimeSheetActionTypeVM enumByValue(String description) {
+		for (TimeSheetActionTypeVM e : values())
 			if (e.value().equals(description))
 				return e;
 		throw new IllegalArgumentException();
 	}
 
-	public TimeSheetActionType enumByCode(String code) {
-		for (TimeSheetActionType e : values())
+	public TimeSheetActionTypeVM enumByCode(String code) {
+		for (TimeSheetActionTypeVM e : values())
 			if (e.getCode().equals(code))
 				return e;
 		throw new IllegalArgumentException();

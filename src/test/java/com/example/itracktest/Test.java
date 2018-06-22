@@ -8,9 +8,9 @@ import java.util.Set;
 import java.util.regex.Pattern;
 
 import com.gspann.itrack.common.constants.ApplicationConstant;
-import com.gspann.itrack.domain.model.common.dto.DayVM;
 import com.gspann.itrack.domain.model.common.dto.Triple;
-import com.gspann.itrack.domain.model.common.dto.WeekVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetDayMetaDataVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekMetaDataVM;
 
 public class Test {
 	

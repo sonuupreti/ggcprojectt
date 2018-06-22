@@ -1,0 +1,27 @@
+#main-cont{
+	width:95%;
+	margin:auto;
+	color:#34495E;
+}
+#main-heading{
+	font-size:28px;
+	font-weight:bold;
+}
+.mat-tab-label{
+	font-size:12px;
+}
+.mat-tab-label-active{
+	color:#0EB3F7;
+	background-color: inherit;
+}
+.mat-tab-group.mat-primary .mat-ink-bar, .mat-tab-nav-bar.mat-primary .mat-ink-bar {
+    background-color: #0EB3F7;
+}
+mat-tab-header.mat-tab-header {
+    border-bottom: 0px;
+}
+
+.submitted{
+	border: 1px solid #62B948;
+	color : #62B948;
+}

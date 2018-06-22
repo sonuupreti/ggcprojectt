@@ -26,7 +26,7 @@ import lombok.experimental.Accessors;
 @Getter
 @Accessors(chain = true, fluent = true)
 @NoArgsConstructor
-@ToString
+@ToString(includeFieldNames = true, exclude = "lead")
 @Entity
 // @formatter:off
 @Table(name = "PRACTICES", uniqueConstraints = {

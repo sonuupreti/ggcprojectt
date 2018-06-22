@@ -1,7 +1,13 @@
-package com.gspann.itrack.domain.model.common.dto;
+package com.gspann.itrack.domain.model.allocations;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.gspann.itrack.domain.model.common.dto.Pair;
+import com.gspann.itrack.domain.model.location.City;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -21,16 +27,27 @@ public class ResourceAllocationSummary {
 
 	private Pair<String, String> resource;
 
-	private Set<ProjectSummary> projects = new LinkedHashSet<>(5);
+	private Set<ResourceProjectSummary> projects = new LinkedHashSet<>(5);
 	
-	public static ResourceAllocationSummary of(final String resourceCode, final String resourceName) {
+	@JsonIgnore
+	private Map<String, ResourceProjectSummary> projectsMap = new HashMap<>();
+	
+	private City deputedLocation;
+	
+	public static ResourceAllocationSummary of(final String resourceCode, final String resourceName, final City deputedLocation) {
 		ResourceAllocationSummary summary = new ResourceAllocationSummary();
 		summary.resource = new Pair<String, String>(resourceCode, resourceName);
+		summary.deputedLocation = deputedLocation;
 		return summary;
 	}
 	
-	public ResourceAllocationSummary addProjectAllocation(final ProjectSummary projectSummary) {
+	public ResourceAllocationSummary addProjectAllocation(final ResourceProjectSummary projectSummary) {
 		this.projects.add(projectSummary);
+		this.projectsMap.put(projectSummary.getProject().getKey(), projectSummary);
 		return this;
+	}
+	
+	public ResourceProjectSummary getProjectSummaryByProjectCode(final String projectCode) {
+		return this.projectsMap.get(projectCode);
 	}
 }

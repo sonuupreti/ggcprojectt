@@ -2,10 +2,10 @@ package com.gspann.itrack.adapter.persistence.repository;
 
 import java.util.List;
 
-import com.gspann.itrack.domain.model.common.dto.ResourceAllocationSummary;
-import com.gspann.itrack.domain.model.common.dto.ResourceProjectAllocationSummary;
+import com.gspann.itrack.domain.model.allocations.ResourceProjectAllocationProjection;
+import com.gspann.itrack.domain.model.timesheets.Week;
 
 public interface AllocationRepositoryJPA {
 
-    public List<ResourceProjectAllocationSummary> findAllAllocationSummaries(final String resourceCode);
+    public List<ResourceProjectAllocationProjection> findAllAllocationSummaries(final String resourceCode, final Week week);
 }

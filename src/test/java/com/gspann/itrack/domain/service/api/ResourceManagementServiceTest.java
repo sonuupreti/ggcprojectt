@@ -1,6 +1,7 @@
 package com.gspann.itrack.domain.service.api;
 
 import java.time.LocalDate;
+import java.time.Month;
 
 import org.javamoney.moneta.Money;
 import org.junit.FixMethodOrder;
@@ -64,14 +65,14 @@ public class ResourceManagementServiceTest {
 		// Money.of(20, CurrencyCode.USD.name()), LocalDate.now(), null, Toggle.YES);
 
 		systemUnderTest.onBoardToProject(rajveerResCode, iTrackPrjCode, Money.of(10, CurrencyCode.USD.name()),
-				LocalDate.now(), Toggle.YES);
+				LocalDate.of(2018, Month.MAY, 1), Toggle.YES);
 		
 		systemUnderTest.onBoardToProject(ankitResCode, iTrackPrjCode, Money.of(10, CurrencyCode.USD.name()),
-				LocalDate.now(), Toggle.NO);
+				LocalDate.of(2018, Month.MAY, 1), Toggle.NO);
 		
 		systemUnderTest.onBoardToProjectPartially(manojResCode, iTrackPrjCode, (short) 50,
-				Money.of(20, CurrencyCode.USD.name()), LocalDate.now(), Toggle.NO);
+				Money.of(20, CurrencyCode.USD.name()), LocalDate.of(2018, Month.MAY, 1), Toggle.NO);
 		systemUnderTest.allocatePartially(manojResCode, finalSelectPrjCode, (short) 50,
-				Money.of(10, CurrencyCode.USD.name()), LocalDate.now(), null, Toggle.YES);
+				Money.of(10, CurrencyCode.USD.name()), LocalDate.of(2018, Month.MAY, 1), null, Toggle.YES);
 	}
 }
