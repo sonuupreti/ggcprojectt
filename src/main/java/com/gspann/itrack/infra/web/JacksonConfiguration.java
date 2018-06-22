@@ -12,40 +12,41 @@ import org.zalando.problem.validation.ConstraintViolationProblemModule;
 @Configuration
 public class JacksonConfiguration {
 
-    /*
-     * Support for Hibernate types in Jackson.
-     */
-    @Bean
-    public Hibernate5Module hibernate5Module() {
-        return new Hibernate5Module();
-    }
+	/*
+	 * Support for Hibernate types in Jackson.
+	 */
+	@Bean
+	public Hibernate5Module hibernate5Module() {
+		return new Hibernate5Module();
+	}
 
-    /*
-     * Jackson Afterburner module to speed up serialization/deserialization.
-     */
-    @Bean
-    public AfterburnerModule afterburnerModule() {
-        return new AfterburnerModule();
-    }
+	/*
+	 * Jackson Afterburner module to speed up serialization/deserialization.
+	 */
+	@Bean
+	public AfterburnerModule afterburnerModule() {
+		return new AfterburnerModule();
+	}
 
-    /*
-     * Module for serialization/deserialization of RFC7807 Problem.
-     */
-    @Bean
-    ProblemModule problemModule() {
-        return new ProblemModule();
-    }
+	/*
+	 * Module for serialization/deserialization of RFC7807 Problem.
+	 */
+	@Bean
+	ProblemModule problemModule() {
+		return new ProblemModule();
+	}
 
-    /*
-     * Module for serialization/deserialization of ConstraintViolationProblem.
-     */
-    @Bean
-    ConstraintViolationProblemModule constraintViolationProblemModule() {
-        return new ConstraintViolationProblemModule();
-    }
-    @Bean
-    public MoneyModule moneyModule() {
-    	return new MoneyModule();
-    }
+	/*
+	 * Module for serialization/deserialization of ConstraintViolationProblem.
+	 */
+	@Bean
+	ConstraintViolationProblemModule constraintViolationProblemModule() {
+		return new ConstraintViolationProblemModule();
+	}
+
+	@Bean
+	public MoneyModule moneyModule() {
+		return new MoneyModule();
+	}
 
 }
