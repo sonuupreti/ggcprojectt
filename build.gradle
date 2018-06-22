@@ -227,12 +227,14 @@ dependencies {
     testCompile "com.mattbertolini:liquibase-slf4j"
     testCompile "org.hamcrest:hamcrest-library"
     testCompile "com.h2database:h2"
+    testCompile("org.springframework.boot:spring-boot-starter-test")
     //jhipster-needle-gradle-dependency - JHipster will add additional dependencies here
     
 	compile("org.javamoney:moneta:1.1")
 	compile("org.jadira.usertype:usertype.core:6.0.1.GA")
 	compileOnly('org.projectlombok:lombok:1.16.20')
 	compile "org.springframework.boot:spring-boot-configuration-processor"
+    compile("org.springframework.boot:spring-boot-starter-hateoas")
 	
 	/*compile("org.zalando:logbook-spring-boot-starter:${logbook_version}") {
 		exclude group: "org.zalando", module: "logbook-httpclient"
