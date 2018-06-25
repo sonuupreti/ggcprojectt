@@ -84,9 +84,9 @@ public class TimeSheetLinks {
 		List<Link> actionLinks = new ArrayList<Link>();
 
 		if (timesheet.isPendingForsubmission() || timesheet.isSaved()) {
-			actionLinks.add(linkTo(methodOn(TimeSheetResourceController.class).saveOrSubmitTimeSheet(null))
+			actionLinks.add(linkTo(methodOn(TimeSheetResourceController.class).saveOrSubmitTimeSheet(null, null))
 					.withRel(TIMESHEET_SAVE_REL));
-			actionLinks.add(linkTo(methodOn(TimeSheetResourceController.class).saveOrSubmitTimeSheet(null))
+			actionLinks.add(linkTo(methodOn(TimeSheetResourceController.class).saveOrSubmitTimeSheet(null, null))
 					.withRel(TIMESHEET_SUBMIT_REL));
 		} else if (timesheet.isSubmitted()) {
 			// TODO: Approve and reject or none depending upon Actor type

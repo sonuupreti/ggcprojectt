@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -146,12 +145,13 @@ public class TimeSheetResourceController {
 
 	@PostMapping
 	@Timed
-	public ResponseEntity<Void> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet)
+	public ResponseEntity<Void> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet, final Principal principal)
 			throws URISyntaxException {
 		log.debug("REST request to  create TimeSheet : {}", timesheet);
 		System.out.println("input timeSheet -->" + timesheet);
+		String resourceCode = principal.getName();
 
-		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(timesheet);
+		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(resourceCode, timesheet);
 		if (weeklyTimeSheet.isPresent()) {
 			return ResponseEntity.created(new URI(TIMESHEET + SLASH + weeklyTimeSheet.get().id()))
 					.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "" + weeklyTimeSheet.get().id()))
@@ -185,18 +185,18 @@ public class TimeSheetResourceController {
 	 * @throws URISyntaxException
 	 *             if the Location URI syntax is incorrect
 	 */
-	@PutMapping
-	@Timed
-	public ResponseEntity<TimeSheetDTO> updateTimesheet(@Valid @RequestBody TimeSheetDTO timesheet)
-			throws URISyntaxException {
-		log.debug("REST request to update timesheet : {}", timesheet);
-
-		return new ResponseEntity<TimeSheetDTO>(timesheet, HttpStatus.OK);
-		// return ResponseEntity.ok()
-		// .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME,
-		// accountDTO1.getAccountCode()))
-		// .body(accountDTO1);
-	}
+//	@PutMapping
+//	@Timed
+//	public ResponseEntity<TimeSheetDTO> updateTimesheet(@Valid @RequestBody TimeSheetDTO timesheet)
+//			throws URISyntaxException {
+//		log.debug("REST request to update timesheet : {}", timesheet);
+//
+//		return new ResponseEntity<TimeSheetDTO>(timesheet, HttpStatus.OK);
+//		// return ResponseEntity.ok()
+//		// .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME,
+//		// accountDTO1.getAccountCode()))
+//		// .body(accountDTO1);
+//	}
 
 	/**
 	 * GET /accounts : get all the accounts.

@@ -15,7 +15,7 @@ public class TimeSheetDTO {
 	
 	private long timesheetId;
 
-	private String resourceCode;
+//	private String resourceCode;
 	
 	private String action;
 	
