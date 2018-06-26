@@ -36,7 +36,7 @@ public interface TimesheetManagementService {
 
 	public Optional<TimeSheetResource> getTimeSheetVMByIdAndResourceCode(final long timesheetId, final String resourceCode);
 
-	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet);
+	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final String resourceCode, final TimeSheetDTO timesheet);
 
 	public Optional<WeeklyTimeSheet> getTimeSheetById(final long id);
 

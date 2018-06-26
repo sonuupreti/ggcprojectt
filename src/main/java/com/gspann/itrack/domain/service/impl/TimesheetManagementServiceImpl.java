@@ -258,7 +258,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 
 	@Override
 	@Transactional
-	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final TimeSheetDTO timesheet) {
+	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final String resourceCode, final TimeSheetDTO timesheet) {
 
 		LocalDate weekStartDate = timesheet.getWeek().getWeekStartDate();
 
@@ -266,7 +266,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		if (timesheet.getTimesheetId() != 0) {
 			existingTimeSheet = getTimeSheetById(timesheet.getTimesheetId());
 		} else {
-			existingTimeSheet = getTimeSheetByResourceAndWeek(timesheet.getResourceCode(), Week.of(weekStartDate));
+			existingTimeSheet = getTimeSheetByResourceAndWeek(resourceCode, Week.of(weekStartDate));
 		}
 
 		LocalDate weekDate = null;
@@ -275,7 +275,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		Set<DayDTO> dailyEntries = timesheet.getWeek().getDailyEntries();
 		Week week = Week.of(timesheet.getWeek().getWeekStartDate());
 		Optional<ResourceAllocationSummary> resourceAllocationSummary = getResourceAllocationSummary(
-				timesheet.getResourceCode(), week);
+				resourceCode, week);
 
 		Set<Holiday> holidays = holidayService.getHolidaysByWeekAndLocation(week,
 				resourceAllocationSummary.get().getDeputedLocation());
@@ -347,7 +347,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			// Create new timesheet in DB
 			// Resource resource =
 			// resourceRepository.findById(timesheet.getResourceCode()).get();
-			Resource resource = resourceRepository.getOne(timesheet.getResourceCode());
+			Resource resource = resourceRepository.getOne(resourceCode);
 			weeklyTimeSheet = WeeklyTimeSheet.of(resource).forWeekOf(Week.of(timesheet.getWeek().getWeekStartDate()))
 					.withDefaultStandardHours().withDailyTimeSheets(dailyTimeSheets).build();
 		}
