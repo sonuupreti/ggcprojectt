@@ -22,6 +22,7 @@ import lombok.ToString;
 @ToString
 public class ProjectWiseTimeSheetWeekVM {
 
+	@JsonInclude(NON_NULL)
 	private ResourceProjectSummary projectDetails;
 
 	private Set<ProjectWiseDailyEntryVM> dailyEntries = new TreeSet<>((x, y) -> x.getDate().compareTo(y.getDate()));
@@ -33,6 +34,25 @@ public class ProjectWiseTimeSheetWeekVM {
 
 	@JsonInclude(NON_NULL)
 	private TimeSheetActionTypeVM[] actions;
+
+//	public static ProjectWiseTimeSheetWeekVM of(final ResourceProjectSummary projectDetails,
+//			final TimeSheetStatusTypeVM projectTimesheetStatus) {
+//		ProjectWiseTimeSheetWeekVM projectWiseTimeSheetVM = new ProjectWiseTimeSheetWeekVM();
+//		projectWiseTimeSheetVM.projectDetails = projectDetails;
+//		projectWiseTimeSheetVM.projectTimesheetStatus = projectTimesheetStatus;
+//		if (projectTimesheetStatus == TimeSheetStatusTypeVM.SAVED) {
+////			projectWiseTimeSheetVM.actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.SAVE,
+////					TimeSheetActionTypeVM.SUBMIT };
+//		} else if (projectTimesheetStatus == TimeSheetStatusTypeVM.SUBMITTED) {
+//			projectWiseTimeSheetVM.actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.APPROVE,
+//					TimeSheetActionTypeVM.REJECT };
+//		}
+//		// TODO: Update later, applicable action will depend or user role, 
+//		// for owner there would not be any action at project level, but for approver there will be actions at project level
+//		// for other statuses such as approved/rejected etc.
+//		projectWiseTimeSheetVM.projectTotalHours = Duration.ZERO;
+//		return projectWiseTimeSheetVM;
+//	}
 
 	public static ProjectWiseTimeSheetWeekVM of(final ResourceProjectSummary projectDetails,
 			final TimeSheetStatusTypeVM projectTimesheetStatus) {

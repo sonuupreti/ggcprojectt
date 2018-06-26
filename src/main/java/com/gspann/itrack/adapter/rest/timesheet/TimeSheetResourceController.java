@@ -29,6 +29,7 @@ import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 import com.gspann.itrack.domain.model.timesheets.dto.TimeSheetDTO;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceList;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
 import com.gspann.itrack.infra.config.ApplicationProperties;
@@ -36,6 +37,7 @@ import com.gspann.itrack.infra.config.ApplicationProperties;
 import io.github.jhipster.web.util.ResponseUtil;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -53,15 +55,16 @@ public class TimeSheetResourceController {
 
 	@NonNull
 	private final ApplicationProperties applicationProperties;
-	
+
 	@NonNull
 	private final TimeSheetLinks timesheetLinks;
 
-//	public TimeSheetResourceController(final TimesheetManagementService timesheetManagementService,
-//			final ApplicationProperties applicationProperties) {
-//		this.timesheetManagementService = timesheetManagementService;
-//		this.applicationProperties = applicationProperties;
-//	}
+	// public TimeSheetResourceController(final TimesheetManagementService
+	// timesheetManagementService,
+	// final ApplicationProperties applicationProperties) {
+	// this.timesheetManagementService = timesheetManagementService;
+	// this.applicationProperties = applicationProperties;
+	// }
 
 	private Week getInputWeek(final Optional<LocalDate> date) {
 		Week currentWeek = Week.current(applicationProperties.timeSheet().WEEK_START_DAY(),
@@ -88,8 +91,7 @@ public class TimeSheetResourceController {
 		Week forWeek = Week.of(timeSheetResource.getWeekDetails().getWeekStartDate(),
 				timeSheetResource.getWeekDetails().getWeekEndDate());
 		Map<Week, TimeSheetWeekStatusVM> nextAndPreviousWeekTimesheetStatuses = timesheetManagementService
-				.getWeeklyStatusesForNextAndPreviousWeeks(timeSheetResource.getResource().getKey(),
-						forWeek);
+				.getWeeklyStatusesForNextAndPreviousWeeks(timeSheetResource.getResource().getKey(), forWeek);
 		timeSheetResource.setNextWeek(nextAndPreviousWeekTimesheetStatuses.get(forWeek.next()));
 		timeSheetResource.setPreviousWeek(nextAndPreviousWeekTimesheetStatuses.get(forWeek.previous()));
 	}
@@ -122,12 +124,12 @@ public class TimeSheetResourceController {
 
 	@GetMapping(TIMESHEET_WEEKLY + SLASH + PATH_VARIABLE_ID)
 	@Timed
-	public ResponseEntity<TimeSheetResource> weekly(@PathVariable final long id,
-			final Principal principal) {
+	public ResponseEntity<TimeSheetResource> weekly(@PathVariable final long id, final Principal principal) {
 		log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
 		String resourceCode = principal.getName();
 
-		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id, resourceCode);
+		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id,
+				resourceCode);
 		if (timeSheetResource.isPresent()) {
 			// TODO: Think about making the call parallel
 			TimeSheetResource timesheet = timeSheetResource.get();
@@ -145,13 +147,14 @@ public class TimeSheetResourceController {
 
 	@PostMapping
 	@Timed
-	public ResponseEntity<Void> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet, final Principal principal)
-			throws URISyntaxException {
+	public ResponseEntity<Void> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet,
+			final Principal principal) throws URISyntaxException {
 		log.debug("REST request to  create TimeSheet : {}", timesheet);
 		System.out.println("input timeSheet -->" + timesheet);
 		String resourceCode = principal.getName();
 
-		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(resourceCode, timesheet);
+		Optional<WeeklyTimeSheet> weeklyTimeSheet = timesheetManagementService.saveOrSubmitTimeSheet(resourceCode,
+				timesheet);
 		if (weeklyTimeSheet.isPresent()) {
 			return ResponseEntity.created(new URI(TIMESHEET + SLASH + weeklyTimeSheet.get().id()))
 					.headers(HeaderUtil.createEntityCreationAlert(ENTITY_NAME, "" + weeklyTimeSheet.get().id()))
@@ -163,14 +166,32 @@ public class TimeSheetResourceController {
 
 	@GetMapping(SLASH + PATH_VARIABLE_ID)
 	@Timed
-	public ResponseEntity<TimeSheetResource> getTimesheetById(@PathVariable long id,
-			final Principal principal) {
+	public ResponseEntity<TimeSheetResource> getTimesheetById(@PathVariable long id, final Principal principal) {
 		log.debug("REST request to getTimesheet : {}", id);
 		String resourceCode = principal.getName();
-		// TODO: Apply role here, only the timesheet owner resource or approver should be able to view
-		
-		return ResponseUtil.wrapOrNotFound(timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id, resourceCode));
+		// TODO: Apply role here, only the timesheet owner resource or approver should
+		// be able to view
 
+		return ResponseUtil
+				.wrapOrNotFound(timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id, resourceCode));
+
+	}
+
+	@GetMapping(SLASH + TIMESHEET_RECENT)
+	@Timed
+	public ResponseEntity<TimeSheetResourceList> recentTimeSheets(final Principal principal) {
+		log.debug("REST request to recentTimeSheets ");
+		String resourceCode = principal.getName();
+		// TODO: Apply role here, only the timesheet owner resource or approver should
+		// be able to view
+		TimeSheetResourceList timeSheetResourceList = timesheetManagementService.listRecentTimeSheetVMsByResource(
+				resourceCode, applicationProperties.timeSheet().RECENT_TIMESHEETS_PAGE_SIZE());
+
+		for (var timesheet : timeSheetResourceList.getTimesheets()) {
+			timesheet.add(timesheetLinks.getSelfLink(timesheet));
+		}
+
+		return ResponseEntity.ok(timeSheetResourceList);
 	}
 
 	/**
@@ -185,18 +206,19 @@ public class TimeSheetResourceController {
 	 * @throws URISyntaxException
 	 *             if the Location URI syntax is incorrect
 	 */
-//	@PutMapping
-//	@Timed
-//	public ResponseEntity<TimeSheetDTO> updateTimesheet(@Valid @RequestBody TimeSheetDTO timesheet)
-//			throws URISyntaxException {
-//		log.debug("REST request to update timesheet : {}", timesheet);
-//
-//		return new ResponseEntity<TimeSheetDTO>(timesheet, HttpStatus.OK);
-//		// return ResponseEntity.ok()
-//		// .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME,
-//		// accountDTO1.getAccountCode()))
-//		// .body(accountDTO1);
-//	}
+	// @PutMapping
+	// @Timed
+	// public ResponseEntity<TimeSheetDTO> updateTimesheet(@Valid @RequestBody
+	// TimeSheetDTO timesheet)
+	// throws URISyntaxException {
+	// log.debug("REST request to update timesheet : {}", timesheet);
+	//
+	// return new ResponseEntity<TimeSheetDTO>(timesheet, HttpStatus.OK);
+	// // return ResponseEntity.ok()
+	// // .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME,
+	// // accountDTO1.getAccountCode()))
+	// // .body(accountDTO1);
+	// }
 
 	/**
 	 * GET /accounts : get all the accounts.

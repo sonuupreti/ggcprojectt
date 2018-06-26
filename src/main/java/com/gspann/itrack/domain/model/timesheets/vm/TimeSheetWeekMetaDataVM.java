@@ -1,11 +1,14 @@
 package com.gspann.itrack.domain.model.timesheets.vm;
 
+import static com.fasterxml.jackson.annotation.JsonInclude.Include.*;
+
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.gspann.itrack.domain.model.timesheets.Week;
 
 import lombok.AllArgsConstructor;
@@ -27,18 +30,25 @@ public class TimeSheetWeekMetaDataVM {
 
 	private LocalDate weekEndDate;
 
+	@JsonInclude(NON_DEFAULT)
 	private int weekLength;
 
+	@JsonInclude(NON_NULL)
 	private DayOfWeek weekStartDay;
 
+	@JsonInclude(NON_NULL)
 	private DayOfWeek weekEndDay;
 
+	@JsonInclude(NON_DEFAULT)
 	private int dailyStandardHours;
 
+	@JsonInclude(NON_DEFAULT)
 	private int weeklyStandardHours;
 
-	private boolean flexibleWeekends = false;
+	@JsonInclude(NON_DEFAULT)
+	private boolean flexibleWeekends;
 
+	@JsonInclude(NON_EMPTY)
 	private Set<TimeSheetDayMetaDataVM> dayDetails;
 
 	public static TimeSheetWeekMetaDataVM current(final Duration weeklyStandardHours, final Duration dailyStandardHours,
@@ -76,6 +86,15 @@ public class TimeSheetWeekMetaDataVM {
 	public static TimeSheetWeekMetaDataVM ofWeek(final Week week, final Duration weeklyStandardHours,
 			final Duration dailyStandardHours) {
 		return of(week.startingFrom(), week.endingOn(), weeklyStandardHours, dailyStandardHours);
+	}
+	
+
+	public static TimeSheetWeekMetaDataVM ofWeek(final Week week) {
+		TimeSheetWeekMetaDataVM weekVM = new TimeSheetWeekMetaDataVM();
+		weekVM.weekStartDate = week.startingFrom();
+		weekVM.weekEndDate = week.endingOn();
+		weekVM.weekName = week.name();
+		return weekVM;
 	}
 
 	public TimeSheetWeekMetaDataVM addDayVM(final TimeSheetDayMetaDataVM dayDTO) {

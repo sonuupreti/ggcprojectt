@@ -21,4 +21,6 @@ public interface TimeSheetRepositoryJPA {
 	Set<TimeSheetWeekStatusVM> findWeeklyStatusesByWeeks(final String resourceCode, final List<Week> weeks);
 	
 	List<WeeklyTimeSheet> findAllTimeSheetsByDateRange(final String resourceCode, final DateRange dateRange, final DayOfWeek weekStartDay, final DayOfWeek weekEndDay);
+	
+	List<WeeklyTimeSheet> findTimeSheetsByWeeks(final String resourceCode, final List<Week> weeks);
 }

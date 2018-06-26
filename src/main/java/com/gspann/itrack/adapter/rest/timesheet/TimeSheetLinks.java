@@ -40,6 +40,8 @@ public class TimeSheetLinks {
 	static final String TIMESHEET_REJECT_REL = "reject";
 
 	static final String TIMESHEET_WEEKLY = SLASH + "weekly";
+
+	static final String TIMESHEET_RECENT = SLASH + "recent";
 	
 	static final String ENTITY_NAME = "timesheet";
 

@@ -61,7 +61,8 @@ spring:
 #spring.jackson.date-format=com.fasterxml.jackson.databind.util.ISO8601DateFormat
     jackson:
         date-format: com.fasterxml.jackson.databind.util.ISO8601DateFormat
-
+    #hateoas:
+        #use-hal-as-default-json-media-type: false
 # ===================================================================
 # OpenID Connect Settings. Default settings are for Keycloak in Docker.
 # Start Keycloak using `docker-compose -f src/main/docker/keycloak.yml up`.

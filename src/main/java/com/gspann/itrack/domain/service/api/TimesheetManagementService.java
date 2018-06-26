@@ -14,6 +14,7 @@ import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 import com.gspann.itrack.domain.model.timesheets.dto.TimeSheetDTO;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceList;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
 
 public interface TimesheetManagementService {
@@ -35,6 +36,8 @@ public interface TimesheetManagementService {
 	public Optional<TimeSheetResource> getTimeSheetVMByResourceAndWeek(final String resourceCode, final Week week);
 
 	public Optional<TimeSheetResource> getTimeSheetVMByIdAndResourceCode(final long timesheetId, final String resourceCode);
+
+	public TimeSheetResourceList listRecentTimeSheetVMsByResource(final String resourceCode, final int pageSize);
 
 	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final String resourceCode, final TimeSheetDTO timesheet);
 

@@ -19,8 +19,8 @@ public enum TimeSheetStatusTypeVM implements StringValuedEnum {
 	APPROVED("APPROVED", "Approved Timesheet"),
 	REJECTED("REJECTED", "Rejected Timesheet"),
 	PARTIALLY_APPROVED_REJECTED("PARTIALLY_APPROVED_REJECTED", "Approved for some projects but rejected for others"),
-	PARTIALLY_APPROVED_PENDING("PARTIALLY_APPROVED_PENDING", "Approved for some projects but pending for others"),
-	PARTIALLY_REJECTED_PENDING("PARTIALLY_REJECTED_PENDING", "Rejected for some projects but pending for others"),
+	PARTIALLY_APPROVED_PENDING("PARTIALLY_APPROVED_PENDING", "Approved for some projects but pending for approval/rejection for others"),
+	PARTIALLY_REJECTED_PENDING("PARTIALLY_REJECTED_PENDING", "Rejected for some projects but pending for approval/rejection for others"),
 	; 
 	// @formatter:on
 	

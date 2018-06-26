@@ -131,8 +131,9 @@ public class Week {
 		}
 	}
 	
-	public void updateWeekName() {
+	public Week updateWeekName() {
 		setWeekName(this.dateRange);
+		return this;
 	}
 
 	public Week next() {
@@ -193,6 +194,7 @@ public class Week {
 			currentWeek = currentWeek.previous();
 			weeks.add(currentWeek);
 		}
+		Collections.sort(weeks, (x, y) -> y.startingFrom().compareTo(x.startingFrom()));
 		return weeks;
 	}
 }

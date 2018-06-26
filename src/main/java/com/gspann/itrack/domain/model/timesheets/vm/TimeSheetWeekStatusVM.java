@@ -61,12 +61,34 @@ public class TimeSheetWeekStatusVM {
 		return weekMetaData;
 	}
 	
-	public Week toWeek() {
-		return Week.of(this.week.getWeekStartDate());
+	public static TimeSheetWeekStatusVM ofSavedTimeSheet(final LocalDate weekStartDate, final long timesheetId) {
+		TimeSheetWeekStatusVM weekMetaData = new TimeSheetWeekStatusVM();
+		weekMetaData.timesheetId = timesheetId;
+		Week inputWeek = Week.of(weekStartDate);
+		weekMetaData.week = WeekVM.of(inputWeek.name(), inputWeek.startingFrom(), inputWeek.endingOn());
+		weekMetaData.status = TimeSheetStatusTypeVM.SAVED;
+		return weekMetaData;
 	}
 	
-	public TimeSheetWeekStatusVM setWeekName() {
-		
-		return this;
+	public static TimeSheetWeekStatusVM ofSubmittedTimeSheet(final LocalDate weekStartDate, final long timesheetId) {
+		TimeSheetWeekStatusVM weekMetaData = new TimeSheetWeekStatusVM();
+		weekMetaData.timesheetId = timesheetId;
+		Week inputWeek = Week.of(weekStartDate);
+		weekMetaData.week = WeekVM.of(inputWeek.name(), inputWeek.startingFrom(), inputWeek.endingOn());
+		weekMetaData.status = TimeSheetStatusTypeVM.SUBMITTED;
+		return weekMetaData;
+	}
+	
+	public static TimeSheetWeekStatusVM ofExistingTimeSheet(final LocalDate weekStartDate, final long timesheetId, final TimeSheetStatusTypeVM status) {
+		TimeSheetWeekStatusVM weekMetaData = new TimeSheetWeekStatusVM();
+		weekMetaData.timesheetId = timesheetId;
+		Week inputWeek = Week.of(weekStartDate);
+		weekMetaData.week = WeekVM.of(inputWeek.name(), inputWeek.startingFrom(), inputWeek.endingOn());
+		weekMetaData.status = status;
+		return weekMetaData;
+	}
+	
+	public Week toWeek() {
+		return Week.of(this.week.getWeekStartDate());
 	}
 }

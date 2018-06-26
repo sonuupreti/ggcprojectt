@@ -49,26 +49,11 @@ public class AllocationRepositoryImpl implements AllocationRepositoryJPA {
 				allocation.get(Allocation_.proportion.getName()),
 				allocation.get(Allocation_.customerTimeTracking.getName())));
 
-		// List<Predicate> dateRangePredicate = criteriaBuilder.between(inputDate,
-		// root.get("startDate"), root.get("endDate")));
-
 		Predicate startDatePredicate = criteriaBuilder.lessThanOrEqualTo(
 				allocation.get(Allocation_.dateRange.getName()).get(DateRange_.fromDate.getName()),
 				week.startingFrom());
 		Predicate endDatePredicate = criteriaBuilder.greaterThanOrEqualTo(
 				allocation.get(Allocation_.dateRange.getName()).get(DateRange_.tillDate.getName()), week.endingOn());
-
-//		Predicate startDatePredicate = criteriaBuilder.between(week.startingFrom(),
-//				allocation.get(Allocation_.dateRange.getName()).get(DateRange_.fromDate.getName()),
-//				allocation.get(Allocation_.dateRange.getName()).get(DateRange_.tillDate.getName()));
-
-		// Predicate startDatePredicate = criteriaBuilder.between(
-		// allocation.get(Allocation_.dateRange.getName()).get(DateRange_.fromDate.getName()),
-		// week.startingFrom(),
-		// week.endingOn());
-		// Predicate endDatePredicate = criteriaBuilder.lessThanOrEqualTo(
-		// allocation.get(Allocation_.dateRange.getName()).get(DateRange_.tillDate.getName()),
-		// week.endingOn());
 
 		Predicate dateRangePredicate = criteriaBuilder.or(startDatePredicate, endDatePredicate);
 
@@ -88,8 +73,6 @@ public class AllocationRepositoryImpl implements AllocationRepositoryJPA {
 		query.where(criteriaBuilder.and(criteriaBuilder.equal(resource.get(Resource_.code.getName()), resourceCode),
 				allocationDateRangePredicate));
 
-		// query.where(criteriaBuilder.equal(resource.get(Resource_.code.getName()),
-		// resourceCode));
 		query.orderBy(criteriaBuilder.asc(projectType.get(ProjectType_.code.getName())));
 		return entityManager.createQuery(query).getResultList();
 	}

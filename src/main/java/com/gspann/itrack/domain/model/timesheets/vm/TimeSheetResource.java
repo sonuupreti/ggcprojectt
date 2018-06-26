@@ -27,8 +27,10 @@ import lombok.ToString;
 @EqualsAndHashCode(callSuper = true)
 public class TimeSheetResource extends ResourceSupport {
 
+	@JsonInclude(NON_NULL)
 	private LocalDate systemStartDate;
 
+	@JsonInclude(NON_NULL)
 	private Pair<String, String> resource;
 
 	@JsonInclude(NON_EMPTY)
@@ -43,6 +45,7 @@ public class TimeSheetResource extends ResourceSupport {
 	@JsonInclude(NON_NULL)
 	private TimeSheetStatusTypeVM timesheetStatus;
 
+	@JsonInclude(NON_NULL)
 	private TimeSheetActionTypeVM[] actions;
 
 	@JsonInclude(NON_NULL)
@@ -51,17 +54,20 @@ public class TimeSheetResource extends ResourceSupport {
 	@JsonInclude(NON_NULL)
 	private TimeSheetWeekStatusVM previousWeek;
 
+//	@JsonInclude(NON_NULL)
+//	private TimeSheetWeekStatusVM week;
+
 	@JsonInclude(NON_NULL)
 	private LocalDateTime lastUpdatedOn;
-	
-//	@JsonInclude(NON_DEFAULT)
+
 	@JsonIgnore
 	public long getTimesheetId() {
 		return timesheet != null ? timesheet.getTimesheetId() : 0;
 	}
 
-	public static TimeSheetResource ofNew(final LocalDate systemStartDate, final Pair<String, String> resource,
-			Set<ResourceProjectSummary> allocations, final TimeSheetWeekMetaDataVM weekDetails) {
+	public static TimeSheetResource ofPendingForSubmission(final LocalDate systemStartDate,
+			final Pair<String, String> resource, Set<ResourceProjectSummary> allocations,
+			final TimeSheetWeekMetaDataVM weekDetails) {
 		TimeSheetResource timeSheetVM = new TimeSheetResource();
 		timeSheetVM.systemStartDate = systemStartDate;
 		timeSheetVM.resource = resource;
@@ -71,33 +77,58 @@ public class TimeSheetResource extends ResourceSupport {
 		timeSheetVM.actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.SAVE, TimeSheetActionTypeVM.SUBMIT };
 		return timeSheetVM;
 	}
+	
+	public static TimeSheetResource ofPendingForSubmission(final TimeSheetWeekMetaDataVM weekDetails) {
+		TimeSheetResource timeSheetVM = new TimeSheetResource();
+		timeSheetVM.weekDetails = weekDetails;
+		timeSheetVM.timesheetStatus = TimeSheetStatusTypeVM.PENDING_SUBMISSION;
+//		timeSheetVM.actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.SAVE, TimeSheetActionTypeVM.SUBMIT };
+		return timeSheetVM;
+	}
 
 	public static TimeSheetResource ofSaved(final LocalDate systemStartDate, final Pair<String, String> resource,
 			Set<ResourceProjectSummary> allocations, final TimeSheetWeekMetaDataVM weekDetails,
-			final ProjectWiseTimeSheetVM timesheet, final LocalDateTime lastUpdatedOn) {
+			final ProjectWiseTimeSheetVM projectWiseTimesheet, final LocalDateTime lastUpdatedOn) {
 		TimeSheetResource timeSheetVM = new TimeSheetResource();
 		timeSheetVM.systemStartDate = systemStartDate;
 		timeSheetVM.resource = resource;
 		timeSheetVM.allocations = allocations;
 		timeSheetVM.weekDetails = weekDetails;
-		timeSheetVM.timesheet = timesheet;
+		timeSheetVM.timesheet = projectWiseTimesheet;
 		timeSheetVM.timesheetStatus = TimeSheetStatusTypeVM.SAVED;
 		timeSheetVM.actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.SAVE, TimeSheetActionTypeVM.SUBMIT };
 		timeSheetVM.lastUpdatedOn = lastUpdatedOn;
 		return timeSheetVM;
 	}
 
-	public static TimeSheetResource ofSubmitted(final LocalDate systemStartDate, final Pair<String, String> resource,
-			final ProjectWiseTimeSheetVM timesheet, final TimeSheetActorType actor, final LocalDateTime lastUpdatedOn) {
+	public static TimeSheetResource ofSubmitted(final LocalDate systemStartDate, final Pair<String, String> resource, 
+			final TimeSheetWeekMetaDataVM weekDetails,
+			final ProjectWiseTimeSheetVM projectWiseTimesheet, final TimeSheetActorType actor,
+			final LocalDateTime lastUpdatedOn) {
 		TimeSheetResource timeSheetVM = new TimeSheetResource();
 		timeSheetVM.systemStartDate = systemStartDate;
 		timeSheetVM.resource = resource;
-		timeSheetVM.timesheet = timesheet;
+		timeSheetVM.weekDetails = weekDetails;
+		timeSheetVM.timesheet = projectWiseTimesheet;
 		timeSheetVM.timesheetStatus = TimeSheetStatusTypeVM.SUBMITTED;
 		timeSheetVM.actions = actor == TimeSheetActorType.RESOURCE
 				? new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.NONE }
 				: new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.APPROVE, TimeSheetActionTypeVM.REJECT };
-				timeSheetVM.lastUpdatedOn = lastUpdatedOn;
+		timeSheetVM.lastUpdatedOn = lastUpdatedOn;
+		return timeSheetVM;
+	}
+
+	public static TimeSheetResource ofExistingTimeSheet(final TimeSheetWeekMetaDataVM weekDetails,
+			final ProjectWiseTimeSheetVM projectWiseTimesheet, final TimeSheetStatusTypeVM timesheetStatus, final LocalDateTime lastUpdatedOn) {
+		TimeSheetResource timeSheetVM = new TimeSheetResource();
+		timeSheetVM.weekDetails = weekDetails;
+		timeSheetVM.timesheet = projectWiseTimesheet;
+		 timeSheetVM.timesheetStatus = timesheetStatus;
+		// timeSheetVM.actions = actor == TimeSheetActorType.RESOURCE
+		// ? new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.NONE }
+		// : new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.APPROVE,
+		// TimeSheetActionTypeVM.REJECT };
+		timeSheetVM.lastUpdatedOn = lastUpdatedOn;
 		return timeSheetVM;
 	}
 

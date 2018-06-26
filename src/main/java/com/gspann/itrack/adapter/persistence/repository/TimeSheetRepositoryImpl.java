@@ -19,6 +19,8 @@ import org.springframework.stereotype.Repository;
 
 import com.gspann.itrack.domain.model.common.DateRange;
 import com.gspann.itrack.domain.model.common.DateRange_;
+import com.gspann.itrack.domain.model.staff.Resource;
+import com.gspann.itrack.domain.model.staff.Resource_;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.Week_;
@@ -47,6 +49,7 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<WeeklyTimeSheet> query = criteriaBuilder.createQuery(WeeklyTimeSheet.class);
 		Root<WeeklyTimeSheet> weeklyTimeSheet = query.from(WeeklyTimeSheet.class);
+		Join<WeeklyTimeSheet, Resource> resource = weeklyTimeSheet.join(WeeklyTimeSheet_.resource);
 		Join<WeeklyTimeSheet, WeeklyTimeSheetStatus> weeklyStatus = weeklyTimeSheet.join(WeeklyTimeSheet_.weeklyStatus);
 		query.select(weeklyTimeSheet);
 		Predicate weekStartDatePredicate = criteriaBuilder.greaterThanOrEqualTo(weeklyTimeSheet
@@ -54,30 +57,20 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 				fromDate);
 		Predicate savedSatusPredicate = criteriaBuilder.equal(weeklyStatus.get(WeeklyTimeSheetStatus_.status.getName()),
 				TimesheetStatus.SAVED);
-		query.where(criteriaBuilder.and(weekStartDatePredicate, savedSatusPredicate));
-
+		Predicate resourceCodeEqualsPredicate = criteriaBuilder.equal(resource.get(Resource_.code.getName()),
+				resourceCode);
+		query.where(criteriaBuilder.and(weekStartDatePredicate, savedSatusPredicate, resourceCodeEqualsPredicate));
 		return entityManager.createQuery(query).getResultList();
 	}
 
 	@Override
 	public Set<TimeSheetWeekStatusVM> findWeeksPendingForSubmissionSinceDate(String resourceCode, LocalDate sinceDate) {
-
-		List<Week> weeks = Week.weeksSince(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(), sinceDate);
+		List<Week> weeks = Week.weeksSince(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+				sinceDate);
 		Set<TimeSheetWeekStatusVM> resultWeeks = new TreeSet<>(
 				(x, y) -> x.getWeek().getWeekStartDate().compareTo(y.getWeek().getWeekStartDate()));
-		weeks.forEach((week) -> resultWeeks.add(TimeSheetWeekStatusVM.ofStartingDatePendingForSubmission(week.startingFrom())));
-		// TODO: Reuse method findWeeklyStatusesByWeeks()
-//		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
-//		CriteriaQuery<TimeSheetWeekStatusVM> query = criteriaBuilder.createQuery(TimeSheetWeekStatusVM.class);
-//		Root<WeeklyTimeSheet> weeklyTimeSheet = query.from(WeeklyTimeSheet.class);
-//		Join<WeeklyTimeSheet, WeeklyTimeSheetStatus> weeklyStatus = weeklyTimeSheet.join(WeeklyTimeSheet_.weeklyStatus);
-//
-//		query.select(criteriaBuilder.construct(TimeSheetWeekStatusVM.class, weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()),
-//				weeklyStatus.get(WeeklyTimeSheetStatus_.status.getName()), weeklyTimeSheet.get(WeeklyTimeSheet_.id.getName())));
-//
-//		query.where(weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()).in(weeks));
-//
-//		List<TimeSheetWeekStatusVM> timesheetWeeks = entityManager.createQuery(query).getResultList();
+		weeks.forEach((week) -> resultWeeks
+				.add(TimeSheetWeekStatusVM.ofStartingDatePendingForSubmission(week.startingFrom())));
 		Set<TimeSheetWeekStatusVM> timesheetWeeks = findWeeklyStatusesByWeeks(resourceCode, weeks);
 		timesheetWeeks.forEach((tw) -> {
 			if (tw.getStatus() == TimeSheetStatusTypeVM.SAVED) {
@@ -92,24 +85,32 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 
 		return resultWeeks;
 	}
-	
+
 	@Override
 	public Set<TimeSheetWeekStatusVM> findWeeklyStatusesByWeeks(String resourceCode, List<Week> weeks) {
-		// TODO: Apply sorting at query level and add one more method to filter by status
+		// TODO: Apply sorting at query level and add one more method to filter by
+		// status
 		Set<TimeSheetWeekStatusVM> resultWeeks = new TreeSet<>(
 				(x, y) -> x.getWeek().getWeekStartDate().compareTo(y.getWeek().getWeekStartDate()));
-		
+
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<TimeSheetWeekStatusVM> query = criteriaBuilder.createQuery(TimeSheetWeekStatusVM.class);
 		Root<WeeklyTimeSheet> weeklyTimeSheet = query.from(WeeklyTimeSheet.class);
+		Join<WeeklyTimeSheet, Resource> resource = weeklyTimeSheet.join(WeeklyTimeSheet_.resource);
 		Join<WeeklyTimeSheet, WeeklyTimeSheetStatus> weeklyStatus = weeklyTimeSheet.join(WeeklyTimeSheet_.weeklyStatus);
 
-		query.select(criteriaBuilder.construct(TimeSheetWeekStatusVM.class, weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()),
-				weeklyStatus.get(WeeklyTimeSheetStatus_.status.getName()), weeklyTimeSheet.get(WeeklyTimeSheet_.id.getName())));
+		query.select(criteriaBuilder.construct(TimeSheetWeekStatusVM.class,
+				weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()),
+				weeklyStatus.get(WeeklyTimeSheetStatus_.status.getName()),
+				weeklyTimeSheet.get(WeeklyTimeSheet_.id.getName())));
 
-		query.where(weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()).in(weeks));
+		Predicate resourceCodeEqualsPredicate = criteriaBuilder.equal(resource.get(Resource_.code.getName()),
+				resourceCode);
+
+		query.where(criteriaBuilder.and(resourceCodeEqualsPredicate,
+				weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()).in(weeks)));
+
 		resultWeeks.addAll(entityManager.createQuery(query).getResultList());
-
 		return resultWeeks;
 	}
 
@@ -123,7 +124,12 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
 		CriteriaQuery<WeeklyTimeSheet> query = criteriaBuilder.createQuery(WeeklyTimeSheet.class);
 		Root<WeeklyTimeSheet> weeklyTimeSheet = query.from(WeeklyTimeSheet.class);
+		Join<WeeklyTimeSheet, Resource> resource = weeklyTimeSheet.join(WeeklyTimeSheet_.resource);
+
 		query.select(weeklyTimeSheet);
+
+		Predicate resourceCodeEqualsPredicate = criteriaBuilder.equal(resource.get(Resource_.code.getName()),
+				resourceCode);
 
 		Predicate weekStartDatePredicate = criteriaBuilder.greaterThanOrEqualTo(weeklyTimeSheet
 				.get(WeeklyTimeSheet_.week.getName()).get(Week_.dateRange.getName()).get(DateRange_.fromDate.getName()),
@@ -132,10 +138,27 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 			Predicate weekEndDatePredicate = criteriaBuilder
 					.lessThanOrEqualTo(weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName())
 							.get(Week_.dateRange.getName()).get(DateRange_.tillDate.getName()), endDate);
-			query.where(criteriaBuilder.and(weekStartDatePredicate, weekEndDatePredicate));
+			query.where(criteriaBuilder.and(weekStartDatePredicate, weekEndDatePredicate, resourceCodeEqualsPredicate));
 		} else {
-			query.where(weekStartDatePredicate);
+			query.where(criteriaBuilder.and(weekStartDatePredicate, resourceCodeEqualsPredicate));
 		}
+
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	@Override
+	public List<WeeklyTimeSheet> findTimeSheetsByWeeks(String resourceCode, List<Week> weeks) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<WeeklyTimeSheet> query = criteriaBuilder.createQuery(WeeklyTimeSheet.class);
+		Root<WeeklyTimeSheet> weeklyTimeSheet = query.from(WeeklyTimeSheet.class);
+		Join<WeeklyTimeSheet, Resource> resource = weeklyTimeSheet.join(WeeklyTimeSheet_.resource);
+		query.select(weeklyTimeSheet);
+
+		Predicate resourceCodeEqualsPredicate = criteriaBuilder.equal(resource.get(Resource_.code.getName()),
+				resourceCode);
+
+		query.where(criteriaBuilder.and(resourceCodeEqualsPredicate,
+				weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()).in(weeks)));
 
 		return entityManager.createQuery(query).getResultList();
 	}
