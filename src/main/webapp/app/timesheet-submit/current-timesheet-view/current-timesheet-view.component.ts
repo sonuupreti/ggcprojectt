@@ -1,8 +1,5 @@
 import { Component, OnInit, ViewChildren, HostListener, EventEmitter, Output, QueryList } from '@angular/core';
-//import { MatInputModule, MatButtonModule } from '@angular/material';
-//import { PROJECTS } from '../projects.service';
 import { TimesheetService } from '../timesheet.service';
-import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { DialogConfirmBodyComponent } from './dialog-confirm-body/dialog-confirm-body.component';
@@ -17,10 +14,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CurrentTimesheetView implements OnInit {
     projects: Array<any>;
     currentDate;
-    private weekObj: any = {}; // = { weekNo: 0, year: 0, startDate: 0, startMonth: '', projects: [], status: '' }; // WeekObj ;
+    private weekObj: any = {};
     private months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    // private daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    private daysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
     leaveTypes = [];
     selectedLeave;
     isLeaveAdded = false;
@@ -34,9 +29,7 @@ export class CurrentTimesheetView implements OnInit {
         public dialog: MatDialog,
         private route: ActivatedRoute,
         private router: Router
-    ) {
-        //config.triggers = 'hover';
-    }
+    ) {}
 
     ngOnInit() {
         this.getTimeSheetData();
@@ -49,7 +42,7 @@ export class CurrentTimesheetView implements OnInit {
     }
     parseModel(timesheetData) {
         let dailyEntries = [];
-        let timeEntries = {
+        const timeEntries = {
             hours: '',
             comments: ''
         };
@@ -58,7 +51,6 @@ export class CurrentTimesheetView implements OnInit {
             comments: '',
             timeEntries: timeEntries
         };
-
         timesheetData.weekDetails.dayDetails.forEach(function(day) {
             obj.date = day.date;
             dailyEntries.push(obj);
@@ -78,13 +70,20 @@ export class CurrentTimesheetView implements OnInit {
     createInitialTimesheetData() {
         this.weekObj.projects = this.createProjectsModel(this.timesheetData.allocations);
         this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dayDetails);
-        this.weekObj.status = 'NOT SUBMITTED';
+        if (this.timesheetData.timesheetStatus.code === 'PENDING_SUBMISSION') {
+            this.weekObj.status = 'NOT SUBMITTED';
+        }
+        this.weekObj.weekName = this.timesheetData.weekDetails.weekName;
         this.weekObj.actions = this.timesheetData.actions;
         this.weekObj.startDate = this.timesheetData.weekDetails.weekStartDate;
         this.weekObj.endDate = this.timesheetData.weekDetails.weekEndDate;
         this.weekObj.weeklyStandardHours = this.timesheetData.weekDetails.weeklyStandardHours;
         this.weekObj.commentsAdded = true;
         this.weekObj.leaves = [];
+        this.weekObj.previousWeekEnabled = this.timesheetData.previousWeek && this.timesheetData.previousWeek != null ? true : false;
+        this.weekObj.previousWeekStartDate = this.weekObj.previousWeekEnabled && this.timesheetData.previousWeek.week.weekStartDate;
+        this.weekObj.nextWeekEnabled = this.timesheetData.nextWeek && this.timesheetData.nextWeek != null ? true : false;
+        this.weekObj.nextWeekStartDate = this.weekObj.nextWeekEnabled && this.timesheetData.nextWeek.week.weekStartDate;
     }
 
     createDaysData(daysData) {
@@ -132,9 +131,9 @@ export class CurrentTimesheetView implements OnInit {
     }
 
     saveOrSubmit(action) {
-        var totalHours = this.calculateTotalHours(this.weekObj.projects);
-        var dailyEntries = this.createHourEntriesModel();
-        var stanardHours = this.weekObj.weeklyStandardHours;
+        let totalHours = this.calculateTotalHours(this.weekObj.projects);
+        let dailyEntries = this.createHourEntriesModel();
+        let stanardHours = this.weekObj.weeklyStandardHours;
         if (action === 'SUBMIT' && totalHours < stanardHours) {
             alert('Minimum 40 hours are reaquired per week');
         } else if (action === 'SUBMIT' && totalHours === stanardHours) {
@@ -199,8 +198,8 @@ export class CurrentTimesheetView implements OnInit {
         let projectsModel = [];
         if (projects.length > 0) {
             projects.forEach(project => {
-                if (project.projectType.key != 'PDL' && project.projectType.key != 'UPL') {
-                    let projObj = {
+                if (project.projectType.key !== 'PDL' && project.projectType.key !== 'UPL') {
+                    const projObj = {
                         code: project.project.key,
                         name: project.project.key + ' - ' + project.project.value + ' ' + project.proportion + '%',
                         attachment: project.customerTimeTracking,
@@ -217,7 +216,7 @@ export class CurrentTimesheetView implements OnInit {
                     };
                     projectsModel.push(projObj);
                 } else {
-                    let projObj = {
+                    const projObj = {
                         code: project.project.key,
                         name: project.project.value,
                         hours: [

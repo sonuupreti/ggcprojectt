@@ -9,13 +9,10 @@
 			</h6>
 		</div>
 		<div>
-			<i class="fa fa-angle-left fat-arrow"></i>
-			<span class="week-date">{{weekObj.startDate | date:'LLL dd'}}{{ weekObj.startDate | date: "d" | dateSuffix }} - {{ weekObj.endDate | date:'dd'}}{{ weekObj.endDate | date: "d" | dateSuffix }}, {{ weekObj.endDate | date:'yyyy'}}</span>
-			<i class="fa fa-angle-right fat-arrow"></i>
+			<i class="fa fa-angle-left fat-arrow" (click)="weekObj.previousWeekEnabled && getTimeSheetData(this.weekObj.previousWeekStartDate)" [style.color]="weekObj.previousWeekEnabled ? '#0EB3F7' : 'lightgray'" [style.cursor]="weekObj.previousWeekEnabled ? 'pointer' : 'not-allowed'"></i>
+			<span class="week-date">{{weekObj.weekName}}</span>
+			<i class="fa fa-angle-right fat-arrow" disabed (click)="weekObj.nextWeekEnabled && getTimeSheetData(this.weekObj.nextWeekStartDate)" [style.color]="weekObj.nextWeekEnabled ? '#0EB3F7' : 'lightgray'" [style.cursor]="weekObj.nextWeekEnabled ? 'pointer' : 'not-allowed'" ></i>
 		</div>
-	
-		<!--  <h3>Week:{{weekObj.weekNo}}</h3>
-		<h6>{{currentDate}}</h6>-->
 		<table>
 			<tr class="weekdays">
 				<td class="first-child">Projects</td>
@@ -55,9 +52,9 @@
 				</td>
 				<td *ngFor="let dayHour of project.hours; let j = index; trackBy:trackByIndex;" [ngClass]="[weekObj.daysData[j].code === 'HD' ? 'holiday' : '']">
 					<input matInput class='hours-input' maxlength="2" [(ngModel)]="dayHour.hour" [ngModelOptions]="{updateOn: 'blur'}" (focusout)="(dayHour.comments.length>0)"  placement="top"
-					 [ngbPopover]="popContent" #p="ngbPopover"  (document:click)="p.close()" (click)="$event.stopPropagation()">
+					 [ngbPopover]="popContent" #p="ngbPopover"  (document:click)="p.close()" (click)="popupTrigger()" (click)="$event.stopPropagation()">
 					 <span *ngIf="dayHour.comments.length>0">
-							<i class="fa fa-comment" aria-hidden="true" placement="top" [ngbPopover]="popContentComment" 
+							<i class="fa fa-comment" aria-hidden="true" placement="top" [ngbPopover]="popContentComment"
 							tabindex="0" triggers="mouseenter:mouseleave"></i>
 						</span>
 						<ng-template #popContent>
@@ -77,9 +74,11 @@
 			<tr class='total-row'>
 				<td class="first-child">Total Hours Per Day</td>
 				<td *ngFor="let day of weekObj.daysData; let k = index; trackBy:trackByIndex;">
-					<input class='hours-input' maxlength="2" value="{{calculateDayHours(weekObj.projects,k)}}" placement="top" [ngbPopover]="commentNeeded" #p="ngbPopover"  (click)="popupTrigger()" (document:click)="p.close()" (click)="$event.stopPropagation()">
+					<div placement="top" [ngbPopover]="commentNeeded" #p="ngbPopover"  (click)="popupTrigger()" (document:click)="p.close()" (click)="$event.stopPropagation()">
+						<input class='hours-input' maxlength="2" value="{{calculateDayHours(weekObj.projects,k)}}" disabled="true">
+					</div>
 					<ng-template #commentNeeded>
-							<div><input matInput class=' ' maxlength="15" type="text" [(ngModel)]="day.comment" (click)="$event.stopPropagation()"></div>
+							<div><input matInput class='' maxlength="15" type="text" [(ngModel)]="day.comment" (click)="$event.stopPropagation()"></div>
 					</ng-template>
 					<span  *ngIf="day.comment.length>0">
 							<i class="fa fa-comment" aria-hidden="true" placement="top" [ngbPopover]="totalHoursComment" triggers="mouseenter:mouseleave"></i>
