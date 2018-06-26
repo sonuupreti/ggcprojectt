@@ -56,5 +56,6 @@ public class ResourceDTO {
 	private Money annualSalary;
 	private Money comission;
 	private Money bonus;
+	private Money otherCost;
 
 }

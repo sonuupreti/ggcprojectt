@@ -746,4 +746,40 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			return this.resource;
 		}
 	}
+	
+	//update methods
+	
+    public void updateEmploymentType(EmploymentType employmentType) {
+        this.employmentType = employmentType;
+    }
+
+    public void updateExpectedJoiningDate(LocalDate expectedJoiningDate) {
+
+        this.expectedJoiningDate = expectedJoiningDate;
+    }
+
+    public void updateActualJoiningDate(LocalDate actualJoiningDate) {
+        this.actualJoiningDate = actualJoiningDate;
+    }
+
+    public void updateBaseLocation(City baseLocation) {
+        this.baseLocation = baseLocation;
+    }
+
+    public void updateDeputedLocation(City deputedLocation) {
+        this.deputedLocation = deputedLocation;
+    }
+
+    public void updateResourceName(String name) {
+        this.name = name;
+    }
+
+    public void updateCosting(List<NonFTECost> costings) {
+        this.costings = costings;
+    }
+
+    public void updateDesignation(Designation designation) {
+        this.designation = designation;
+    }
+
 }

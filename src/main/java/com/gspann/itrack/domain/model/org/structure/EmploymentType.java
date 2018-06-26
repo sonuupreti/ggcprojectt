@@ -94,4 +94,11 @@ public class EmploymentType extends AbstractAssignable<String> {
 			throw new IllegalArgumentException();
 		}
 	}
+	
+	public static EmploymentType getEmploymentType(String code) {
+		for (CODE e : CODE.values())
+			if (e.code().equals(code))
+				return EmploymentType.of(e.code, e.description);
+		throw new IllegalArgumentException();
+	}
 }

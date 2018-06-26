@@ -6,6 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.validation.Valid;
+
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -20,10 +22,12 @@ import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
 import com.gspann.itrack.adapter.persistence.repository.SkillsRepository;
 import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
+import com.gspann.itrack.domain.model.business.payments.FTECost;
 import com.gspann.itrack.domain.model.common.Toggle;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
+import com.gspann.itrack.domain.model.common.dto.ResourceSearchDTO;
 import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.org.skills.Technology;
@@ -240,4 +244,49 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 		Optional<Resource> resource = resourceRepository.findById(id);
 		return BeanConverterUtil.resourceEntitytoDto(resource.get());
 	}
+
+    @Override
+    @Transactional
+    public ResourceDTO updateResource(@Valid ResourceDTO resourceDTO) {
+
+        Optional<Resource> resource = resourceRepository.findById(resourceDTO.getResourceCode());
+        Resource resourceObject = resource.get();
+
+        City baseLocation = locationRepository.loadCity(resourceDTO.getBaseLocationId());
+        City deputedLocation = locationRepository.loadCity(resourceDTO.getDeputedLocationId());
+        Designation designation = organizationRepository.findDesignationById(resourceDTO.getDesignationId()).get();
+        // TODO: need to confirm
+        FTECost fteCost = (FTECost) resourceObject.costings().get(0);
+
+        // resourceDTO.getEmployeeStatusCode()
+
+        fteCost.updateAnnualSalary(resourceDTO.getAnnualSalary());
+        fteCost.updateBonus(resourceDTO.getBonus());
+        fteCost.updateCommission(resourceDTO.getComission());
+        fteCost.updateOtherCost(resourceDTO.getOtherCost());
+
+        resourceObject.costings().add(fteCost);
+        resourceObject.updateResourceName(resourceDTO.getName());
+        resourceObject.updateEmploymentType(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode()));
+        resourceObject.updateDesignation(designation);
+        resourceObject.updateDeputedLocation(deputedLocation);
+        resourceObject.updateBaseLocation(baseLocation);
+        resourceObject.updateActualJoiningDate(resourceDTO.getActualJoiningDate());
+        resourceObject.updateExpectedJoiningDate(resourceDTO.getExpectedJoiningDate());
+        resourceObject.updatePrimarySkills(resourceDTO.getPrimarySkills());
+        resourceObject.updateSecondarySkills(resourceDTO.getSecondarySkills());
+
+        return BeanConverterUtil.resourceEntitytoDto(resourceObject);
+    }
+
+    @Override
+    public List<ResourceSearchDTO> getAllResourcesBySearchParameter(String searchParam) {
+        log.debug("START:: ResourceManagementServiceImpl :: getAllResourcesBySearchParameter : {}", searchParam);
+
+        String likeExpression = "%" + searchParam.toUpperCase() + "%";
+
+        return resourceRepository.searchResourceByParameter(likeExpression);
+
+    }
+	
 }

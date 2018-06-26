@@ -16,16 +16,20 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.codahale.metrics.annotation.Timed;
 import com.gspann.itrack.adapter.rest.error.BadRequestAlertException;
 import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.adapter.rest.util.PaginationUtil;
+import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
+import com.gspann.itrack.domain.model.common.dto.ResourceSearchDTO;
 import com.gspann.itrack.domain.service.api.ResourceManagementService;
 
 import io.github.jhipster.web.util.ResponseUtil;
@@ -81,21 +85,16 @@ public class ResourceRestController {
 	        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
 	    }
 	 	
-	 /*	@GetMapping("/resource/search")
-	    @Timed
-	    public ResponseEntity<List<ResourceDTO>> getAllResourcesBySearchParameter(Pageable pageable, @RequestParam("searchParam") String searchParam) {
-	 		 ObjectMapper mapper = new ObjectMapper();
-	 		try {
-				ResourceDTO resourcesearchDTO = mapper.readValue(searchParam, ResourceDTO.class);
-				
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-	 		 Page<ResourceDTO> page = resourceManagementService.getAllResourcesBySearchParameter(pageable,resourcesearchDTO);
-	 		 HttpHeaders headers = PaginationUtil.generatePaginationHttpHeaders(page, "/api/resource/search");
-	        return new ResponseEntity<>(page.getContent(), headers, HttpStatus.OK);
-	    }*/
+        @GetMapping("/resource/search")
+        @Timed
+        public ResponseEntity<List<ResourceSearchDTO>> getAllResourcesBySearchParameter(
+                @RequestParam("searchParam") String searchParam) {
+            log.debug("START :: ResourceRestController :: getAllResourcesBySearchParameter ");
+            List<ResourceSearchDTO> resourceSearchDTO = resourceManagementService
+                    .getAllResourcesBySearchParameter(searchParam);
+    
+            return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resourceSearchDTO));
+        }
 	 	/**
 	 	 * This method is used to get Resource object by Id.
 	 	 * @param id
@@ -109,4 +108,23 @@ public class ResourceRestController {
 	 		 log.debug("END :: ResourceRestController :: getResourceById");
 	 		 return ResponseUtil.wrapOrNotFound(Optional.ofNullable(resourceDTO));
 	 	}
+	 	
+        /**
+         * 
+         * @param resourceDTO
+         * @return
+         */
+        @PutMapping("/resources")
+        @Timed
+        public ResponseEntity<ResourceDTO> updateResource(@Valid @RequestBody ResourceDTO resourceDTO) {
+            log.debug("START :: ResourceRestController :: updateResource ");
+            ResourceDTO updatedResourceDTO = resourceManagementService.updateResource(resourceDTO);
+    
+            log.debug("END :: ResourceRestController :: updateResource ");
+    
+            return ResponseEntity.ok()
+                    .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedResourceDTO.getResourceCode()))
+                    .body(updatedResourceDTO);
+        }
+
 }
