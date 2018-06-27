@@ -5,13 +5,12 @@
                 Projects
             </th>
             <th class='timesheet-cell' 
-                *ngFor="let days of data.weekDetails.dailyDetails" 
+                *ngFor="let day of data.timesheet.projectTimeSheets[0].dailyEntries" 
                 [ngClass]="{
-                    'weekend-day':days.type.code === 'WE',
-                    'holiday':days.type.code === 'HD'
-                }"
-            >
-                {{days.date | date: 'EEE'}} <br/> {{days.date | date: 'MMM'}} {{days.date | date: 'dd'}}
+                    'weekend-day':day.type.code === 'WE',
+                    'holiday':day.type.code === 'HD'
+                }">
+                {{day.date | date: 'EEE'}} <br/> {{day.date | date: 'MMM'}} {{day.date | date: 'dd'}}
             </th>
             <th class='timesheet-cell resource-total-hrs'>
                 Total Hours
@@ -22,25 +21,32 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor="let timesheet of data.projects" class='text-center'>
+        <tr *ngFor="let timesheet of data.timesheet.projectTimeSheets" class='text-center'>
             <td class='timesheet-cell project-cell text-left'>
-                {{timesheet.project.key}} - {{timesheet.project.value}}
+                {{timesheet.projectDetails.project.key}} - {{timesheet.projectDetails.project.value}}
             </td>
-            <td *ngFor="let day of timesheet.dailyEntries" class='timesheet-cell'>
-                {{day.timeEntries.hours}}
+            <td *ngFor="let day of timesheet.dailyEntries" class='timesheet-cell' 
+            [ngClass]="{
+                'weekend-day':day.type.code === 'WE',
+                'holiday':day.type.code === 'HD'
+            }">
+                {{formatHours(day.hours)}}
             </td>
             <td class='timesheet-cell resource-total-hrs'>
-                {{timesheet.totalSubmittedHrs}}
+                {{formatHours(timesheet.projectTotalHours)}}
             </td>
-            <td 
-                class='timesheet-cell'
-                [ngClass]="{
-                    'apprvr-action-danger':timesheet.actions.isCancelled,
-                    'apprvr-action-success':timesheet.actions.isApproved}"
-                    >
-                <span *ngIf='timesheet.actions.isApproved'>Approved</span>
-                <span *ngIf='timesheet.actions.isCancelled'>Declined</span>
+            <td class='timesheet-cell'>
+                {{timesheet.projectTimesheetStatus.code}}
             </td>
         </tr>
+        <!-- <tr class='text-center'>
+            <td class='timesheet-cell project-cell text-left'>Total Hours Per Day	</td>
+            <td *ngFor='let day of data.timesheet.totalEntries' class='timesheet-cell'>
+                {{formatHours(day.totalHours)}}
+            </td>
+            <td class='timesheet-cell'>{{formatHours(data.timesheet.grandTotal)}}</td>
+            <td class='timesheet-cell'>{{data.timesheetStatus.code}}</td>
+            timesheet.timesheet.projectTimeSheets[2].projectDetails.projectType.key==="UPL"
+        </tr> -->
     </tbody>
 </table>

@@ -3,20 +3,20 @@
     
             <ng-container matColumnDef="weekOf">
                 <mat-header-cell *matHeaderCellDef> Week of </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.weekStartDate | date:'MMM dd'}}{{timesheet.weekDetails.weekStartDate | date:'dd' | dateSuffix}} - {{timesheet.weekDetails.weekEndDate | date:'dd'}}{{timesheet.weekDetails.weekEndDate | date:'dd' | dateSuffix}} </mat-cell>
-            </ng-container>
-    
-            <ng-container matColumnDef="status">
-                <mat-header-cell *matHeaderCellDef> Status </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.status}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.weekName}} </mat-cell>
             </ng-container>
     
             <ng-container matColumnDef="submittedOn">
                 <mat-header-cell *matHeaderCellDef> Submitted On </mat-header-cell>
-                <mat-cell *matCellDef="let timesheet"> {{timesheet.weekDetails.submittedDate | date:'MM/dd/yyyy'}} </mat-cell>
+                <mat-cell *matCellDef="let timesheet"> {{timesheet.lastUpdatedOn ? (timesheet.lastUpdatedOn | date:'MM/dd/yyyy') : 'N/A'}} </mat-cell>
+            </ng-container>
+
+            <ng-container matColumnDef="status">
+                <mat-header-cell *matHeaderCellDef> Timesheet Status </mat-header-cell>
+                <mat-cell *matCellDef="let timesheet" [ngClass]="getStatusColor(timesheet.timesheetStatus.code)">{{getStatus(timesheet.timesheetStatus.code)}}</mat-cell>
             </ng-container>
     
-            <ng-container matColumnDef="approverAction">
+            <!-- <ng-container matColumnDef="approverAction">
                 <mat-header-cell *matHeaderCellDef> Approver's Action </mat-header-cell>
                 <mat-cell *matCellDef="let timesheet" 
                     [ngClass]="{
@@ -26,12 +26,12 @@
                     }">
                     {{timesheet.approverAction}} 
                 </mat-cell>
-            </ng-container>
+            </ng-container> -->
     
             <ng-container matColumnDef="comments">
                 <mat-header-cell *matHeaderCellDef> Comments </mat-header-cell>
                 <mat-cell *matCellDef="let timesheet">
-                    <span 
+                    <!-- <span 
                         placement="top"
                         [ngbPopover]="tipContent"
                         triggers='mouseenter:mouseleave'
@@ -39,7 +39,8 @@
                         {{timesheet.approverComments | ellipsis:50}}
                     </span>
                     <ng-template #noTooltip>{{timesheet.approverComments}}</ng-template>
-                    <ng-template #tipContent>{{timesheet.approverComments}}</ng-template>
+                    <ng-template #tipContent>{{timesheet.approverComments}}</ng-template> -->
+                    <span>N/A</span>
                 </mat-cell>
             </ng-container>
     
@@ -48,11 +49,13 @@
                 <mat-cell *matCellDef="let timesheet;let i=index;" id="quickLinks">
                     <i class="fa fa-eye quick-link-icon"></i>
                     <i class="quick-link-icon"
-                        (click)="expandRow($event,timesheet,i/2)"
+                        (click)="timesheet.timesheetStatus.code !== 'PENDING_SUBMISSION' && expandRow($event,timesheet,i/2)"
                         [class.fa]="expandedElement != timesheet"
                         [class.fa-arrows-alt]="expandedElement != timesheet"
                         [class.contract-icon]="expandedElement == timesheet"
-                        [class.expanded]="expandedElement == timesheet">
+                        [class.expanded]="expandedElement == timesheet"
+                        [style.color] = "timesheet.timesheetStatus.code !== 'PENDING_SUBMISSION'  ? '#666' : '#E0E0E0'"
+                        [style.cursor] = "timesheet.timesheetStatus.code !== 'PENDING_SUBMISSION'  ? 'pointer' : 'not-allowed'">
                     </i>
                 </mat-cell>
             </ng-container>

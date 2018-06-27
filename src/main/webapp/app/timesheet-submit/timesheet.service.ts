@@ -11,7 +11,7 @@ export class TimesheetService {
     getTimesheetData(date?): Observable<any> {
         let url;
         if (date) {
-            url = '/api/v1/timesheets/weekly?date=date';
+            url = '/api/v1/timesheets/weekly?date=' + date;
         } else {
             url = '/api/v1/timesheets/weekly';
         }
@@ -23,6 +23,8 @@ export class TimesheetService {
         });
     }
     getReturnTimesheets(): Observable<any> {
-        return this.http.get('src/main/webapp/app/mockResponse/timeSeetResponse.json');
+        return this.http.get(SERVER_API_URL + 'api/v1/timesheets/recent', {}).map((response: HttpResponse<any>) => {
+            return response;
+        });
     }
 }
