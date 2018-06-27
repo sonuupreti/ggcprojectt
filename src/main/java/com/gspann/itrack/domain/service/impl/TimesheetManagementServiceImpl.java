@@ -252,7 +252,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			WeeklyTimeSheet weeklyTimeSheet = existingTimesheet.get();
 			Optional<ResourceAllocationSummary> resourceAllocationDetails = getResourceAllocationSummary(
 					weeklyTimeSheet.resource().code(), weeklyTimeSheet.week());
-			return getTimeSheetVMForExistingTimeSheet(weeklyTimeSheet.week(), weeklyTimeSheet,
+			return getTimeSheetVMForExistingTimeSheet(weeklyTimeSheet.week().updateWeekName(), weeklyTimeSheet,
 					resourceAllocationDetails.get());
 		} else {
 			// TODO: Throw exception that no timesheet with such ID exists

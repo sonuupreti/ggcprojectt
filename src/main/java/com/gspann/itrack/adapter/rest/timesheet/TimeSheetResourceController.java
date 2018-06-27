@@ -12,7 +12,6 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
-import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,9 +33,8 @@ import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
 import com.gspann.itrack.infra.config.ApplicationProperties;
 
-import io.github.jhipster.web.util.ResponseUtil;
+import io.swagger.annotations.ApiOperation;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 
@@ -45,8 +43,6 @@ import lombok.extern.slf4j.Slf4j;
  */
 @RestController
 @RequestMapping(TIMESHEET)
-@ExposesResourceFor(TimeSheetResource.class)
-@RequiredArgsConstructor
 @Slf4j
 public class TimeSheetResourceController {
 
@@ -59,12 +55,12 @@ public class TimeSheetResourceController {
 	@NonNull
 	private final TimeSheetLinks timesheetLinks;
 
-	// public TimeSheetResourceController(final TimesheetManagementService
-	// timesheetManagementService,
-	// final ApplicationProperties applicationProperties) {
-	// this.timesheetManagementService = timesheetManagementService;
-	// this.applicationProperties = applicationProperties;
-	// }
+	public TimeSheetResourceController(final TimesheetManagementService timesheetManagementService,
+			final ApplicationProperties applicationProperties, final TimeSheetLinks timesheetLinks) {
+		this.timesheetManagementService = timesheetManagementService;
+		this.applicationProperties = applicationProperties;
+		this.timesheetLinks = timesheetLinks;
+	}
 
 	private Week getInputWeek(final Optional<LocalDate> date) {
 		Week currentWeek = Week.current(applicationProperties.timeSheet().WEEK_START_DAY(),
@@ -98,6 +94,22 @@ public class TimeSheetResourceController {
 
 	@GetMapping(TIMESHEET_WEEKLY)
 	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "weekly-view", 
+			value = "Gets the timesheet View Model for Weekly View, by input date", response = TimeSheetResource.class, 
+				notes = "<p>The <b>input date is optional</b>, if not supplied returns the data for current week otherwise for the week wherein the supplied date falls.</p><br>"
+					+ "<br/>	1. If timesheet is PENDING for submission then the provided week's metadata "
+					+ "which includes week start and end date and days, week name, week ends, "
+					+ "day metadata such as if normal working day or week end or holiday etc."
+					+ "resource allocation to project's details, resource details etc."
+					+ "<br/>	2. If timesheet is in SAVED state then week metadata, "
+					+ "resource and her allocation to project details along with the saved timesheet data is returned."
+					+ "<br/>	3. If timesheet is in SUBMITTED state, then the minimal week details with just week name, start and end date, "
+					+ "resource details and timesheet data is returned, but not the resource to project allocation, "
+					+ "as it is not required by UI for submitted timesheets<br/><br/>"
+					+ "Also the link to previous and next week timesheet are return as HATEOAS links in response body"
+				)
+	// @formatter:on
 	public ResponseEntity<TimeSheetResource> weekly(
 			@RequestParam(value = "date", required = false) final Optional<LocalDate> date, final Principal principal) {
 		System.out.println("????? " + principal.getName());
@@ -108,7 +120,6 @@ public class TimeSheetResourceController {
 				.getTimeSheetVMByResourceAndWeek(resourceCode, forWeek);
 
 		if (timeSheetResource.isPresent()) {
-			// TODO: Think about making the call parallel
 			TimeSheetResource timesheet = timeSheetResource.get();
 			updateNextAndPreviousWeeks(timesheet);
 			try {
@@ -124,6 +135,18 @@ public class TimeSheetResourceController {
 
 	@GetMapping(TIMESHEET_WEEKLY + SLASH + PATH_VARIABLE_ID)
 	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "weekly-view", 
+			value = "Gets the timesheet View Model for Weekly View, by timesheet ID", response = TimeSheetResource.class, 
+				notes = "Takes mandatory timesheet ID as input as path variable"
+					+ "<br/>	1. If timesheet is in SAVED state then week metadata, "
+					+ "resource and her allocation to project details along with the saved timesheet data is returned."
+					+ "<br/>	2. If timesheet is in SUBMITTED state, then the minimal week details with just week name, start and end date, "
+					+ "resource details and timesheet data is returned, but not the resource to project allocation, "
+					+ "as it is not required by UI for submitted timesheets.<br/><br/>"
+					+ "Also the link to previous and next week timesheet are return as HATEOAS links in response body"
+				)
+	// @formatter:on
 	public ResponseEntity<TimeSheetResource> weekly(@PathVariable final long id, final Principal principal) {
 		log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
 		String resourceCode = principal.getName();
@@ -145,8 +168,46 @@ public class TimeSheetResourceController {
 		}
 	}
 
+	@GetMapping(SLASH + PATH_VARIABLE_ID)
+	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "getTimesheetById", response = TimeSheetResource.class,
+			value = "Gets an existing timesheet by ID",
+			notes = "Takes mandatory timesheet ID as input as path variable"
+					+ "<br/>	1. If timesheet is in SAVED state then week metadata, "
+					+ "resource and her allocation to project details along with the saved timesheet data is returned."
+					+ "<br/>	2. If timesheet is in SUBMITTED state, then the minimal week details with just week name, start and end date, "
+					+ "resource details and timesheet data is returned, but not the resource to project allocation, "
+					+ "as it is not required by UI for submitted timesheets<br/><br/>"
+					+ "But the link to previous and next week timesheet are not returned in response, "
+					+ "if you need next and previous nevigation links, consume the endpoints for <b>weekly-view</b>"
+			)
+	// @formatter:on
+	public ResponseEntity<TimeSheetResource> getTimesheetById(@PathVariable long id, final Principal principal) {
+		log.debug("REST request to getTimesheet : {}", id);
+		String resourceCode = principal.getName();
+		// TODO: Apply role here, only the timesheet owner resource or approver should
+		// be able to view
+		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id,
+				resourceCode);
+		if (timeSheetResource.isPresent()) {
+			return new ResponseEntity<TimeSheetResource>(timeSheetResource.get(), HttpStatus.OK);
+		} else {
+			return ResponseEntity.notFound().build();
+		}
+	}
+
 	@PostMapping
 	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "save/submit", 
+			value = "Saves or Submits the timesheet", 
+				notes = "Saves or Submits the input timesheet depending upon the if <b>action</b> "
+						+ "attribute in request body is SAVE or SUBMIT respectively"
+						+ "Returns the URI of the newly created timesheet in <b>location</b> header, "
+						+ "along with success message as a header value"
+				)
+	// @formatter:on
 	public ResponseEntity<Void> saveOrSubmitTimeSheet(@Valid @RequestBody TimeSheetDTO timesheet,
 			final Principal principal) throws URISyntaxException {
 		log.debug("REST request to  create TimeSheet : {}", timesheet);
@@ -164,21 +225,11 @@ public class TimeSheetResourceController {
 		}
 	}
 
-	@GetMapping(SLASH + PATH_VARIABLE_ID)
-	@Timed
-	public ResponseEntity<TimeSheetResource> getTimesheetById(@PathVariable long id, final Principal principal) {
-		log.debug("REST request to getTimesheet : {}", id);
-		String resourceCode = principal.getName();
-		// TODO: Apply role here, only the timesheet owner resource or approver should
-		// be able to view
-
-		return ResponseUtil
-				.wrapOrNotFound(timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id, resourceCode));
-
-	}
-
 	@GetMapping(SLASH + TIMESHEET_RECENT)
 	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "recent timesheets", response = TimeSheetResourceList.class, value = "Gets list of timesheets")
+	// @formatter:on
 	public ResponseEntity<TimeSheetResourceList> recentTimeSheets(final Principal principal) {
 		log.debug("REST request to recentTimeSheets ");
 		String resourceCode = principal.getName();

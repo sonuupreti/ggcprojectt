@@ -23,7 +23,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
 import org.springframework.format.Formatter;
 import org.springframework.hateoas.UriTemplate;
-import org.springframework.hateoas.config.EnableEntityLinks;
 import org.springframework.hateoas.hal.CurieProvider;
 import org.springframework.hateoas.hal.DefaultCurieProvider;
 
@@ -33,7 +32,6 @@ import com.gspann.itrack.infra.config.DefaultProfileUtil;
 import io.github.jhipster.config.JHipsterConstants;
 
 @SpringBootApplication
-@EnableEntityLinks
 @EnableConfigurationProperties({ LiquibaseProperties.class, ApplicationProperties.class })
 public class ItrackApplication {
 

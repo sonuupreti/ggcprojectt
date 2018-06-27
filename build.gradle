@@ -45,6 +45,13 @@ apply plugin: 'io.spring.dependency-management'
 apply plugin: 'eclipse'
 apply plugin: 'propdeps-eclipse'
 
+eclipse {
+    classpath {
+        downloadJavadoc = true
+        downloadSources = true
+    }
+}
+
 dependencyManagement {
   imports {
     mavenBom 'io.github.jhipster:jhipster-dependencies:' + jhipster_dependencies_version
