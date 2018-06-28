@@ -17,24 +17,31 @@ import com.gspann.itrack.domain.model.common.dto.ResourceSearchDTO;
 
 public interface ResourceManagementService {
 
-	public ResourceDTO addResource(ResourceDTO resourceDTO);
-	public ResourceOnLoadVM resourceOnLodPage();
-	public Page<ResourceDTO> getAllResources(Pageable pageable);
-	public void onBoardToBench(final String resourceCode, final LocalDate joiningDate);
-	public ResourceDTO findById(String id);
-	public ResourceDTO updateResource(@Valid ResourceDTO resourceDTO);
-	public List<ResourceSearchDTO> getAllResourcesBySearchParameter(String searchParam);
+    public ResourceDTO addResource(ResourceDTO resourceDTO);
 
-	public void onBoardToProject(final String resourceCode, final String projectCode, final Money hourlyRate,
-			final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem);
-	
-	public void onBoardToProjectPartially(final String resourceCode, final String projectCode, final short percentage, final Money hourlyRate,
-			final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem);
+    public ResourceOnLoadVM resourceOnLodPage();
 
-	public void allocate(final String resourceCode, final String projectCode, final Money hourlyRate,
-			final LocalDate fromDate, final LocalDate tillDate, final Toggle onboardedToClientTimeTrackingsystem);
-	
-	public void allocatePartially(final String resourceCode, final String projectCode, final short percentage, final Money hourlyRate,
-			final LocalDate fromDate, final LocalDate tillDate, final Toggle onboardedToClientTimeTrackingsystem);
+    public Page<ResourceDTO> getAllResources(Pageable pageable);
+
+    public void onBoardToBench(final String resourceCode, final LocalDate joiningDate);
+
+    public ResourceDTO findById(String id);
+
+    public ResourceDTO updateResource(@Valid ResourceDTO resourceDTO);
+
+    public List<ResourceSearchDTO> getAllResourcesBySearchParameter(String searchParam);
+
+    public void onBoardToProject(final String resourceCode, final String projectCode, final Money hourlyRate,
+            final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem);
+
+    public void onBoardToProjectPartially(final String resourceCode, final String projectCode, final short percentage,
+            final Money hourlyRate, final LocalDate joiningDate, final Toggle onboardedToClientTimeTrackingsystem);
+
+    public void allocate(final String resourceCode, final String projectCode, final Money hourlyRate,
+            final LocalDate fromDate, final LocalDate tillDate, final Toggle onboardedToClientTimeTrackingsystem);
+
+    public void allocatePartially(final String resourceCode, final String projectCode, final short percentage,
+            final Money hourlyRate, final LocalDate fromDate, final LocalDate tillDate,
+            final Toggle onboardedToClientTimeTrackingsystem);
 
 }

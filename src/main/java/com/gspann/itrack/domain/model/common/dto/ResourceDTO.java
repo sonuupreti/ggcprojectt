@@ -21,41 +21,41 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-//@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+// @JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
 public class ResourceDTO {
-	
-	private String resourceCode;
-	private long version;
-	private String emailId;
-	private String greytHRId;
-	@NotNull
-	private String name;
-	@NotNull
-	private Gender gender;
-	@NotNull
-	private short designationId;
-	@NotNull
-	private String employmentTypeCode;
-	
-	private String employeeStatusCode;
-	@NotNull
-	private int baseLocationId;
-	private int deputedLocationId;
-	@NotNull
-	private String primarySkills;
-	
-	private String secondarySkills;
-	@NotNull
-	private LocalDate expectedJoiningDate;
-	private LocalDate actualJoiningDate;
-	private LocalDate exitDate;
-	private long imageId;
-	private short companyId;
-	private short departmentId;
-	
-	private Money annualSalary;
-	private Money comission;
-	private Money bonus;
-	private Money otherCost;
+
+    private String resourceCode;
+    private long version;
+    private String emailId;
+    private String greytHRId;
+    @NotNull
+    private String name;
+    @NotNull
+    private Gender gender;
+    @NotNull
+    private short designationId;
+    @NotNull
+    private String employmentTypeCode;
+
+    private String employeeStatusCode;
+    @NotNull
+    private int baseLocationId;
+    private int deputedLocationId;
+    @NotNull
+    private String primarySkills;
+
+    private String secondarySkills;
+    @NotNull
+    private LocalDate expectedJoiningDate;
+    private LocalDate actualJoiningDate;
+    private LocalDate exitDate;
+    private long imageId;
+    private short companyId;
+    private short departmentId;
+
+    private Money annualSalary;
+    private Money comission;
+    private Money bonus;
+    private Money otherCost;
 
 }
