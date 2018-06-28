@@ -3,8 +3,8 @@
 			<div class="col-sm-3">
 				<h1 id='main-heading'>My Timesheet</h1>
 			</div>
-			<div class="col-sm-6 alert alert-success text-center submitted" *ngIf="submitted">
-						<strong>Your Timesheet has been successfully submitted.</strong> 
+			<div class="col-sm-6 alert alert-success text-center submitted" *ngIf="data.submitted">
+				<strong>{{data.displayLabel}}</strong> 
 			</div>
 			<div class="col-sm-3">
 			</div>

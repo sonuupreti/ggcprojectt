@@ -35,12 +35,18 @@ export class CurrentTimesheetView implements OnInit {
         this.getTimeSheetData();
     }
     getTimeSheetData(date?) {
+        if (date) {
+            this.leaveTypes = [];
+        }
         this.timesheetService.getTimesheetData(date).subscribe(timesheetData => {
             if (timesheetData.timesheetStatus.code === 'PENDING_SUBMISSION') {
                 this.weekObj.status = 'NOT SUBMITTED';
                 this.timesheetData = this.parseModel(timesheetData);
             } else if (timesheetData.timesheetStatus.code === 'SUBMITTED') {
                 this.weekObj.status = 'SUBMITTED';
+                this.timesheetData = this.parseModel(timesheetData);
+            } else if (timesheetData.timesheetStatus.code === 'SAVED') {
+                this.weekObj.status = 'SAVED';
                 this.timesheetData = this.parseModel(timesheetData);
             }
             this.createInitialTimesheetData();
@@ -86,6 +92,9 @@ export class CurrentTimesheetView implements OnInit {
         } else if (this.weekObj.status === 'SUBMITTED') {
             this.weekObj.projects = this.createProjectsModel(this.timesheetData.timesheet.projectTimeSheets);
             this.weekObj.daysData = this.createDaysData(this.timesheetData.timesheet.projectTimeSheets[0].dailyEntries);
+        } else if (this.weekObj.status === 'SAVED') {
+            this.weekObj.projects = this.createProjectsModel(this.timesheetData.timesheet.projectTimeSheets);
+            this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dayDetails);
         }
         this.weekObj.weekName = this.timesheetData.weekDetails.weekName;
         this.weekObj.actions = this.timesheetData.actions;
@@ -150,6 +159,32 @@ export class CurrentTimesheetView implements OnInit {
         let totalHours = this.calculateTotalHours(this.weekObj.projects);
         let dailyEntries = this.createHourEntriesModel();
         let stanardHours = this.weekObj.weeklyStandardHours;
+        if (action === 'SAVE') {
+            let data = {
+                action: action,
+                resourceCode: this.timesheetData.resource.key,
+                week: {
+                    weekStartDate: this.timesheetData.weekDetails.weekStartDate,
+                    dailyEntries: dailyEntries
+                }
+            };
+            this.timesheetService.saveSubmitTimesheet(data).subscribe(response => {
+                let obj;
+                console.log(response);
+                if (response) {
+                    obj = {
+                        submitted: true,
+                        displayLabel: 'saveTesting'
+                    };
+                    // this.onSubmit = true;
+                    this.submittedToParent.emit(obj);
+                    // this.weekObj.status = timesheetData.status;
+                    // alert('Timesheet ' + this.weekObj.status + ' successfully');
+                    // this.weekObj.actions = this.timesheetData.actions;
+                    // this.router.navigate(['']);
+                }
+            });
+        }
         if (action === 'SUBMIT' && totalHours < stanardHours) {
             alert('Minimum 40 hours are reaquired per week');
         } else if (action === 'SUBMIT' && totalHours === stanardHours) {
@@ -185,7 +220,7 @@ export class CurrentTimesheetView implements OnInit {
                 resourceCode: this.timesheetData.resource.key,
                 week: {
                     dailyEntries: dailyEntries,
-                    weekStartDate: this.timesheetData.weekDetails.dailyDetails[0].date
+                    weekStartDate: this.timesheetData.weekDetails.weekStartDate
                 }
             };
             const dialogRef = this.dialog.open(DialogConfirmBodyComponent, {
@@ -238,8 +273,12 @@ export class CurrentTimesheetView implements OnInit {
                         { hour: 0, comments: '' },
                         { hour: 0, comments: '' }
                     ];
-                } else if (this.weekObj.status === 'SUBMITTED') {
-                    condition = true;
+                } else if (this.weekObj.status === 'SUBMITTED' || this.weekObj.status === 'SAVED') {
+                    if (this.weekObj.status === 'SUBMITTED') {
+                        condition = true;
+                    } else {
+                        condition = project.projectDetails.projectType.key !== 'PDL' && project.projectDetails.projectType.key !== 'UPL';
+                    }
                     dataObj.code = project.projectDetails.project.key;
                     dataObj.name =
                         project.projectDetails.project.key +
@@ -251,7 +290,11 @@ export class CurrentTimesheetView implements OnInit {
                     dataObj.attachment = project.projectDetails.customerTimeTracking;
                     dataObj.type = project.projectDetails.projectType.key;
                     project.dailyEntries.forEach(function(day) {
-                        dataObj.hours.push({ hour: day.hours, comments: day.comments });
+                        let hour = day.hours.replace(day.hours.charAt(day.hours.length - 1), '').replace('PT', '');
+                        dataObj.hours.push({
+                            hour: hour,
+                            comments: day.comments
+                        });
                     });
                     dataObj.totalHours = project.projectTotalHours;
                     //dataObj.attachment =
@@ -299,12 +342,7 @@ export class CurrentTimesheetView implements OnInit {
         let hourss: any = 0;
         if (p && p.length > 0) {
             for (let i = 0; i < p.length; i++) {
-                if (this.weekObj.status === 'NOT SUBMITTED') {
-                    let h = parseInt(p[i].hours[indx].hour);
-                } else if (this.weekObj.status === 'SUBMITTED') {
-                    let h = p[i].hours[indx].hour;
-                    h = parseInt(h.replace(h.charAt(h.length - 1), '').replace('PT', ''));
-                }
+                let h = parseInt(p[i].hours[indx].hour);
                 if (isNaN(h)) {
                     hourss += 0;
                 } else {
@@ -322,12 +360,7 @@ export class CurrentTimesheetView implements OnInit {
             for (let i = 0; i < p.length; i++) {
                 if (p[i].hours.length > 0) {
                     for (let j = 0; j < p[i].hours.length; j++) {
-                        if (this.weekObj.status === 'NOT SUBMITTED') {
-                            let h = parseInt(p[i].hours[j].hour);
-                        } else if (this.weekObj.status === 'SUBMITTED') {
-                            let h = p[i].hours[j].hour;
-                            h = parseInt(h.replace(h.charAt(h.length - 1), '').replace('PT', ''));
-                        }
+                        let h = parseInt(p[i].hours[j].hour);
                         if (isNaN(h)) {
                             hours += 0;
                         } else {

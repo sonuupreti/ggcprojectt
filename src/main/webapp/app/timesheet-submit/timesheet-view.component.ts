@@ -6,14 +6,14 @@ import { Component, OnInit } from '@angular/core';
     styleUrls: ['./timesheet-view.component.css']
 })
 export class TimesheetViewComponent implements OnInit {
-    submitted: boolean = false;
+    data: any = {};
     constructor() {}
 
     ngOnInit() {}
 
     getOutputVal(status) {
         if (status) {
-            this.submitted = status;
+            this.data = status;
         }
     }
 }
