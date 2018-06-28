@@ -90,8 +90,9 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	@JoinColumn(name = "RESOURCE_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_RESOURCE_CODE))
 	private Resource resource;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false)
+//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "weeklyTimeSheet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false)
 	@org.hibernate.annotations.OrderBy(clause = "DATE asc")
 	@Getter(value = AccessLevel.NONE)
 	private Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>();

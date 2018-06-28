@@ -43,13 +43,13 @@ public class State extends AbstractIdentifiable<Integer> {
 	private String name;
 
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.location.Country.class, fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "COUNTRY_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_STATES_COUNTRY_CODE))
 	private Country country;
 
-	@OneToMany(cascade = { CascadeType.PERSIST, CascadeType.MERGE }, mappedBy = "state", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "state", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<City> cities = new HashSet<City>();
-	
+
 	public static State of(final String name, final Country country) {
 		State state = new State();
 		state.name = name;

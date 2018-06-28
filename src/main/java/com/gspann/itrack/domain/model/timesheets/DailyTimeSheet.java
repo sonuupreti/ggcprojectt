@@ -70,13 +70,14 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 	@Column(name = "COMMENTS", nullable = true, length = 255)
 	private String dailyComments;
 
-	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@JoinColumn(name = "DAILY_TIME_SHEET_ID", nullable = false)
+//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "dailyTimeSheet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+//	@JoinColumn(name = "DAILY_TIME_SHEET_ID", nullable = false)
 	private Set<TimeSheetEntry> entries = new LinkedHashSet<>();
 
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", updatable = false, insertable = false, foreignKey = @ForeignKey(name = FK_DAILY_TIME_SHEETS_WEEKLY_TIME_SHEET_ID))
+	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DAILY_TIME_SHEETS_WEEKLY_TIME_SHEET_ID))
 	private WeeklyTimeSheet weeklyTimeSheet;
 
 	public DailyTimeSheet setWeeklyTimeSheet(final WeeklyTimeSheet weeklyTimeSheet) {

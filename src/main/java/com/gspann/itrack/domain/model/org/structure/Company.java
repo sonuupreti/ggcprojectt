@@ -21,7 +21,6 @@ import org.hibernate.annotations.Immutable;
 
 import com.gspann.itrack.domain.model.common.type.AbstractIdentifiable;
 import com.gspann.itrack.domain.model.location.City;
-import com.gspann.itrack.domain.model.location.State;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,10 +39,10 @@ public class Company extends AbstractIdentifiable<Short> {
 	private String name;
 	
 	@NotNull
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "company", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "company", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Department> departments = new HashSet<Department>();
-	@OneToMany(fetch = FetchType.EAGER)
 	
+	@OneToMany(fetch = FetchType.EAGER)
 	// @formatter:off
  	@JoinTable(
 	        name = "COMPANY_LOCATION_MAP",

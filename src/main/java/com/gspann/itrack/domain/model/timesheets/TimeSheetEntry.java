@@ -49,7 +49,7 @@ public class TimeSheetEntry extends BaseIdentifiableVersionableEntity<Long, Long
 
 	@NotNull
 	@ManyToOne
-	@JoinColumn(name = "DAILY_TIME_SHEET_ID", updatable = false, insertable = false, foreignKey = @ForeignKey(name = FK_TIME_SHEET_ENTRIES_DAILY_TIME_SHEET_ID))
+	@JoinColumn(name = "DAILY_TIME_SHEET_ID", nullable = false, foreignKey = @ForeignKey(name = FK_TIME_SHEET_ENTRIES_DAILY_TIME_SHEET_ID))
 	private DailyTimeSheet dailyTimeSheet;
 
 	public TimeSheetEntry setDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {

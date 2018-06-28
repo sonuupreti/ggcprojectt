@@ -1,7 +1,6 @@
 package com.gspann.itrack.domain.model.org.structure;
 
-import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.FK_DEPARTMENTS_COMPANY_ID;
-import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.UNQ_DEPT_NAME;
+import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -40,19 +39,12 @@ public class Department extends AbstractIdentifiable<Short> {
 	@Column(name = "NAME", nullable = false, length = 100)
 	private String name;
 
-	/*@NotNull
-	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
-	@JoinColumn(name = "COMPANY_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DEPARTMENTS_COMPANY_ID))
-	private Company company;*/
-	
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.org.structure.Company.class, fetch = FetchType.EAGER)
-	@JoinColumn(name = "COMPANY_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DEPARTMENTS_COMPANY_ID))
+	@ManyToOne
+	@JoinColumn(name = "COMPANY_ID", foreignKey = @ForeignKey(name = FK_DEPARTMENTS_COMPANY_ID))
 	private Company company;
 	
 	@NotNull
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "department", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "department", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<Designation> designations = new HashSet<Designation>();
-	
-	
 }

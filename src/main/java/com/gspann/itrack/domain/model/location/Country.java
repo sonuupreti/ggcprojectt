@@ -36,7 +36,7 @@ public class Country extends AbstractAssignable<String> {
 	private String name;
 
 	@NotNull
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "country", fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "country", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
 	private Set<State> states = new HashSet<State>();
 
 	public static Country of(String alpha2, String name) {

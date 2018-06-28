@@ -4,7 +4,6 @@ import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMet
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -37,7 +36,7 @@ public class City extends AbstractIdentifiable<Integer> {
 	private String name;
 
 	@NotNull
-	@ManyToOne(targetEntity = com.gspann.itrack.domain.model.location.State.class, fetch = FetchType.EAGER)
+	@ManyToOne
 	@JoinColumn(name = "STATE_ID", nullable = false, foreignKey = @ForeignKey(name = FK_CITIES_STATE_ID))
 	private State state;
 
