@@ -36,7 +36,13 @@ export class CurrentTimesheetView implements OnInit {
     }
     getTimeSheetData(date?) {
         this.timesheetService.getTimesheetData(date).subscribe(timesheetData => {
-            this.timesheetData = this.parseModel(timesheetData);
+            if (timesheetData.timesheetStatus.code === 'PENDING_SUBMISSION') {
+                this.weekObj.status = 'NOT SUBMITTED';
+                this.timesheetData = this.parseModel(timesheetData);
+            } else if (timesheetData.timesheetStatus.code === 'SUBMITTED') {
+                this.weekObj.status = 'SUBMITTED';
+                this.timesheetData = timesheetData;
+            }
             this.createInitialTimesheetData();
         });
     }
@@ -68,10 +74,12 @@ export class CurrentTimesheetView implements OnInit {
         return index;
     }
     createInitialTimesheetData() {
-        this.weekObj.projects = this.createProjectsModel(this.timesheetData.allocations);
-        this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dayDetails);
-        if (this.timesheetData.timesheetStatus.code === 'PENDING_SUBMISSION') {
-            this.weekObj.status = 'NOT SUBMITTED';
+        if (this.weekObj.status === 'NOT SUBMITTED') {
+            this.weekObj.projects = this.createProjectsModel(this.timesheetData.allocations);
+            this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dayDetails);
+        } else if (this.weekObj.status === 'SUBMITTED') {
+            this.weekObj.projects = this.createProjectsModel(this.timesheetData.timesheet.projectTimeSheets);
+            this.weekObj.daysData = this.createDaysData(this.timesheetData.timesheet.projectTimeSheets[0].dailyEntries);
         }
         this.weekObj.weekName = this.timesheetData.weekDetails.weekName;
         this.weekObj.actions = this.timesheetData.actions;
@@ -97,7 +105,9 @@ export class CurrentTimesheetView implements OnInit {
                 dModel.day = dayObj.day.substr(0, 3);
                 dModel.remarks = dayObj.remarks;
                 dModel.code = dayObj.type.code;
-                dModel.comment = dayObj.timeEntries.comments;
+                if (this.weekObj.status === 'NOT SUBMITTED') {
+                    dModel.comment = dayObj.timeEntries.comments;
+                }
                 daysViewModel.push(dModel);
             });
         }
@@ -195,40 +205,67 @@ export class CurrentTimesheetView implements OnInit {
     }
 
     createProjectsModel(projects) {
-        let projectsModel = [];
+        let projectsModel = [],
+            condition;
         if (projects.length > 0) {
             projects.forEach(project => {
-                if (project.projectType.key !== 'PDL' && project.projectType.key !== 'UPL') {
+                let dataObj = {
+                    code: '',
+                    name: '',
+                    attachment: '',
+                    type: '',
+                    hours: [],
+                    totalHours: ''
+                };
+                if (this.weekObj.status === 'NOT SUBMITTED') {
+                    condition = project.projectType.key !== 'PDL' && project.projectType.key !== 'UPL';
+                    dataObj.code = project.project.key;
+                    dataObj.name = project.project.key + ' - ' + project.project.value + ' ' + project.proportion + '%';
+                    dataObj.attachment = project.customerTimeTracking;
+                    dataObj.type = project.projectType.key;
+                    dataObj.hours = [
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' }
+                    ];
+                } else if (this.weekObj.status === 'SUBMITTED') {
+                    condition = project.projectDetails.projectType.key !== 'PDL' && project.projectDetails.projectType.key !== 'UPL';
+                    dataObj.code = project.projectDetails.project.key;
+                    dataObj.name =
+                        project.projectDetails.project.key +
+                        ' - ' +
+                        project.projectDetails.project.value +
+                        ' ' +
+                        project.projectDetails.proportion +
+                        '%';
+                    dataObj.attachment = project.projectDetails.customerTimeTracking;
+                    dataObj.type = project.projectDetails.projectType.key;
+                    project.dailyEntries.forEach(function(day) {
+                        dataObj.hours.push({ hour: day.hours, comments: day.comments });
+                    });
+                    dataObj.totalHours = project.projectTotalHours;
+                    //dataObj.attachment =
+                }
+                if (condition) {
                     const projObj = {
-                        code: project.project.key,
-                        name: project.project.key + ' - ' + project.project.value + ' ' + project.proportion + '%',
-                        attachment: project.customerTimeTracking,
-                        hours: [
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' }
-                        ],
-                        type: project.projectType.key
+                        code: dataObj.code,
+                        name: dataObj.name,
+                        hours: dataObj.hours,
+                        type: dataObj.type,
+                        totalHours: dataObj.totalHours
                     };
                     projectsModel.push(projObj);
                 } else {
                     const projObj = {
-                        code: project.project.key,
-                        name: project.project.value,
-                        hours: [
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' }
-                        ],
-                        type: project.projectType.key
+                        code: dataObj.code,
+                        name: dataObj.name,
+                        hours: dataObj.hours,
+                        type: dataObj.type,
+                        totalHours: dataObj.totalHours
                         //attachment: project.customerTimeTracking
                     };
                     this.leaveTypes.push(projObj);

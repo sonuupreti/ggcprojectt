@@ -14,6 +14,7 @@ import { TimesheetService } from './timesheet.service';
 import { EllipsisPipe } from './previous-timesheet-view/ellipsis.pipe';
 import { DateSuffixPipe } from './datesuffix.pipe';
 import { DialogConfirmBodyComponent } from './current-timesheet-view/dialog-confirm-body/dialog-confirm-body.component';
+import { FormatDataPipe } from './format-date.pipe';
 
 const routes = [
     {
@@ -35,7 +36,8 @@ const routes = [
         TimeSheetsDetailedViewDirective,
         EllipsisPipe,
         DateSuffixPipe,
-        DialogConfirmBodyComponent
+        DialogConfirmBodyComponent,
+        FormatDataPipe
     ],
     entryComponents: [TimesheetDetailedViewComponent, DialogConfirmBodyComponent],
     providers: [TimesheetService],
