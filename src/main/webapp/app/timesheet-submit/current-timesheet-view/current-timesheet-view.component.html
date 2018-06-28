@@ -13,7 +13,7 @@
 			<span class="week-date">{{weekObj.weekName}}</span>
 			<i class="fa fa-angle-right fat-arrow" disabed (click)="weekObj.nextWeekEnabled && getTimeSheetData(this.weekObj.nextWeekStartDate)" [style.color]="weekObj.nextWeekEnabled ? '#0EB3F7' : 'lightgray'" [style.cursor]="weekObj.nextWeekEnabled ? 'pointer' : 'not-allowed'" ></i>
 		</div>
-		<table>
+		<table id='weeklyTSRow'>
 			<tr class="weekdays">
 				<td class="first-child">Projects</td>
 				<td *ngFor="let day of weekObj.daysData; let i = index" [ngClass]="[day.code === 'HD' ? 'holiday' : '']">{{day.day}}
@@ -46,7 +46,7 @@
 					<i class="material-icons" [hidden]="!project.attachment">attach_file</i>
 				</td>
 			</tr>	
-			<tr *ngFor="let project of weekObj.projects" class='leave-row' [hidden]="weekObj.status === 'NOT SUBMITTED' && project.type != 'PDL' && project.type != 'UPL'">
+			<tr *ngFor="let project of weekObj.projects" class='leave-row' [hidden]="project.type != 'PDL' && project.type != 'UPL'">
 				<td class="first-child">
 					<span *ngIf="weekObj.status === 'NOT SUBMITTED'">{{project.code+'-'+project.name}}</span>
 					<span *ngIf="weekObj.status === 'SUBMITTED'">{{project.name}}</span>
@@ -75,27 +75,29 @@
 					<i class="material-icons" [hidden]="!project.attachment">attach_file</i>
 				</td>
 			</tr>
-			<!-- <tr class='total-row'>
+			<tr class='total-row'>
 				<td class="first-child">Total Hours Per Day</td>
 				<td *ngFor="let day of weekObj.daysData; let k = index; trackBy:trackByIndex;">
-					<div placement="top" [ngbPopover]="commentNeeded" #p="ngbPopover"  (click)="popupTrigger()" (document:click)="p.close()" (click)="$event.stopPropagation()">
+					<div *ngIf="weekObj.status === 'NOT SUBMITTED'" placement="top" [ngbPopover]="commentNeeded" #p="ngbPopover"  (click)="popupTrigger()" (document:click)="p.close()" (click)="$event.stopPropagation()">
 						<input class='hours-input' maxlength="2" value="{{calculateDayHours(weekObj.projects,k)}}" disabled="true">
 					</div>
+					<span *ngIf="weekObj.status === 'SUBMITTED'">{{calculateDayHours(weekObj.projects,k)}}</span>
 					<ng-template #commentNeeded>
-							<div><input matInput class='' maxlength="15" type="text" [(ngModel)]="day.comment" (click)="$event.stopPropagation()"></div>
+						<div><input matInput class='' maxlength="15" type="text" [(ngModel)]="day.comment" (click)="$event.stopPropagation()"></div>
 					</ng-template>
-					<span  *ngIf="day.comment.length>0">
+					<span  *ngIf="day.comment != null && day.comment.length>0">
 							<i class="fa fa-comment" aria-hidden="true" placement="top" [ngbPopover]="totalHoursComment" triggers="mouseenter:mouseleave"></i>
 							<ng-template #totalHoursComment>
-									<input matInput class='thours-comments' maxlength="15" type="text" value="{{day.comment}}" required></div>
+								<input matInput class='thours-comments' maxlength="15" type="text" value="{{day.comment}}" required></div>
 							</ng-template>
 						</span>
 				</td>
 				<td>
-					<input class='hours-input' maxlength="2" value="{{calculateTotalHours(weekObj.projects)}}" disabled="true">
+					<!-- <input class='hours-input' *ngIf="weekObj.status==="NOT SUBMITTED"" maxlength="2" value="{{calculateTotalHours(weekObj.projects)}}" disabled="true"> -->
+					<span class='hours-input'>{{calculateTotalHours(weekObj.projects)}}</span>
 				</td>
 				<td></td>
-			</tr> -->
+			</tr>
 		</table>
 	
 		<div class="leave-section" *ngIf='weekObj.status === "NOT SUBMITTED"'>

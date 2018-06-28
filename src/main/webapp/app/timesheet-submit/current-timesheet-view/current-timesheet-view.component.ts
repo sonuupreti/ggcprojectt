@@ -41,33 +41,39 @@ export class CurrentTimesheetView implements OnInit {
                 this.timesheetData = this.parseModel(timesheetData);
             } else if (timesheetData.timesheetStatus.code === 'SUBMITTED') {
                 this.weekObj.status = 'SUBMITTED';
-                this.timesheetData = timesheetData;
+                this.timesheetData = this.parseModel(timesheetData);
             }
             this.createInitialTimesheetData();
         });
     }
     parseModel(timesheetData) {
-        let dailyEntries = [];
         const timeEntries = {
             hours: '',
             comments: ''
         };
-        let obj = {
-            date: '',
-            comments: '',
-            timeEntries: timeEntries
-        };
-        timesheetData.weekDetails.dayDetails.forEach(function(day) {
-            obj.date = day.date;
-            dailyEntries.push(obj);
-        });
-        timesheetData.allocations.forEach(function(project) {
-            project.dailyEntries = dailyEntries;
-        });
-        timesheetData.weekDetails.dayDetails.forEach(function(day) {
-            day.comments = '';
-            day.timeEntries = timeEntries;
-        });
+        if (this.weekObj.status === 'NOT SUBMITTED') {
+            let dailyEntries = [];
+            let obj = {
+                date: '',
+                comments: '',
+                timeEntries: timeEntries
+            };
+            timesheetData.weekDetails.dayDetails.forEach(function(day) {
+                obj.date = day.date;
+                dailyEntries.push(obj);
+            });
+            timesheetData.allocations.forEach(function(project) {
+                project.dailyEntries = dailyEntries;
+            });
+            timesheetData.weekDetails.dayDetails.forEach(function(day) {
+                day.comments = '';
+                day.timeEntries = timeEntries;
+            });
+        } else if (this.weekObj.status === 'SUBMITTED') {
+            timesheetData.timesheet.projectTimeSheets[0].dailyEntries.forEach(function(day) {
+                day.timeEntries = timeEntries;
+            });
+        }
         return timesheetData;
     }
     trackByIndex(index: number, obj: any): any {
@@ -233,7 +239,7 @@ export class CurrentTimesheetView implements OnInit {
                         { hour: 0, comments: '' }
                     ];
                 } else if (this.weekObj.status === 'SUBMITTED') {
-                    condition = project.projectDetails.projectType.key !== 'PDL' && project.projectDetails.projectType.key !== 'UPL';
+                    condition = true;
                     dataObj.code = project.projectDetails.project.key;
                     dataObj.name =
                         project.projectDetails.project.key +
@@ -293,7 +299,12 @@ export class CurrentTimesheetView implements OnInit {
         let hourss: any = 0;
         if (p && p.length > 0) {
             for (let i = 0; i < p.length; i++) {
-                let h = parseInt(p[i].hours[indx].hour);
+                if (this.weekObj.status === 'NOT SUBMITTED') {
+                    let h = parseInt(p[i].hours[indx].hour);
+                } else if (this.weekObj.status === 'SUBMITTED') {
+                    let h = p[i].hours[indx].hour;
+                    h = parseInt(h.replace(h.charAt(h.length - 1), '').replace('PT', ''));
+                }
                 if (isNaN(h)) {
                     hourss += 0;
                 } else {
@@ -311,7 +322,12 @@ export class CurrentTimesheetView implements OnInit {
             for (let i = 0; i < p.length; i++) {
                 if (p[i].hours.length > 0) {
                     for (let j = 0; j < p[i].hours.length; j++) {
-                        let h = parseInt(p[i].hours[j].hour);
+                        if (this.weekObj.status === 'NOT SUBMITTED') {
+                            let h = parseInt(p[i].hours[j].hour);
+                        } else if (this.weekObj.status === 'SUBMITTED') {
+                            let h = p[i].hours[j].hour;
+                            h = parseInt(h.replace(h.charAt(h.length - 1), '').replace('PT', ''));
+                        }
                         if (isNaN(h)) {
                             hours += 0;
                         } else {
