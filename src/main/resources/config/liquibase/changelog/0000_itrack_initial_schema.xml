@@ -908,7 +908,7 @@
 			<column name="comments" type="varchar(255)">
 				<constraints nullable="true" />
 			</column>
-			<column name="updated_on" type="timestamp" valueDate="${now}">
+			<column name="updated_on" type="timestamp with time zone" valueDate="${now}">
 				<constraints nullable="false" />
 			</column>
 		</createTable>

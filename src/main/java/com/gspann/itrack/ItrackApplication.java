@@ -26,6 +26,7 @@ import org.springframework.hateoas.UriTemplate;
 import org.springframework.hateoas.hal.CurieProvider;
 import org.springframework.hateoas.hal.DefaultCurieProvider;
 
+import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.infra.config.ApplicationProperties;
 import com.gspann.itrack.infra.config.DefaultProfileUtil;
 
@@ -104,6 +105,7 @@ public class ItrackApplication {
 						+ "Profile(s): \t{}\n----------------------------------------------------------",
 				env.getProperty("spring.application.name"), protocol, env.getProperty("server.port"), protocol,
 				hostAddress, env.getProperty("server.port"), env.getActiveProfiles());
+		System.out.println("Default timezone --->>" + ApplicationConstant.DEFAULT_TIME_ZONE);
 	}
 
 	@Bean

@@ -2,7 +2,7 @@ package com.gspann.itrack.domain.model.timesheets;
 
 import static com.gspann.itrack.adapter.persistence.PersistenceConstant.TableMetaData.*;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -59,7 +59,7 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 //	@Column(name = "UPDATED_ON", insertable = false, updatable = false, nullable = false)
 //	@org.hibernate.annotations.Generated(org.hibernate.annotations.GenerationTime.ALWAYS)
 //	@UpdateTimestamp
-	private LocalDateTime updatedOn;
+	private ZonedDateTime updatedOn;
 
 	@ElementCollection(targetClass = ProjectTimeSheetStatus.class, fetch = FetchType.EAGER)
 	// @formatter:off
@@ -120,7 +120,7 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 	public static WeeklyTimeSheetStatus forSave(Set<Project> projects) {
 		WeeklyTimeSheetStatus weeklyTimeSheetStatus = newInstance();
 		weeklyTimeSheetStatus.status = TimesheetStatus.SAVED;
-		weeklyTimeSheetStatus.updatedOn = LocalDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
+		weeklyTimeSheetStatus.updatedOn = ZonedDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
 		projects.forEach((project) -> {
 			if (project.isLeaveType()) {
 				weeklyTimeSheetStatus.projectTimeSheetStatuses.put(project,
@@ -135,7 +135,7 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 	public static WeeklyTimeSheetStatus forSubmit(Set<Project> projects) {
 		WeeklyTimeSheetStatus weeklyTimeSheetStatus = newInstance();
 		weeklyTimeSheetStatus.status = TimesheetStatus.SUBMITTED;
-		weeklyTimeSheetStatus.updatedOn = LocalDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
+		weeklyTimeSheetStatus.updatedOn = ZonedDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
 		projects.forEach((project) -> {
 			if (project.isLeaveType()) {
 				weeklyTimeSheetStatus.projectTimeSheetStatuses.put(project,
@@ -167,13 +167,13 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 
 	public void approve(final Project project, final String comments) {
 		this.nonLeaveProjectTimeSheetStatuses.get(project).approve(comments);
-		this.updatedOn = LocalDateTime.now();
+		this.updatedOn = ZonedDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
 		updateConsolidatedStatus();
 	}
 
 	public void reject(final Project project, final String comments) {
 		this.nonLeaveProjectTimeSheetStatuses.get(project).reject(comments);
-		this.updatedOn = LocalDateTime.now();
+		this.updatedOn = ZonedDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
 		updateConsolidatedStatus();
 	}
 

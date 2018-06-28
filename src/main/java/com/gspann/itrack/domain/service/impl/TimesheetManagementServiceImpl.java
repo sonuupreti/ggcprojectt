@@ -420,7 +420,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			// Update existing timesheet
 			weeklyTimeSheet = existingTimeSheet.get();
 			// weeklyTimeSheet.clearAllDailyTimeSheets();
-			weeklyTimeSheet.addAllDailyTimeSheets(dailyTimeSheets);
+			weeklyTimeSheet.replaceAllDailyTimeSheets(dailyTimeSheets);
 		} else {
 			// Create new timesheet in DB
 			// Resource resource =

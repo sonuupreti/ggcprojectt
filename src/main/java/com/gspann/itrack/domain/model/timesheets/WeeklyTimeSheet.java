@@ -130,9 +130,19 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 		return this.dailyTimeSheets.add(dailyTimeSheet);
 	}
 
+	public boolean replaceDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
+		this.dailyTimeSheets.remove(dailyTimeSheet);
+		return this.dailyTimeSheets.add(dailyTimeSheet);
+	}
+
 	public boolean addAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
 		dailyTimeSheets.forEach((dailyTimesheet) -> dailyTimesheet.setWeeklyTimeSheet(this));
 		return this.dailyTimeSheets.addAll(dailyTimeSheets);
+	}
+	
+	public boolean replaceAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
+		this.dailyTimeSheets.removeAll(dailyTimeSheets);
+		return addAllDailyTimeSheets(dailyTimeSheets);
 	}
 
 	public Map<DayOfWeek, DailyTimeSheet> dayWiseDailyTimeSheets() {
