@@ -419,8 +419,9 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		if (existingTimeSheet.isPresent()) {
 			// Update existing timesheet
 			weeklyTimeSheet = existingTimeSheet.get();
-			// weeklyTimeSheet.clearAllDailyTimeSheets();
-			weeklyTimeSheet.replaceAllDailyTimeSheets(dailyTimeSheets);
+			weeklyTimeSheet.clearAllDailyTimeSheets();
+			// weeklyTimeSheet.replaceAllDailyTimeSheets(dailyTimeSheets);
+			weeklyTimeSheet.addAllDailyTimeSheets(dailyTimeSheets);
 		} else {
 			// Create new timesheet in DB
 			// Resource resource =

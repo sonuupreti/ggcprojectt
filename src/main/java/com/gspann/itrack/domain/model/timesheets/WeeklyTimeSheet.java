@@ -189,10 +189,12 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	}
 
 	public void save() {
+		this.weeklyStatus.projectTimeSheetStatuses().clear();
 		this.weeklyStatus = WeeklyTimeSheetStatus.forSave(allProjects());
 	}
 
 	public void submit() {
+		this.weeklyStatus.projectTimeSheetStatuses().clear();
 		this.weeklyStatus = WeeklyTimeSheetStatus.forSubmit(allProjects());
 	}
 
