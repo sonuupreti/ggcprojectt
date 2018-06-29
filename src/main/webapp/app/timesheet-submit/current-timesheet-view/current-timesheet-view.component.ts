@@ -184,7 +184,7 @@ export class CurrentTimesheetView implements OnInit {
                     };
                     this.submittedToParent.emit(obj);
                 }
-                this.getTimeSheetDataById(response.timesheetId);
+                this.getTimeSheetDataById(parseInt(response.headers.get('x-itrack2app-params')));
             });
         }
         if (action === 'SUBMIT' && totalHours < stanardHours) {
@@ -210,6 +210,7 @@ export class CurrentTimesheetView implements OnInit {
                         displayLabel: 'Your timsheet has successfully submitted.'
                     };
                     this.submittedToParent.emit(obj);
+                    this.getTimeSheetDataById(parseInt(response.headers.get('x-itrack2app-params')));
                 }
             });
         } else if (action === 'SUBMIT' && totalHours > stanardHours) {
@@ -234,6 +235,7 @@ export class CurrentTimesheetView implements OnInit {
                         displayLabel: 'Your timsheet has successfully submitted.'
                     };
                     this.submittedToParent.emit(obj);
+                    this.getTimeSheetDataById(parseInt(response.headers.get('x-itrack2app-params')));
                 }
             });
         }

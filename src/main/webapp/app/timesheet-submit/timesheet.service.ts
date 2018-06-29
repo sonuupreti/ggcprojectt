@@ -18,7 +18,7 @@ export class TimesheetService {
     }
     saveSubmitTimesheet(data): Observable<any> {
         return this.http.post(SERVER_API_URL + 'api/v1/timesheets', data, { observe: 'response' }).map((response: HttpResponse<any>) => {
-            response.timesheetId = parseInt(response.headers.get('x-itrack2app-params'));
+            // response.timesheetId = parseInt(response.headers.get('x-itrack2app-params'));
             return response;
         });
     }
