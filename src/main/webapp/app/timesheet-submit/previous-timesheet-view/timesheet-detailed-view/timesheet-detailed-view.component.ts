@@ -6,4 +6,7 @@ import { Component, Input, OnInit } from '@angular/core';
 })
 export class TimesheetDetailedViewComponent {
     @Input() data: any;
+    formatHours(hour) {
+        return hour.replace(hour.charAt(hour.length - 1), '').replace('PT', '');
+    }
 }

@@ -1,8 +1,5 @@
-import { Component, OnInit, ViewChild, HostListener, EventEmitter, Output } from '@angular/core';
-//import { MatInputModule, MatButtonModule } from '@angular/material';
-//import { PROJECTS } from '../projects.service';
+import { Component, OnInit, ViewChildren, HostListener, EventEmitter, Output, QueryList } from '@angular/core';
 import { TimesheetService } from '../timesheet.service';
-import { NgbPopoverConfig } from '@ng-bootstrap/ng-bootstrap';
 import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import { MatDialog, MatDialogConfig } from '@angular/material';
 import { DialogConfirmBodyComponent } from './dialog-confirm-body/dialog-confirm-body.component';
@@ -17,456 +14,106 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class CurrentTimesheetView implements OnInit {
     projects: Array<any>;
     currentDate;
-    private weekObj: any = {}; // = { weekNo: 0, year: 0, startDate: 0, startMonth: '', projects: [], status: '' }; // WeekObj ;
+    private weekObj: any = {};
     private months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    // private daysOfWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-    private daysInMonths = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-    //timesheetData: any = {};
     leaveTypes = [];
     selectedLeave;
     isLeaveAdded = false;
     onSubmit: boolean = false;
-    @ViewChild('p') public popover: NgbPopover;
+    @ViewChildren('p') public popoverList: QueryList<NgbPopover>;
     @Output() submittedToParent = new EventEmitter<boolean>();
-
-    timesheetData = {
-        resourceAllocationSummary: {
-            resource: {
-                key: '20001',
-                value: 'Manoj Nautiyal'
-            },
-            projects: [
-                {
-                    project: {
-                        key: 'INV0000004',
-                        value: 'iTrack'
-                    },
-                    projectType: {
-                        key: 'INV',
-                        value: 'Investment'
-                    },
-                    proportion: 50,
-                    customerTimeTracking: false,
-                    dailyEntries: [
-                        {
-                            date: '2018-05-21',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-22',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-23',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-24',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-25',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-26',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-27',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        }
-                    ]
-                },
-                {
-                    project: {
-                        key: 'INV0000005',
-                        value: 'FinalSelect'
-                    },
-                    projectType: {
-                        key: 'INV',
-                        value: 'Investment'
-                    },
-                    proportion: 50,
-                    customerTimeTracking: true,
-                    dailyEntries: [
-                        {
-                            date: '2018-05-21',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-22',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-23',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-24',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-25',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-26',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-27',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        }
-                    ]
-                },
-                {
-                    project: {
-                        key: 'PDL0000001',
-                        value: 'Paid Leave'
-                    },
-                    projectType: {
-                        key: 'PDL',
-                        value: 'Paid Leave'
-                    },
-                    proportion: 100,
-                    customerTimeTracking: false,
-                    dailyEntries: [
-                        {
-                            date: '2018-05-21',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-22',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-23',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-24',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-25',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-26',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-27',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        }
-                    ]
-                },
-                {
-                    project: {
-                        key: 'UPL0000002',
-                        value: 'Unpaid Leave'
-                    },
-                    projectType: {
-                        key: 'UPL',
-                        value: 'Unpaid Leave'
-                    },
-                    proportion: 100,
-                    customerTimeTracking: false,
-                    dailyEntries: [
-                        {
-                            date: '2018-05-21',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-22',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-23',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-24',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-25',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-26',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        },
-                        {
-                            date: '2018-05-27',
-                            comments: '',
-                            timeEntries: {
-                                hours: '0',
-                                comments: ''
-                            }
-                        }
-                    ]
-                }
-            ]
-        },
-        weekDetails: {
-            weekStartDate: '2018-05-28',
-            weekEndDate: '2018-06-03',
-            weekLength: 7,
-            weekStartDay: 'MONDAY',
-            weekEndDay: 'SUNDAY',
-            dailyStandardHours: 8,
-            weeklyStandardHours: 32,
-            flexibleWeekends: false,
-            dailyDetails: [
-                {
-                    date: '2018-05-28',
-                    day: 'MONDAY',
-                    type: {
-                        code: 'WD',
-                        value: 'Regular Working Day'
-                    },
-                    remarks: null,
-                    comments: '',
-                    timeEntries: {
-                        hours: 8,
-                        comments: ''
-                    }
-                },
-                {
-                    date: '2018-05-29',
-                    day: 'TUESDAY',
-                    type: {
-                        code: 'WD',
-                        value: 'Regular Working Day'
-                    },
-
-                    remarks: null,
-                    comments: '',
-                    timeEntries: {
-                        hours: 8,
-                        comments: ''
-                    }
-                },
-                {
-                    date: '2018-05-30',
-                    day: 'WEDNESDAY',
-                    type: {
-                        code: 'WD',
-                        value: 'Regular Working Day'
-                    },
-                    remarks: null,
-                    comments: '',
-                    timeEntries: {
-                        hours: 8,
-                        comments: ''
-                    }
-                },
-                {
-                    date: '2018-05-31',
-                    day: 'THURSDAY',
-                    type: {
-                        code: 'HD',
-                        value: 'Holiday'
-                    },
-                    remarks: 'Diwali',
-                    comments: '',
-                    timeEntries: {
-                        hours: 8,
-                        comments: ''
-                    }
-                },
-                {
-                    date: '2018-06-01',
-                    day: 'FRIDAY',
-                    type: {
-                        code: 'WD',
-                        value: 'Regular Working Day'
-                    },
-                    remarks: null,
-                    comments: '',
-                    timeEntries: {
-                        hours: 8,
-                        comments: ''
-                    }
-                },
-                {
-                    date: '2018-06-02',
-                    day: 'SATURDAY',
-                    type: {
-                        code: 'WE',
-                        value: 'Weekend'
-                    },
-                    remarks: null,
-                    comments: '',
-                    timeEntries: {
-                        hours: 8,
-                        comments: ''
-                    }
-                },
-                {
-                    date: '2018-06-03',
-                    day: 'SUNDAY',
-                    type: {
-                        code: 'WE',
-                        value: 'Weekend'
-                    },
-                    remarks: null,
-                    comments: '',
-                    timeEntries: {
-                        hours: 8,
-                        comments: ''
-                    }
-                }
-            ]
-        },
-        actions: [
-            {
-                code: 'SAVE',
-                description: 'Save Timesheet'
-            },
-            {
-                code: 'SUBMIT',
-                description: 'Submit Timesheet'
-            }
-        ]
-    };
+    timesheetData: any = {};
 
     constructor(
         private timesheetService: TimesheetService,
         public dialog: MatDialog,
         private route: ActivatedRoute,
         private router: Router
-    ) {
-        //config.triggers = 'hover';
-    }
+    ) {}
 
     ngOnInit() {
-        this.createInitialTimesheetData();
-        this.timesheetService.getGetInitialTimesheet().subscribe(timesheetData => {});
+        this.getTimeSheetData();
+    }
+    getTimeSheetData(date?) {
+        if (date) {
+            this.leaveTypes = [];
+        }
+        this.timesheetService.getTimesheetData(date).subscribe(timesheetData => {
+            this.timesheetData = this.parseModel(timesheetData);
+            this.createInitialTimesheetData();
+        });
+    }
+    getTimeSheetDataById(id) {
+        this.leaveTypes = [];
+        this.timesheetService.getTimeSheetDataById(id).subscribe(timesheetData => {
+            this.timesheetData = this.parseModel(timesheetData);
+            this.createInitialTimesheetData();
+        });
+    }
+    parseModel(timesheetData) {
+        if (timesheetData.timesheetStatus.code === 'PENDING_SUBMISSION') {
+            this.weekObj.status = 'NOT SUBMITTED';
+        } else if (timesheetData.timesheetStatus.code === 'SUBMITTED') {
+            this.weekObj.status = 'SUBMITTED';
+        } else if (timesheetData.timesheetStatus.code === 'SAVED') {
+            this.weekObj.status = 'SAVED';
+        }
+        const timeEntries = {
+            hours: '',
+            comments: ''
+        };
+        if (this.weekObj.status === 'NOT SUBMITTED' || this.weekObj.status === 'SAVED') {
+            let dailyEntries = [];
+            let obj = {
+                date: '',
+                comments: '',
+                timeEntries: timeEntries
+            };
+            timesheetData.weekDetails.dayDetails.forEach(function(day) {
+                obj.date = day.date;
+                dailyEntries.push(obj);
+            });
+            if (this.weekObj.status === 'NOT SUBMITTED') {
+                timesheetData.allocations.forEach(function(project) {
+                    project.dailyEntries = dailyEntries;
+                });
+            }
+            timesheetData.weekDetails.dayDetails.forEach(function(day) {
+                day.comments = '';
+                day.timeEntries = timeEntries;
+            });
+        } else if (this.weekObj.status === 'SUBMITTED') {
+            timesheetData.timesheet.projectTimeSheets[0].dailyEntries.forEach(function(day) {
+                day.timeEntries = timeEntries;
+            });
+        }
+        return timesheetData;
     }
     trackByIndex(index: number, obj: any): any {
         return index;
     }
     createInitialTimesheetData() {
-        this.weekObj.projects = this.createProjectsModel(this.timesheetData.resourceAllocationSummary.projects);
-        this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dailyDetails);
-        this.weekObj.status = 'NOT SUBMITTED';
+        if (this.weekObj.status === 'NOT SUBMITTED') {
+            this.weekObj.projects = this.createProjectsModel(this.timesheetData.allocations);
+            this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dayDetails);
+        } else if (this.weekObj.status === 'SUBMITTED') {
+            this.weekObj.projects = this.createProjectsModel(this.timesheetData.timesheet.projectTimeSheets);
+            this.weekObj.daysData = this.createDaysData(this.timesheetData.timesheet.projectTimeSheets[0].dailyEntries);
+        } else if (this.weekObj.status === 'SAVED') {
+            this.weekObj.projects = this.createProjectsModel(this.timesheetData.timesheet.projectTimeSheets);
+            this.weekObj.daysData = this.createDaysData(this.timesheetData.weekDetails.dayDetails);
+        }
+        this.weekObj.weekName = this.timesheetData.weekDetails.weekName;
         this.weekObj.actions = this.timesheetData.actions;
         this.weekObj.startDate = this.timesheetData.weekDetails.weekStartDate;
         this.weekObj.endDate = this.timesheetData.weekDetails.weekEndDate;
         this.weekObj.weeklyStandardHours = this.timesheetData.weekDetails.weeklyStandardHours;
         this.weekObj.commentsAdded = true;
         this.weekObj.leaves = [];
+        this.weekObj.previousWeekEnabled = this.timesheetData.previousWeek && this.timesheetData.previousWeek != null ? true : false;
+        this.weekObj.previousWeekStartDate = this.weekObj.previousWeekEnabled && this.timesheetData.previousWeek.week.weekStartDate;
+        this.weekObj.nextWeekEnabled = this.timesheetData.nextWeek && this.timesheetData.nextWeek != null ? true : false;
+        this.weekObj.nextWeekStartDate = this.weekObj.nextWeekEnabled && this.timesheetData.nextWeek.week.weekStartDate;
     }
 
     createDaysData(daysData) {
@@ -480,7 +127,9 @@ export class CurrentTimesheetView implements OnInit {
                 dModel.day = dayObj.day.substr(0, 3);
                 dModel.remarks = dayObj.remarks;
                 dModel.code = dayObj.type.code;
-                dModel.comment = dayObj.timeEntries.comments;
+                if (this.weekObj.status === 'NOT SUBMITTED' || this.weekObj.status === 'SAVED') {
+                    dModel.comment = dayObj.timeEntries.comments;
+                }
                 daysViewModel.push(dModel);
             });
         }
@@ -489,7 +138,6 @@ export class CurrentTimesheetView implements OnInit {
 
     createProjectHoursPerDayModel(i) {
         let hoursPerDayModel = [];
-        let comment = ''; // keeping it fixed for now
         let currentProj = this.weekObj.projects;
         currentProj.forEach(proj => {
             let timeObj: any = {};
@@ -502,9 +150,7 @@ export class CurrentTimesheetView implements OnInit {
     }
 
     createHourEntriesModel() {
-        let comment = ''; // keeping it fixed for now
-        let currentProj = this.weekObj.projects;
-        let dailydetails = this.timesheetData.weekDetails.dailyDetails;
+        let dailydetails = this.timesheetData.weekDetails.dayDetails;
         let hourEntries = [];
         for (let i = 0; i < 7; i++) {
             let entryObj: any = {};
@@ -517,109 +163,155 @@ export class CurrentTimesheetView implements OnInit {
     }
 
     saveOrSubmit(action) {
-        alert(this.weekObj.weeklyStandardHours);
-        var totalHours = this.calculateTotalHours(this.weekObj.projects);
-        var dailyEntries = this.createHourEntriesModel();
-        var stanardHours = this.weekObj.weeklyStandardHours;
-        var hoursValidation = false;
+        let totalHours = this.calculateTotalHours(this.weekObj.projects);
+        let dailyEntries = this.createHourEntriesModel();
+        let stanardHours = this.weekObj.weeklyStandardHours;
+        if (action === 'SAVE') {
+            let data = {
+                action: action,
+                resourceCode: this.timesheetData.resource.key,
+                week: {
+                    weekStartDate: this.timesheetData.weekDetails.weekStartDate,
+                    dailyEntries: dailyEntries
+                }
+            };
+            this.timesheetService.saveSubmitTimesheet(data).subscribe(response => {
+                let obj;
+                if (response) {
+                    obj = {
+                        submitted: true,
+                        displayLabel: 'Your timsheet has successfully saved.'
+                    };
+                    this.submittedToParent.emit(obj);
+                }
+                this.getTimeSheetDataById(parseInt(response.headers.get('x-itrack2app-params')));
+            });
+        }
         if (action === 'SUBMIT' && totalHours < stanardHours) {
             alert('Minimum 40 hours are reaquired per week');
         } else if (action === 'SUBMIT' && totalHours === stanardHours) {
             let data = {
                 action: action,
-                resourceCode: '20001',
-                weekDetails: {
-                    dailyEntries: dailyEntries,
-                    weekStartDate: this.timesheetData.weekDetails.dailyDetails[0].date
-                },
-                weeklyTimeSheetId: 10
+                resourceCode: this.timesheetData.resource.key,
+                week: {
+                    weekStartDate: this.timesheetData.weekDetails.weekStartDate,
+                    dailyEntries: dailyEntries
+                }
             };
             const dialogRef = this.dialog.open(DialogConfirmBodyComponent, {
                 width: '412px',
                 position: { top: '130px' }
             });
-
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                    this.timesheetService.saveSubmitTimesheet(data).subscribe(timesheetData => {
-                        if (timesheetData) {
-                            this.onSubmit = true;
-                            this.submittedToParent.emit(this.onSubmit);
-                            this.weekObj.status = timesheetData.status;
-                            alert('Timesheet ' + this.weekObj.status + ' successfully');
-                            this.weekObj.actions = this.timesheetData.actions;
-                            this.router.navigate(['']);
-                        }
-                    });
+            dialogRef.afterClosed().subscribe(response => {
+                let obj;
+                if (response) {
+                    obj = {
+                        submitted: true,
+                        displayLabel: 'Your timsheet has successfully submitted.'
+                    };
+                    this.submittedToParent.emit(obj);
+                    this.getTimeSheetDataById(parseInt(response.headers.get('x-itrack2app-params')));
                 }
             });
         } else if (action === 'SUBMIT' && totalHours > stanardHours) {
             let data = {
                 action: action,
-                resourceCode: '20001',
+                resourceCode: this.timesheetData.resource.key,
                 week: {
                     dailyEntries: dailyEntries,
-                    weekStartDate: this.timesheetData.weekDetails.dailyDetails[0].date
-                },
-                weeklyTimeSheetId: 10
+                    weekStartDate: this.timesheetData.weekDetails.weekStartDate
+                }
             };
             const dialogRef = this.dialog.open(DialogConfirmBodyComponent, {
                 width: '412px',
                 position: { top: '130px' }
             });
 
-            dialogRef.afterClosed().subscribe(result => {
-                if (result) {
-                    this.timesheetService.saveSubmitTimesheet(data).subscribe(timesheetData => {
-                        if (timesheetData) {
-                            this.onSubmit = true;
-                            this.submittedToParent.emit(this.onSubmit);
-                            this.weekObj.status = timesheetData.status;
-                            alert('Timesheet ' + this.weekObj.status + ' successfully');
-                            this.weekObj.actions = this.timesheetData.actions;
-                            this.router.navigate(['']);
-                        }
-                    });
+            dialogRef.afterClosed().subscribe(response => {
+                let obj;
+                if (response) {
+                    obj = {
+                        submitted: true,
+                        displayLabel: 'Your timsheet has successfully submitted.'
+                    };
+                    this.submittedToParent.emit(obj);
+                    this.getTimeSheetDataById(parseInt(response.headers.get('x-itrack2app-params')));
                 }
             });
         }
     }
 
     createProjectsModel(projects) {
-        let projectsModel = [];
+        let projectsModel = [],
+            condition;
         if (projects.length > 0) {
             projects.forEach(project => {
-                if (project.projectType.key != 'PDL' && project.projectType.key != 'UPL') {
-                    let projObj = {
-                        code: project.project.key,
-                        name: project.project.key + ' - ' + project.project.value + ' ' + project.proportion + '%',
-                        attachment: project.customerTimeTracking,
-                        hours: [
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' }
-                        ],
-                        type: project.projectType.key
+                let dataObj = {
+                    code: '',
+                    name: '',
+                    attachment: '',
+                    type: '',
+                    hours: [],
+                    totalHours: ''
+                };
+                if (this.weekObj.status === 'NOT SUBMITTED') {
+                    condition = project.projectType.key !== 'PDL' && project.projectType.key !== 'UPL';
+                    dataObj.code = project.project.key;
+                    dataObj.name = project.project.key + ' - ' + project.project.value + ' ' + project.proportion + '%';
+                    dataObj.attachment = project.customerTimeTracking;
+                    dataObj.type = project.projectType.key;
+                    dataObj.hours = [
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' },
+                        { hour: 0, comments: '' }
+                    ];
+                } else if (this.weekObj.status === 'SUBMITTED' || this.weekObj.status === 'SAVED') {
+                    if (this.weekObj.status === 'SUBMITTED') {
+                        condition = true;
+                    } else {
+                        condition = true;
+                        //condition = project.projectDetails.projectType.key !== 'PDL' && project.projectDetails.projectType.key !== 'UPL';
+                    }
+                    dataObj.code = project.projectDetails.project.key;
+                    dataObj.name =
+                        project.projectDetails.project.key +
+                        ' - ' +
+                        project.projectDetails.project.value +
+                        ' ' +
+                        project.projectDetails.proportion +
+                        '%';
+                    dataObj.attachment = project.projectDetails.customerTimeTracking;
+                    dataObj.type = project.projectDetails.projectType.key;
+                    project.dailyEntries.forEach(function(day) {
+                        let hour = day.hours.replace(day.hours.charAt(day.hours.length - 1), '').replace('PT', '');
+                        dataObj.hours.push({
+                            hour: hour,
+                            comments: day.comments
+                        });
+                    });
+                    dataObj.totalHours = project.projectTotalHours;
+                    //dataObj.attachment =
+                }
+                if (condition) {
+                    const projObj = {
+                        code: dataObj.code,
+                        name: dataObj.name,
+                        hours: dataObj.hours,
+                        type: dataObj.type,
+                        totalHours: dataObj.totalHours
                     };
                     projectsModel.push(projObj);
                 } else {
-                    let projObj = {
-                        code: project.project.key,
-                        name: project.project.value,
-                        hours: [
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' },
-                            { hour: 0, comments: '' }
-                        ],
-                        type: project.projectType.key
+                    const projObj = {
+                        code: dataObj.code,
+                        name: dataObj.name,
+                        hours: dataObj.hours,
+                        type: dataObj.type,
+                        totalHours: dataObj.totalHours
                         //attachment: project.customerTimeTracking
                     };
                     this.leaveTypes.push(projObj);
@@ -727,9 +419,10 @@ export class CurrentTimesheetView implements OnInit {
     }
 
     public popupTrigger(): void {
-        const isOpen = this.popover.isOpen();
-        if (isOpen) {
-            this.popover.close();
-        }
+        this.popoverList.forEach(function(popover) {
+            if (popover.isOpen()) {
+                popover.close();
+            }
+        });
     }
 }
