@@ -69,12 +69,8 @@ import lombok.experimental.Accessors;
 public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long> {
 
 	@NotNull
-	@AttributeOverrides({
-        @AttributeOverride(name="dateRange.fromDate",
-                           column=@Column(name="WEEK_START_DATE")),
-        @AttributeOverride(name="dateRange.tillDate",
-                           column=@Column(name="WEEK_END_DATE"))
-    })
+	@AttributeOverrides({ @AttributeOverride(name = "dateRange.fromDate", column = @Column(name = "WEEK_START_DATE")),
+			@AttributeOverride(name = "dateRange.tillDate", column = @Column(name = "WEEK_END_DATE")) })
 	private Week week;
 
 	@NotNull
@@ -90,9 +86,9 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	@JoinColumn(name = "RESOURCE_CODE", nullable = false, foreignKey = @ForeignKey(name = FK_WEEKLY_TIME_SHEETS_RESOURCE_CODE))
 	private Resource resource;
 
-//	@OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-	@OneToMany(mappedBy = "weeklyTimeSheet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-//	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false)
+	// @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToMany(mappedBy = "weeklyTimeSheet", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+	// @JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false)
 	@org.hibernate.annotations.OrderBy(clause = "DATE asc")
 	@Getter(value = AccessLevel.NONE)
 	private Set<DailyTimeSheet> dailyTimeSheets = new LinkedHashSet<>();
@@ -123,11 +119,10 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	}
 
 	public void clearAllDailyTimeSheets() {
-		this.dailyTimeSheets.clear();
-	}
-
-	public boolean addDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
-		return this.dailyTimeSheets.add(dailyTimeSheet);
+		if(this.dailyTimeSheets != null && !this.dailyTimeSheets.isEmpty()) {
+			this.dailyTimeSheets.forEach((dailyTimeSheet) -> dailyTimeSheet.clearAllTimeEntries());
+			this.dailyTimeSheets.clear();
+		}
 	}
 
 	public boolean replaceDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
@@ -135,14 +130,18 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 		return this.dailyTimeSheets.add(dailyTimeSheet);
 	}
 
-	public boolean addAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
-		dailyTimeSheets.forEach((dailyTimesheet) -> dailyTimesheet.setWeeklyTimeSheet(this));
-		return this.dailyTimeSheets.addAll(dailyTimeSheets);
-	}
-	
 	public boolean replaceAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
 		this.dailyTimeSheets.removeAll(dailyTimeSheets);
 		return addAllDailyTimeSheets(dailyTimeSheets);
+	}
+
+	public boolean addDailyTimeSheet(final DailyTimeSheet dailyTimeSheet) {
+		return this.dailyTimeSheets.add(dailyTimeSheet);
+	}
+
+	public boolean addAllDailyTimeSheets(final Set<DailyTimeSheet> dailyTimeSheets) {
+		dailyTimeSheets.forEach((dailyTimesheet) -> dailyTimesheet.setWeeklyTimeSheet(this));
+		return this.dailyTimeSheets.addAll(dailyTimeSheets);
 	}
 
 	public Map<DayOfWeek, DailyTimeSheet> dayWiseDailyTimeSheets() {
@@ -161,7 +160,8 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 					"A timesheet must have atleat one project, hence time entries for the same");
 		} else {
 			Set<Project> projects = new HashSet<>();
-			this.dailyTimeSheets.iterator().forEachRemaining((dailyTimeSheet) -> projects.addAll(dailyTimeSheet.projects()));
+			this.dailyTimeSheets.iterator()
+					.forEachRemaining((dailyTimeSheet) -> projects.addAll(dailyTimeSheet.projects()));
 			return projects;
 		}
 	}
@@ -189,12 +189,17 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	}
 
 	public void save() {
-		this.weeklyStatus.projectTimeSheetStatuses().clear();
+		if (this.weeklyStatus != null) {
+			this.weeklyStatus.clearProjectStatuses();
+		}
 		this.weeklyStatus = WeeklyTimeSheetStatus.forSave(allProjects());
 	}
 
 	public void submit() {
-		this.weeklyStatus.projectTimeSheetStatuses().clear();
+		if (this.weeklyStatus != null && this.weeklyStatus.projectTimeSheetStatuses() != null
+				&& !this.weeklyStatus.projectTimeSheetStatuses().isEmpty()) {
+			this.weeklyStatus.projectTimeSheetStatuses().clear();
+		}
 		this.weeklyStatus = WeeklyTimeSheetStatus.forSubmit(allProjects());
 	}
 

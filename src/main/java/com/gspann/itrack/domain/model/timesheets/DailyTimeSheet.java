@@ -70,13 +70,47 @@ public class DailyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Long
 	@Column(name = "COMMENTS", nullable = true, length = 255)
 	private String dailyComments;
 
-	@OneToMany(mappedBy = "dailyTimeSheet", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "dailyTimeSheet", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
 	private Set<TimeSheetEntry> entries = new LinkedHashSet<>();
 
 	@NotNull
 	@ManyToOne
 	@JoinColumn(name = "WEEKLY_TIME_SHEET_ID", nullable = false, foreignKey = @ForeignKey(name = FK_DAILY_TIME_SHEETS_WEEKLY_TIME_SHEET_ID))
 	private WeeklyTimeSheet weeklyTimeSheet;
+	
+	public void clearAllTimeEntries() {
+		if(this.entries != null && !this.entries.isEmpty()) {
+			this.entries.clear();
+		}
+	}
+	
+	public boolean addTimeEntry(final TimeSheetEntry entry) {
+		return this.entries.add(entry);
+	}
+	
+	public boolean addAllTimeEntries(final Set<TimeSheetEntry> entries) {
+		return this.entries.addAll(entries);
+	}
+
+	public boolean replaceTimeEntry(final TimeSheetEntry entry) {
+		if(this.entries != null && !this.entries.isEmpty()) {
+			this.entries.clear();
+			this.entries.remove(entry);
+			return this.entries.add(entry);
+		} else {
+			return false;
+		}
+	}
+
+	public boolean replaceAllTimeEntries(final Set<TimeSheetEntry> entries) {
+		if(this.entries != null && !this.entries.isEmpty()) {
+			this.entries.removeAll(entries);
+			return this.entries.addAll(entries);
+		} else {
+			return false;
+		}
+	}
+
 
 	public DailyTimeSheet setWeeklyTimeSheet(final WeeklyTimeSheet weeklyTimeSheet) {
 		this.weeklyTimeSheet = weeklyTimeSheet;

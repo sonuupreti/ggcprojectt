@@ -82,15 +82,27 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 	private Map<Project, ProjectTimeSheetStatus> leaveProjectTimeSheetStatuses;
 
 	public boolean containsLeaveTypeProject() {
-		return projectTimeSheetStatuses.keySet().stream().anyMatch((project) -> project.isLeaveType());
+		if(this.projectTimeSheetStatuses != null && !this.projectTimeSheetStatuses.isEmpty()) {
+			return projectTimeSheetStatuses.keySet().stream().anyMatch((project) -> project.isLeaveType());
+		} else {
+			return false;
+		}
 	}
 
 	public Map<Project, ProjectTimeSheetStatus> projectTimeSheetStatuses() {
 		return Collections.unmodifiableMap(projectTimeSheetStatuses);
 	}
+	
+	public void clearProjectStatuses() {
+		if(this.projectTimeSheetStatuses != null && !this.projectTimeSheetStatuses.isEmpty()) {
+			this.projectTimeSheetStatuses.clear();
+			this.nonLeaveProjectTimeSheetStatuses = null;
+			this.leaveProjectTimeSheetStatuses = null;
+		}
+	}
 
 	public Map<Project, ProjectTimeSheetStatus> nonLeaveProjectTimeSheetStatuses() {
-		if (nonLeaveProjectTimeSheetStatuses == null) {
+		if (this.nonLeaveProjectTimeSheetStatuses == null) {
 			if (containsLeaveTypeProject()) {
 				this.nonLeaveProjectTimeSheetStatuses = projectTimeSheetStatuses;
 				this.nonLeaveProjectTimeSheetStatuses.keySet().removeIf(project -> project.isLeaveType());
@@ -102,7 +114,7 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 	}
 
 	public Map<Project, ProjectTimeSheetStatus> leaveProjectTimeSheetStatuses() {
-		if (leaveProjectTimeSheetStatuses == null) {
+		if (this.leaveProjectTimeSheetStatuses == null) {
 			if (containsLeaveTypeProject()) {
 				this.leaveProjectTimeSheetStatuses = projectTimeSheetStatuses;
 				this.leaveProjectTimeSheetStatuses.keySet().removeIf(project -> !project.isLeaveType());
