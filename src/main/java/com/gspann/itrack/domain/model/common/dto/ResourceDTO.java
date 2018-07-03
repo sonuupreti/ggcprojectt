@@ -57,5 +57,9 @@ public class ResourceDTO {
     private Money comission;
     private Money bonus;
     private Money otherCost;
-
+    private Money rateperHour;
+    
+    private LocalDate paystartDate;
+    private LocalDate payendDate;
+    
 }

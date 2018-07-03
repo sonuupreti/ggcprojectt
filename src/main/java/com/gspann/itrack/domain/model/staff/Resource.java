@@ -85,7 +85,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	// private String loginId;
 
 	@Email(message = MESSAGE_EMAIL_INVALID)
-	@NaturalId(mutable = false)
+	//@NaturalId(mutable = false)
 	@Column(name = "EMAIL_ID", nullable = true, length = 255)
 	private String emailId;
 
@@ -485,9 +485,9 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 
 		public AnnualSalaryBuilder asFullTimeEmployee();
 
-		public NameBuilder asDirectContractor();
+		public NonFTECostBuilder asDirectContractor();
 
-		public NameBuilder asSubContractor();
+		public NonFTECostBuilder asSubContractor();
 
 		public NameBuilder asW2Consultant();
 	}
@@ -513,11 +513,11 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	public interface OtherCostBuilder {
 		public NameBuilder andOtherCost(final Money otherCost);
 
-		public NameBuilder noOtherCost();
+		public NameBuilder noOtherCost(LocalDate startdate,LocalDate endDate);
 	}
 
 	public interface NonFTECostBuilder {
-		public NameBuilder atHourlyCost(final Money hourlyCost);
+		public NameBuilder atHourlyCost(final Money hourlyCost,LocalDate startdate,LocalDate endDate);
 	}
 
 	public interface NameBuilder {
@@ -636,20 +636,20 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public NameBuilder noOtherCost() {
-			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingIndefinatelyFrom(LocalDate.now())
+		public NameBuilder noOtherCost(LocalDate startdate,LocalDate endDate) {
+			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingFrom(startdate).till(endDate)
 					.withAnnualSalary(annualSalary).withCommission(commission).withBonus(bonus).build());
 			return this;
 		}
 
 		@Override
-		public NameBuilder asDirectContractor() {
+		public NonFTECostBuilder asDirectContractor() {
 			this.resource.employmentType = EmploymentType.directContractor();
 			return this;
 		}
 
 		@Override
-		public NameBuilder asSubContractor() {
+		public NonFTECostBuilder asSubContractor() {
 			this.resource.employmentType = EmploymentType.subContractor();
 			return this;
 		}
@@ -661,9 +661,9 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public NameBuilder atHourlyCost(Money hourlyCost) {
+		public NameBuilder atHourlyCost(Money hourlyCost,LocalDate startdate,LocalDate endDate) {
 			this.resource.costings.add(NonFTECost.nonFTECostOf(this.resource).atHourlyRate(hourlyCost)
-					.startingIndefinatelyFrom(LocalDate.now()));
+					.startingFrom(startdate).till(endDate));
 			return this;
 		}
 
@@ -780,6 +780,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 
     public void updateDesignation(Designation designation) {
         this.designation = designation;
+    }
+    
+    public void updateEmailId(String emailId) {
+        this.emailId = emailId;
+    }
+    public void updateGreytHRID(String greytHRID) {
+        this.greytHRID= greytHRID;
     }
 
 }

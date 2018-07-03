@@ -84,4 +84,12 @@ public class DateRange {
 				: (date.equals(this.fromDate()) || date.equals(this.tillDate()))
 						|| (date.isAfter(this.fromDate()) && date.isBefore(this.tillDate()));
 	}
+	
+    public void updatePaymentStartDate(LocalDate fromDate) {
+        this.fromDate = fromDate;
+    }
+
+    public void updatePaymentEndDate(LocalDate tillDate) {
+        this.tillDate = tillDate;
+    }
 }

@@ -137,7 +137,7 @@ public class PrefixedSequentialCodeGenerator implements IdentifierGenerator {
 						? resource.isFTE() ? FTE_SEQUENCE_START
 								: NON_FTE_SEQUENCE_START
 						: Long.valueOf(highEnd) + 1;
-				return "" + nextSeq;
+				return resource.baseLocation().state().country().code() + nextSeq;
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();

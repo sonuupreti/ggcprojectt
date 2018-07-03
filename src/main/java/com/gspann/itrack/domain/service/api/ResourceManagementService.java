@@ -12,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import com.gspann.itrack.domain.model.common.Toggle;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
+import com.gspann.itrack.domain.model.common.dto.ResourceOnBoardingDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
 import com.gspann.itrack.domain.model.common.dto.ResourceSearchDTO;
 
@@ -43,5 +44,7 @@ public interface ResourceManagementService {
     public void allocatePartially(final String resourceCode, final String projectCode, final short percentage,
             final Money hourlyRate, final LocalDate fromDate, final LocalDate tillDate,
             final Toggle onboardedToClientTimeTrackingsystem);
+    
+    public ResourceOnBoardingDTO processOnBoard(ResourceOnBoardingDTO resourceOnBoardingDTO);
 
 }

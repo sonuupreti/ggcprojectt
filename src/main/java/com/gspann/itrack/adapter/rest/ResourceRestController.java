@@ -28,6 +28,7 @@ import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.adapter.rest.util.PaginationUtil;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
+import com.gspann.itrack.domain.model.common.dto.ResourceOnBoardingDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
 import com.gspann.itrack.domain.model.common.dto.ResourceSearchDTO;
 import com.gspann.itrack.domain.service.api.ResourceManagementService;
@@ -119,6 +120,23 @@ public class ResourceRestController {
         ResourceDTO updatedResourceDTO = resourceManagementService.updateResource(resourceDTO);
 
         log.debug("END :: ResourceRestController :: updateResource ");
+
+        return ResponseEntity.ok()
+                .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedResourceDTO.getResourceCode()))
+                .body(updatedResourceDTO);
+    }
+    
+    /**
+     * 
+     * @param resourceDTO
+     * @return
+     */
+    @PutMapping("/onBoarding")
+    @Timed
+    public ResponseEntity<ResourceOnBoardingDTO> processOnBoarding(@Valid @RequestBody ResourceOnBoardingDTO resourceOnBoardingDTO) {
+        log.debug("START :: ResourceRestController :: processOnBoarding ");
+        ResourceOnBoardingDTO updatedResourceDTO = resourceManagementService.processOnBoard(resourceOnBoardingDTO);
+        log.debug("END :: ResourceRestController :: processOnBoarding ");
 
         return ResponseEntity.ok()
                 .headers(HeaderUtil.createEntityUpdateAlert(ENTITY_NAME, updatedResourceDTO.getResourceCode()))

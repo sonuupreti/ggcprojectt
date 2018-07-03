@@ -8,6 +8,7 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import org.apache.commons.lang3.StringUtils;
 import org.javamoney.moneta.Money;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -22,10 +23,13 @@ import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
 import com.gspann.itrack.adapter.persistence.repository.SkillsRepository;
 import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
+import com.gspann.itrack.domain.model.business.payments.CostRateType;
 import com.gspann.itrack.domain.model.business.payments.FTECost;
+import com.gspann.itrack.domain.model.business.payments.NonFTECost;
 import com.gspann.itrack.domain.model.common.Toggle;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
+import com.gspann.itrack.domain.model.common.dto.ResourceOnBoardingDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceOnLoadVM;
 import com.gspann.itrack.domain.model.common.dto.ResourceSearchDTO;
 import com.gspann.itrack.domain.model.location.City;
@@ -37,6 +41,7 @@ import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.Practice;
+import com.gspann.itrack.domain.model.org.structure.ResourceActionType;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 import com.gspann.itrack.domain.service.api.ResourceManagementService;
@@ -75,7 +80,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
                 && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.FULLTIME_EMPLOYEE.code())) {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
                     .asFullTimeEmployee().withAnnualSalary(resourceDTO.getAnnualSalary())
-                    .plusCommission(resourceDTO.getComission()).plusBonus(resourceDTO.getBonus()).noOtherCost()
+                    .plusCommission(resourceDTO.getComission()).plusBonus(resourceDTO.getBonus()).noOtherCost(resourceDTO.getPaystartDate(),resourceDTO.getPayendDate())
                     .withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
                     .onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
                     .addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
@@ -83,18 +88,19 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         } else if (null != resourceDTO.getEmploymentTypeCode()
                 && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.DIRECT_CONTRACTOR.code())) {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asDirectContractor().withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
-                    .onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
+                    .asDirectContractor().atHourlyCost(resourceDTO.getRateperHour(), resourceDTO.getPaystartDate(),resourceDTO.getPayendDate())
+                    .withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
                     .addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
         } else if (null != resourceDTO.getEmploymentTypeCode()
                 && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.SUB_CONTRACTOR.code())) {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asFullTimeEmployee().withJustAnnualSalary(resourceDTO.getAnnualSalary())
-                    .withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
+                    .asSubContractor().atHourlyCost(resourceDTO.getRateperHour(), resourceDTO.getPaystartDate(),
+                     resourceDTO.getPayendDate()).withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
                     .onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
                     .addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
+                    
         }
-        resourceRepository.saveAndFlush(resources);
+        resources = resourceRepository.saveAndFlush(resources);
         return BeanConverterUtil.resourceEntitytoDto(resources);
     }
 
@@ -255,17 +261,22 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         City baseLocation = locationRepository.loadCity(resourceDTO.getBaseLocationId());
         City deputedLocation = locationRepository.loadCity(resourceDTO.getDeputedLocationId());
         Designation designation = organizationRepository.findDesignationById(resourceDTO.getDesignationId()).get();
-        // TODO: need to confirm
-        FTECost fteCost = (FTECost) resourceObject.costings().get(0);
-
-        // resourceDTO.getEmployeeStatusCode()
-
-        fteCost.updateAnnualSalary(resourceDTO.getAnnualSalary());
-        fteCost.updateBonus(resourceDTO.getBonus());
-        fteCost.updateCommission(resourceDTO.getComission());
-        fteCost.updateOtherCost(resourceDTO.getOtherCost());
-
-        resourceObject.costings().add(fteCost);
+        NonFTECost nonFteCost = resourceObject.costings().get(0);
+        if (nonFteCost != null && CostRateType.FTE_COST_RATE.name().equals(nonFteCost.getDiscriminatorValue())) {
+            FTECost fteCost = (FTECost) nonFteCost;
+            fteCost.updateAnnualSalary(resourceDTO.getAnnualSalary());
+            fteCost.updateBonus(resourceDTO.getBonus());
+            fteCost.updateCommission(resourceDTO.getComission());
+            fteCost.updateOtherCost(resourceDTO.getOtherCost());
+            fteCost.updatePaymentStartDate(resourceDTO.getPaystartDate());
+            fteCost.updatePaymentEndDate(resourceDTO.getPayendDate());
+            resourceObject.costings().add(fteCost);
+        } else {
+            nonFteCost.updateRateForHour(resourceDTO.getRateperHour());
+            nonFteCost.updatePaymentStartDate(resourceDTO.getPaystartDate());
+            nonFteCost.updatePaymentEndDate(resourceDTO.getPayendDate());
+            resourceObject.costings().add(nonFteCost);
+        }
         resourceObject.updateResourceName(resourceDTO.getName());
         resourceObject.updateEmploymentType(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode()));
         resourceObject.updateDesignation(designation);
@@ -287,6 +298,28 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 
         return resourceRepository.searchResourceByParameter(likeExpression);
 
+    }
+
+    @Override
+    @Transactional
+    public ResourceOnBoardingDTO processOnBoard(ResourceOnBoardingDTO resourceOnBoardingDTO) {
+
+        Resource resource = resourceRepository.findById(resourceOnBoardingDTO.getResourceCode()).get();
+
+        if (StringUtils.isNotEmpty(resourceOnBoardingDTO.getAction())
+                && resourceOnBoardingDTO.getAction().equals(ResourceActionType.JOIN.name())) {
+
+            resource.onBoarded(resourceOnBoardingDTO.getActualJoiningDate(), EmploymentStatus.active());
+            resource.updateEmailId(resourceOnBoardingDTO.getEmailId());
+            resource.updateGreytHRID(resourceOnBoardingDTO.getGreytHRId());
+
+        } else if (StringUtils.isNotEmpty(resourceOnBoardingDTO.getAction())
+                && resourceOnBoardingDTO.getAction().equals(ResourceActionType.DID_NOT_JOIN.name())) {
+
+            resource.markDidNotJoin();
+        }
+
+        return BeanConverterUtil.resourceEntitytoOnBoardingDto(resource);
     }
 
 }

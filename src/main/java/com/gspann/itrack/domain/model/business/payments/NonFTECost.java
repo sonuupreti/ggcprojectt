@@ -152,5 +152,22 @@ public class NonFTECost implements Costing, Versionable<Long> {
 			return this.cost;
 		}
 	}
+	
+    public String getDiscriminatorValue() {
+        DiscriminatorValue val = this.getClass().getAnnotation(DiscriminatorValue.class);
+        return val == null ? null : val.value();
+    }
+    
+    public void updateRateForHour(Money payRateAmount) {
+        this.payment.updatePayMoney(payRateAmount);
+    }
+
+    public void updatePaymentStartDate(LocalDate fromDate) {
+        this.dateRange.updatePaymentStartDate(fromDate);
+    }
+
+    public void updatePaymentEndDate(LocalDate endDate) {
+        this.dateRange.updatePaymentEndDate(endDate);
+    }
 
 }
