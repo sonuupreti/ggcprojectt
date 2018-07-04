@@ -45,6 +45,7 @@ public class ResourceDTO {
     private String primarySkills;
 
     private String secondarySkills;
+    private String practice;
     @NotNull
     private LocalDate expectedJoiningDate;
     private LocalDate actualJoiningDate;

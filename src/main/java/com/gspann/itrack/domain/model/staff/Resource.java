@@ -113,7 +113,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	private EmploymentType employmentType;
 
 	public boolean isFTE() {
-		return this.employmentType.equals(EmploymentType.fullTimeEmployee());
+		return (this.employmentType.equals(EmploymentType.fullTimeEmployee()) || this.employmentType.equals(EmploymentType.w2Consultant()));
 	}
 
 	@NotNull
@@ -483,13 +483,15 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 
 	public interface EmployementTypeBuilder {
 
-		public AnnualSalaryBuilder asFullTimeEmployee();
+		public AnnualSalaryBuilder asFullTimeEmployee(EmploymentType employmentType);
 
 		public NonFTECostBuilder asDirectContractor();
 
 		public NonFTECostBuilder asSubContractor();
 
-		public NameBuilder asW2Consultant();
+		public NonFTECostBuilder asW2Consultant();
+		
+		public NonFTECostBuilder asNonFullTimeEmployee(EmploymentType employmentType);
 	}
 
 	public interface AnnualSalaryBuilder {
@@ -511,9 +513,9 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface OtherCostBuilder {
-		public NameBuilder andOtherCost(final Money otherCost);
+		public NameBuilder andOtherCost(final Money otherCost,LocalDate startdate,LocalDate endDate);
 
-		public NameBuilder noOtherCost(LocalDate startdate,LocalDate endDate);
+		public NameBuilder noOtherCost();
 	}
 
 	public interface NonFTECostBuilder {
@@ -587,8 +589,8 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public AnnualSalaryBuilder asFullTimeEmployee() {
-			this.resource.employmentType = EmploymentType.fullTimeEmployee();
+		public AnnualSalaryBuilder asFullTimeEmployee(EmploymentType employmentType) {
+			this.resource.employmentType = employmentType;
 			return this;
 		}
 
@@ -628,16 +630,16 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public NameBuilder andOtherCost(Money otherCost) {
-			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingIndefinatelyFrom(LocalDate.now())
+		public NameBuilder andOtherCost(Money otherCost,LocalDate startdate,LocalDate endDate) {
+			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingFrom(startdate).till(endDate)
 					.withAnnualSalary(annualSalary).withCommission(commission).withBonus(bonus).withOtherCost(otherCost)
 					.build());
 			return this;
 		}
 
 		@Override
-		public NameBuilder noOtherCost(LocalDate startdate,LocalDate endDate) {
-			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingFrom(startdate).till(endDate)
+		public NameBuilder noOtherCost() {
+			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingIndefinatelyFrom(LocalDate.now())
 					.withAnnualSalary(annualSalary).withCommission(commission).withBonus(bonus).build());
 			return this;
 		}
@@ -655,10 +657,16 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public NameBuilder asW2Consultant() {
+		public NonFTECostBuilder asW2Consultant() {
 			this.resource.employmentType = EmploymentType.w2Consultant();
 			return this;
 		}
+
+        @Override
+        public NonFTECostBuilder asNonFullTimeEmployee(EmploymentType employmentType) {
+            this.resource.employmentType = employmentType;
+            return this;
+        }
 
 		@Override
 		public NameBuilder atHourlyCost(Money hourlyCost,LocalDate startdate,LocalDate endDate) {

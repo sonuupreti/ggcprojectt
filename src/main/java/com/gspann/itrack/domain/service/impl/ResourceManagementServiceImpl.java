@@ -26,6 +26,8 @@ import com.gspann.itrack.common.enums.standard.CurrencyCode;
 import com.gspann.itrack.domain.model.business.payments.CostRateType;
 import com.gspann.itrack.domain.model.business.payments.FTECost;
 import com.gspann.itrack.domain.model.business.payments.NonFTECost;
+import com.gspann.itrack.domain.model.business.payments.PayRateUnit;
+import com.gspann.itrack.domain.model.business.payments.Payment;
 import com.gspann.itrack.domain.model.common.Toggle;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
@@ -41,6 +43,7 @@ import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.Practice;
+import com.gspann.itrack.domain.model.org.structure.Practice.CODE;
 import com.gspann.itrack.domain.model.org.structure.ResourceActionType;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
@@ -74,32 +77,23 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 
         City baseLocation = locationRepository.loadCity(resourceDTO.getBaseLocationId());
         Optional<Designation> designation = organizationRepository.findDesignationById(resourceDTO.getDesignationId());
+        Optional<Practice> practice=projectRepository.findPracticeByCode(resourceDTO.getPractice());
 
         Resource resources = null;
-        if (null != resourceDTO.getEmploymentTypeCode()
-                && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.FULLTIME_EMPLOYEE.code())) {
+        if (EmploymentType.isFTE(resourceDTO.getEmploymentTypeCode())) {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asFullTimeEmployee().withAnnualSalary(resourceDTO.getAnnualSalary())
-                    .plusCommission(resourceDTO.getComission()).plusBonus(resourceDTO.getBonus()).noOtherCost(resourceDTO.getPaystartDate(),resourceDTO.getPayendDate())
+                    .asFullTimeEmployee(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode())).withAnnualSalary(resourceDTO.getAnnualSalary())
+                    .plusCommission(resourceDTO.getComission()).plusBonus(resourceDTO.getBonus()).andOtherCost(resourceDTO.getOtherCost(), resourceDTO.getPaystartDate(), resourceDTO.getPayendDate())
                     .withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
                     .onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
-                    .addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
+                    .addPractice(practice.get()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
 
-        } else if (null != resourceDTO.getEmploymentTypeCode()
-                && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.DIRECT_CONTRACTOR.code())) {
+        } else {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asDirectContractor().atHourlyCost(resourceDTO.getRateperHour(), resourceDTO.getPaystartDate(),resourceDTO.getPayendDate())
+                    .asNonFullTimeEmployee(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode())).atHourlyCost(resourceDTO.getRateperHour(), resourceDTO.getPaystartDate(),resourceDTO.getPayendDate())
                     .withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
-                    .addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
-        } else if (null != resourceDTO.getEmploymentTypeCode()
-                && resourceDTO.getEmploymentTypeCode().equalsIgnoreCase(EmploymentType.CODE.SUB_CONTRACTOR.code())) {
-            resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asSubContractor().atHourlyCost(resourceDTO.getRateperHour(), resourceDTO.getPaystartDate(),
-                     resourceDTO.getPayendDate()).withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
-                    .onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
-                    .addPractice(Practice.adms()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
-                    
-        }
+                    .addPractice(practice.get()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
+        } 
         resources = resourceRepository.saveAndFlush(resources);
         return BeanConverterUtil.resourceEntitytoDto(resources);
     }
@@ -238,9 +232,11 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         currencyPairs.add(inrCurrency);
         currencyPairs.add(gbpCurrency);
         currencyPairs.add(usdCurrency);
+        
+        List<Pair<String, String>> practiceList = projectRepository.findAllPracticeCodeAndDescription();
 
         return ResourceOnLoadVM.of(companyPairs, locationPairs, departmentPairs, designationsPairs, technologiesPairs,
-                currencyPairs);
+                currencyPairs,practiceList);
     }
 
     @Override
@@ -262,19 +258,20 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         City deputedLocation = locationRepository.loadCity(resourceDTO.getDeputedLocationId());
         Designation designation = organizationRepository.findDesignationById(resourceDTO.getDesignationId()).get();
         NonFTECost nonFteCost = resourceObject.costings().get(0);
-        if (nonFteCost != null && CostRateType.FTE_COST_RATE.name().equals(nonFteCost.getDiscriminatorValue())) {
+        if (EmploymentType.isFTE(resourceDTO.getEmploymentTypeCode())){
             FTECost fteCost = (FTECost) nonFteCost;
             fteCost.updateAnnualSalary(resourceDTO.getAnnualSalary());
             fteCost.updateBonus(resourceDTO.getBonus());
             fteCost.updateCommission(resourceDTO.getComission());
             fteCost.updateOtherCost(resourceDTO.getOtherCost());
-            fteCost.updatePaymentStartDate(resourceDTO.getPaystartDate());
-            fteCost.updatePaymentEndDate(resourceDTO.getPayendDate());
+            fteCost.dateRange().startOn(resourceDTO.getPaystartDate());
+            fteCost.dateRange().endOn(resourceDTO.getPayendDate());
             resourceObject.costings().add(fteCost);
         } else {
-            nonFteCost.updateRateForHour(resourceDTO.getRateperHour());
-            nonFteCost.updatePaymentStartDate(resourceDTO.getPaystartDate());
-            nonFteCost.updatePaymentEndDate(resourceDTO.getPayendDate());
+            //nonFteCost.updateRateForHour(resourceDTO.getRateperHour());
+            nonFteCost.dateRange().startOn(resourceDTO.getPaystartDate());
+            nonFteCost.dateRange().endOn(resourceDTO.getPayendDate());
+            nonFteCost.payment(Payment.of(PayRateUnit.HOURLY, resourceDTO.getRateperHour()));
             resourceObject.costings().add(nonFteCost);
         }
         resourceObject.updateResourceName(resourceDTO.getName());

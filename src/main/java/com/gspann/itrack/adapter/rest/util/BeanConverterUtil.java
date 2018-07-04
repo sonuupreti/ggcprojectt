@@ -123,12 +123,17 @@ public class BeanConverterUtil {
 		resourceDTO.setVersion(resource.version());
 		resourceDTO.setCompanyId(resource.designation().department().company().id());
 		resourceDTO.setDepartmentId(resource.designation().department().id());
+		if(null!= resource.practices()) {
+		    Practice practice =resource.practices().iterator().next();
+		    resourceDTO.setPractice(practice.name());
+		}
 		NonFTECost nonFteCost=resource.costings().get(0);
-        if (nonFteCost != null && CostRateType.FTE_COST_RATE.name().equals(nonFteCost.getDiscriminatorValue())) {
+        if (resource.isFTE()) {
             FTECost fteCost = (FTECost) nonFteCost;
             resourceDTO.setAnnualSalary(fteCost.annualSalary());
             resourceDTO.setComission(fteCost.commission());
             resourceDTO.setBonus(fteCost.bonus());
+            resourceDTO.setOtherCost(fteCost.otherCost());
             resourceDTO.setPaystartDate(fteCost.dateRange().fromDate());
             resourceDTO.setPayendDate(fteCost.dateRange().tillDate());
         } else {

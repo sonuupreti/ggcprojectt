@@ -20,5 +20,7 @@ public class ResourceOnLoadVM {
 	List<Pair<Short, String>> designationList;
 	List<Pair<Integer, String>> technologiesPairs;
 	List<Pair<String, String>> currencyPairs;
+	List<Pair<String, String>> practiceList;
+
 	
 }
