@@ -2,9 +2,11 @@ package com.gspann.itrack.domain.service.impl;
 
 import java.time.LocalDate;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import javax.validation.Valid;
 
@@ -23,12 +25,13 @@ import com.gspann.itrack.adapter.persistence.repository.ResourceRepository;
 import com.gspann.itrack.adapter.persistence.repository.SkillsRepository;
 import com.gspann.itrack.adapter.rest.util.BeanConverterUtil;
 import com.gspann.itrack.common.enums.standard.CurrencyCode;
-import com.gspann.itrack.domain.model.business.payments.CostRateType;
 import com.gspann.itrack.domain.model.business.payments.FTECost;
 import com.gspann.itrack.domain.model.business.payments.NonFTECost;
 import com.gspann.itrack.domain.model.business.payments.PayRateUnit;
 import com.gspann.itrack.domain.model.business.payments.Payment;
 import com.gspann.itrack.domain.model.common.Toggle;
+import com.gspann.itrack.domain.model.common.dto.CompanyDTO;
+import com.gspann.itrack.domain.model.common.dto.DepartmentDTO;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceOnBoardingDTO;
@@ -38,12 +41,10 @@ import com.gspann.itrack.domain.model.location.City;
 import com.gspann.itrack.domain.model.location.Location;
 import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Company;
-import com.gspann.itrack.domain.model.org.structure.Department;
 import com.gspann.itrack.domain.model.org.structure.Designation;
 import com.gspann.itrack.domain.model.org.structure.EmploymentStatus;
 import com.gspann.itrack.domain.model.org.structure.EmploymentType;
 import com.gspann.itrack.domain.model.org.structure.Practice;
-import com.gspann.itrack.domain.model.org.structure.Practice.CODE;
 import com.gspann.itrack.domain.model.org.structure.ResourceActionType;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
@@ -77,23 +78,29 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
 
         City baseLocation = locationRepository.loadCity(resourceDTO.getBaseLocationId());
         Optional<Designation> designation = organizationRepository.findDesignationById(resourceDTO.getDesignationId());
-        Optional<Practice> practice=projectRepository.findPracticeByCode(resourceDTO.getPractice());
+        Optional<Practice> practice = projectRepository.findPracticeByCode(resourceDTO.getPractice());
 
         Resource resources = null;
         if (EmploymentType.isFTE(resourceDTO.getEmploymentTypeCode())) {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asFullTimeEmployee(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode())).withAnnualSalary(resourceDTO.getAnnualSalary())
-                    .plusCommission(resourceDTO.getComission()).plusBonus(resourceDTO.getBonus()).andOtherCost(resourceDTO.getOtherCost(), resourceDTO.getPaystartDate(), resourceDTO.getPayendDate())
+                    .asFullTimeEmployee(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode()))
+                    .withAnnualSalary(resourceDTO.getAnnualSalary()).plusCommission(resourceDTO.getComission())
+                    .plusBonus(resourceDTO.getBonus())
+                    .andOtherCost(resourceDTO.getOtherCost(), resourceDTO.getPaystartDate(),
+                            resourceDTO.getPayendDate())
                     .withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
                     .onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
                     .addPractice(practice.get()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
 
         } else {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asNonFullTimeEmployee(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode())).atHourlyCost(resourceDTO.getRateperHour(), resourceDTO.getPaystartDate(),resourceDTO.getPayendDate())
-                    .withName(resourceDTO.getName()).withGender(resourceDTO.getGender()).onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
+                    .asNonFullTimeEmployee(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode()))
+                    .atHourlyCost(resourceDTO.getRateperHour(), resourceDTO.getPaystartDate(),
+                            resourceDTO.getPayendDate())
+                    .withName(resourceDTO.getName()).withGender(resourceDTO.getGender())
+                    .onDesignation(designation.get()).withPrimarySkills(resourceDTO.getPrimarySkills())
                     .addPractice(practice.get()).deputeAtJoiningLocation().withEmail(resourceDTO.getEmailId()).build();
-        } 
+        }
         resources = resourceRepository.saveAndFlush(resources);
         return BeanConverterUtil.resourceEntitytoDto(resources);
     }
@@ -184,31 +191,31 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         log.debug("Request to get all resources");
         return resourceRepository.findAll(pageable).map(BeanConverterUtil::resourceEntitytoDto);
     }
-
+    @Transactional(readOnly = true)
     public ResourceOnLoadVM resourceOnLodPage() {
         log.debug("Request to load  ResourceOnLoadVM");
         List<Company> companies = organizationRepository.findAllCompanies();
-        List<Department> departments = organizationRepository.findAllDepartments();
+       // List<Department> departments = organizationRepository.findAllDepartments();
         // Collections.sort(companies);
         List<Location> locations = locationRepository.findAllLocations();
-        List<Designation> designations = organizationRepository.findAllDesignations();
+        //List<Designation> designations = organizationRepository.findAllDesignations();
         List<Technology> technologies = skillsRepository.findAllTechnologies();
 
         Collections.sort(locations);
 
-        List<Pair<Short, String>> companyPairs = new LinkedList<>();
+       /* List<Pair<Short, String>> companyPairs = new LinkedList<>();
 
         for (Company company : companies) {
             Pair<Short, String> comp = new Pair<Short, String>(company.id(), company.name());
             companyPairs.add(comp);
-        }
+        }*/
 
         List<Pair<Integer, String>> locationPairs = new LinkedList<>();
         for (Location location : locations) {
             Pair<Integer, String> loc = new Pair<Integer, String>(location.cityId(), location.format());
             locationPairs.add(loc);
         }
-        List<Pair<Short, String>> departmentPairs = new LinkedList<>();
+       /* List<Pair<Short, String>> departmentPairs = new LinkedList<>();
         for (Department department : departments) {
             Pair<Short, String> dept = new Pair<Short, String>(department.id(), department.name());
             departmentPairs.add(dept);
@@ -218,7 +225,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         for (Designation designation : designations) {
             Pair<Short, String> dept = new Pair<Short, String>(designation.id(), designation.name());
             designationsPairs.add(dept);
-        }
+        }*/
         List<Pair<Integer, String>> technologiesPairs = new LinkedList<>();
         for (Technology technology : technologies) {
             Pair<Integer, String> tech = new Pair<Integer, String>(technology.id(), technology.name());
@@ -232,11 +239,33 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         currencyPairs.add(inrCurrency);
         currencyPairs.add(gbpCurrency);
         currencyPairs.add(usdCurrency);
-        
+
         List<Pair<String, String>> practiceList = projectRepository.findAllPracticeCodeAndDescription();
 
-        return ResourceOnLoadVM.of(companyPairs, locationPairs, departmentPairs, designationsPairs, technologiesPairs,
-                currencyPairs,practiceList);
+        Set<CompanyDTO> companyDTOSet = new HashSet<>();
+        for (Company company : companies) {
+            CompanyDTO companyDTO = new CompanyDTO();
+
+            companyDTO.setCompanyId(company.id());
+            companyDTO.setCompanyName(company.name());
+            Set<DepartmentDTO> departmentDTOSet = new HashSet<>();
+
+            company.departments().forEach(department -> {
+                Set<Pair<Short, String>> designatonsDTOSet = new HashSet<>();
+                DepartmentDTO departmentDTO = new DepartmentDTO();
+                departmentDTO.setDepartmentId(department.id());
+                departmentDTO.setDepartmentName(department.name());
+                department.designations().forEach(disgnation -> {
+                    designatonsDTOSet.add(new Pair<Short, String>(disgnation.id(), disgnation.name()));
+                });
+                departmentDTO.setDesignations(designatonsDTOSet);
+                departmentDTOSet.add(departmentDTO);
+            });
+            companyDTO.setDepartments(departmentDTOSet);
+            companyDTOSet.add(companyDTO);
+        }
+
+        return ResourceOnLoadVM.of(locationPairs, technologiesPairs, currencyPairs, practiceList, companyDTOSet);
     }
 
     @Override
@@ -258,7 +287,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         City deputedLocation = locationRepository.loadCity(resourceDTO.getDeputedLocationId());
         Designation designation = organizationRepository.findDesignationById(resourceDTO.getDesignationId()).get();
         NonFTECost nonFteCost = resourceObject.costings().get(0);
-        if (EmploymentType.isFTE(resourceDTO.getEmploymentTypeCode())){
+        if (EmploymentType.isFTE(resourceDTO.getEmploymentTypeCode())) {
             FTECost fteCost = (FTECost) nonFteCost;
             fteCost.updateAnnualSalary(resourceDTO.getAnnualSalary());
             fteCost.updateBonus(resourceDTO.getBonus());
@@ -268,7 +297,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
             fteCost.dateRange().endOn(resourceDTO.getPayendDate());
             resourceObject.costings().add(fteCost);
         } else {
-            //nonFteCost.updateRateForHour(resourceDTO.getRateperHour());
+            // nonFteCost.updateRateForHour(resourceDTO.getRateperHour());
             nonFteCost.dateRange().startOn(resourceDTO.getPaystartDate());
             nonFteCost.dateRange().endOn(resourceDTO.getPayendDate());
             nonFteCost.payment(Payment.of(PayRateUnit.HOURLY, resourceDTO.getRateperHour()));

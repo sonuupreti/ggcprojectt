@@ -1,10 +1,8 @@
 package com.gspann.itrack.domain.model.common.dto;
 
-import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 import org.codehaus.jackson.map.annotate.JsonSerialize;
-
-import com.gspann.itrack.domain.model.org.structure.Department;
 
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
@@ -19,12 +17,13 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
-@JsonSerialize(include=JsonSerialize.Inclusion.NON_NULL)
+@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
 public class CompanyDTO {
-	
-	private Department department;
-	
-	@NotNull
-	private int baseLocationId;
-	private int deputedLocationId;;
+
+    private Short companyId;
+
+    private String companyName;
+
+    private Set<DepartmentDTO> departments;
+
 }
