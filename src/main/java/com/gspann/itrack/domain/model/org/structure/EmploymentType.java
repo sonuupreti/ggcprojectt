@@ -56,6 +56,9 @@ public class EmploymentType extends AbstractAssignable<String> {
 	public static EmploymentType w2Consultant() {
 		return of(CODE.W2_CONSULTANT.code, CODE.W2_CONSULTANT.description);
 	}
+	public static boolean isFTE(String code) {
+	    return (CODE.FULLTIME_EMPLOYEE.code().equalsIgnoreCase(code) || CODE.W2_CONSULTANT.code().equalsIgnoreCase(code));
+	}
 
 	public enum CODE implements StringValuedEnum {
 		// FULLTIME_EMPLOYEE("FTE"), DIRECT_CONTRACTOR("DC"), SUB_CONTRACTOR("SC"),

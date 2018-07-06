@@ -68,4 +68,8 @@ public class Payment {
 			return this.payment;
 		}
 	}
+	
+	public void updatePayMoney(Money payMoney) {
+	    this.payMoney = payMoney;
+	}
 }

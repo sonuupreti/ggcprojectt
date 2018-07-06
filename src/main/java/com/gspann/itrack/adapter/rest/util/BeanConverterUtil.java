@@ -18,6 +18,7 @@ import com.gspann.itrack.domain.model.common.dto.AccountDTO;
 import com.gspann.itrack.domain.model.common.dto.Pair;
 import com.gspann.itrack.domain.model.common.dto.ProjectDTO;
 import com.gspann.itrack.domain.model.common.dto.ResourceDTO;
+import com.gspann.itrack.domain.model.common.dto.ResourceOnBoardingDTO;
 import com.gspann.itrack.domain.model.org.skills.Technology;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
@@ -122,12 +123,37 @@ public class BeanConverterUtil {
 		resourceDTO.setVersion(resource.version());
 		resourceDTO.setCompanyId(resource.designation().department().company().id());
 		resourceDTO.setDepartmentId(resource.designation().department().id());
-		FTECost fteCost = (FTECost)resource.costings().get(0);
-		resourceDTO.setAnnualSalary(fteCost.annualSalary());
-		resourceDTO.setComission(fteCost.commission());
-		resourceDTO.setBonus(fteCost.bonus());
+		if(null!= resource.practices()) {
+		    Practice practice =resource.practices().iterator().next();
+		    resourceDTO.setPractice(practice.name());
+		}
+		NonFTECost nonFteCost=resource.costings().get(0);
+        if (resource.isFTE()) {
+            FTECost fteCost = (FTECost) nonFteCost;
+            resourceDTO.setAnnualSalary(fteCost.annualSalary());
+            resourceDTO.setComission(fteCost.commission());
+            resourceDTO.setBonus(fteCost.bonus());
+            resourceDTO.setOtherCost(fteCost.otherCost());
+            resourceDTO.setPaystartDate(fteCost.dateRange().fromDate());
+            resourceDTO.setPayendDate(fteCost.dateRange().tillDate());
+        } else {
+            resourceDTO.setRateperHour(nonFteCost.payment().payMoney());
+            resourceDTO.setPaystartDate(nonFteCost.dateRange().fromDate());
+            resourceDTO.setPayendDate(nonFteCost.dateRange().tillDate());
+        }
+
+        return resourceDTO;
+	}
 	
-		return resourceDTO;
+	public static ResourceOnBoardingDTO resourceEntitytoOnBoardingDto(Resource resource) {
+	    ResourceOnBoardingDTO resourceOnBoardingInfo = new ResourceOnBoardingDTO();
+	    resourceOnBoardingInfo.setEmailId(resource.emailId());
+	    resourceOnBoardingInfo.setGreytHRId(resource.greytHRID());
+	    resourceOnBoardingInfo.setEmployeeStatusCode(resource.employmentStatus().code());
+	    resourceOnBoardingInfo.setActualJoiningDate(resource.actualJoiningDate());
+	    resourceOnBoardingInfo.setResourceCode(resource.code());
+
+	    return resourceOnBoardingInfo;
 	}
 
 }

@@ -18,7 +18,7 @@ public final class ValidationConstant {
 		
 		public static final String MESSAGE_EMAIL_INVALID = "resource.emailId.invalid";
 
-		public static final String REGEX_GREYT_HR_ID = "";
+		public static final String REGEX_GREYT_HR_ID = "^[a-zA-Z0-9]+$";
 		public static final String MESSAGE_GREYT_HR_ID_INVALID = "resource.greytHRId.invalid";
 
 		public static final String REGEX_NAME = "";

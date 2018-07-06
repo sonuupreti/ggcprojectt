@@ -45,6 +45,7 @@ public class ResourceDTO {
     private String primarySkills;
 
     private String secondarySkills;
+    private String practice;
     @NotNull
     private LocalDate expectedJoiningDate;
     private LocalDate actualJoiningDate;
@@ -57,5 +58,9 @@ public class ResourceDTO {
     private Money comission;
     private Money bonus;
     private Money otherCost;
-
+    private Money rateperHour;
+    
+    private LocalDate paystartDate;
+    private LocalDate payendDate;
+    
 }

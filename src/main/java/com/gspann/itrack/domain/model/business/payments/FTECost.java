@@ -170,16 +170,20 @@ public class FTECost extends NonFTECost {
 		}
 	}
 	
-	public void updateAnnualSalary(Money annualSalary) {
-		this.annualSalary = annualSalary;
-	}
-	public void updateBonus(Money bonus) {
-		this.bonus = bonus;
-	}
-	public void updateCommission(Money commission) {
-		this.commission = commission;
-	}
-	public void updateOtherCost(Money otherCost) {
-		this.otherCost = otherCost;
-	}
+    public void updateAnnualSalary(Money annualSalary) {
+        this.annualSalary = annualSalary;
+    }
+
+    public void updateBonus(Money bonus) {
+        this.bonus = bonus;
+    }
+
+    public void updateCommission(Money commission) {
+        this.commission = commission;
+    }
+
+    public void updateOtherCost(Money otherCost) {
+        this.otherCost = otherCost;
+    }
+   
 }

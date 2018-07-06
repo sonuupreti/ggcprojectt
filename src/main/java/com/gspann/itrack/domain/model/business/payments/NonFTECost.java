@@ -152,5 +152,5 @@ public class NonFTECost implements Costing, Versionable<Long> {
 			return this.cost;
 		}
 	}
-
+	
 }

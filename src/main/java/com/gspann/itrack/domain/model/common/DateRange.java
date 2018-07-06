@@ -84,4 +84,5 @@ public class DateRange {
 				: (date.equals(this.fromDate()) || date.equals(this.tillDate()))
 						|| (date.isAfter(this.fromDate()) && date.isBefore(this.tillDate()));
 	}
+	
 }
