@@ -210,15 +210,15 @@ public class WeeklyTimeSheet extends BaseIdentifiableVersionableEntity<Long, Lon
 	// public void approve() {
 	// }
 
-	public void approve(final Project project, final String comments) {
-		this.weeklyStatus.approve(project, comments);
+	public void approve(final Resource approver, final Project project, final String comments) {
+		this.weeklyStatus.approve(approver, project, comments);
 	}
 
 	// public void reject() {
 	// }
 
-	public void reject(final Project project, final String comments) {
-		this.weeklyStatus.reject(project, comments);
+	public void reject(final Resource approver, final Project project, final String comments) {
+		this.weeklyStatus.reject(approver, project, comments);
 	}
 
 	public static WeeklyTimeSheetWeekBuilder of(final Resource resource) {

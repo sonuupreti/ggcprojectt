@@ -13,6 +13,7 @@ import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 import com.gspann.itrack.domain.model.timesheets.dto.TimeSheetDTO;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetActorType;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceList;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
@@ -31,13 +32,17 @@ public interface TimesheetManagementService {
 
 	public Optional<ResourceAllocationSummary> getResourceAllocationSummary(final String resourceCode, final Week week);
 
-	public Optional<TimeSheetResource> getTimeSheetVMByResource(final String resourceCode);
+	public Optional<TimeSheetResource> getTimeSheetVMByResource(final String resourceCode,
+			final TimeSheetActorType actor);
 
-	public Optional<TimeSheetResource> getTimeSheetVMByResourceAndWeek(final String resourceCode, final Week week);
+	public Optional<TimeSheetResource> getTimeSheetVMByResourceAndWeek(final String resourceCode, final Week week,
+			final TimeSheetActorType actor);
 
-	public Optional<TimeSheetResource> getTimeSheetVMByIdAndResourceCode(final long timesheetId, final String resourceCode);
+	public Optional<TimeSheetResource> getTimeSheetVMByIdAndResourceCode(final long timesheetId,
+			final String resourceCode, final TimeSheetActorType actor);
 
-	public TimeSheetResourceList listRecentTimeSheetVMsByResource(final String resourceCode, final int pageSize);
+	public TimeSheetResourceList listTimeSheetVMsByResourceAndMonth(final String resourceCode, final YearMonth month,
+			final TimeSheetActorType actor);
 
 	public Optional<WeeklyTimeSheet> saveOrSubmitTimeSheet(final String resourceCode, final TimeSheetDTO timesheet);
 
@@ -48,18 +53,31 @@ public interface TimesheetManagementService {
 	public Optional<WeeklyTimeSheet> getTimeSheetByResourceAndDate(final String resourceCode, final LocalDate date);
 
 	public Optional<WeeklyTimeSheet> getTimeSheetByIdAndResourceCode(final long timesheetId, final String resourceCode);
-	
-	public Set<TimeSheetWeekStatusVM> getWeeklyStatusesByWeeks(String resourceCode, List<Week> weeks);
-	
-	public Map<Week, TimeSheetWeekStatusVM> getWeeklyStatusesForNextAndPreviousWeeks(String resourceCode, Week week);
+
+	public Set<TimeSheetWeekStatusVM> getWeeklyStatusesByWeeks(final String resourceCode, final List<Week> weeks);
+
+	public Set<TimeSheetWeekStatusVM> getWeeklyStatusesSinceMonths(final String resourceCode, final int months);
+
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForResourceSinceMonths(final String resourceCode, final int months);
+
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForResourceByMonth(final String resourceCode, final YearMonth month);
+
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverSinceMonths(final String approverCode, final int months);
+
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverByMonth(final String approverCode, final YearMonth month);
+
+	public Map<Week, TimeSheetWeekStatusVM> getWeeklyStatusesForNextAndPreviousWeeks(final String resourceCode,
+			final Week week);
 
 	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndMonth(final String resourceCode, final YearMonth month);
 
-	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndDateRange(final String resourceCode, final DateRange dateRange);
+	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndDateRange(final String resourceCode,
+			final DateRange dateRange);
 
 	public List<WeeklyTimeSheet> listTimeSheetsByResourceSinceDate(final String resourceCode, final LocalDate date);
 
-	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndStatus(final String resourceCode, final TimesheetStatus status);
+	public List<WeeklyTimeSheet> listTimeSheetsByResourceAndStatus(final String resourceCode,
+			final TimesheetStatus status);
 
 	public List<WeeklyTimeSheet> listRecentTimeSheetsByResource(final String resourceCode, final int pageSize);
 

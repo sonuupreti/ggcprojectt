@@ -1,12 +1,5 @@
 package com.gspann.itrack.adapter.persistence.repository;
 
-import java.time.LocalDate;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,14 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.gspann.itrack.ItrackApplication;
 import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.common.enums.standard.CountryCode;
-import com.gspann.itrack.domain.model.business.Account;
-import com.gspann.itrack.domain.model.common.dto.Pair;
-import com.gspann.itrack.domain.model.location.City;
-import com.gspann.itrack.domain.model.location.Location;
-import com.gspann.itrack.domain.model.staff.Resource;
-import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
-
-import lombok.experimental.var;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = ItrackApplication.class)

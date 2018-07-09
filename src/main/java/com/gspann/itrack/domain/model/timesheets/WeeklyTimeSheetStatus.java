@@ -27,6 +27,7 @@ import javax.validation.constraints.NotNull;
 import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.domain.model.common.type.BaseIdentifiableVersionableEntity;
 import com.gspann.itrack.domain.model.projects.Project;
+import com.gspann.itrack.domain.model.staff.Resource;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -136,7 +137,7 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 		projects.forEach((project) -> {
 			if (project.isLeaveType()) {
 				weeklyTimeSheetStatus.projectTimeSheetStatuses.put(project,
-						ProjectTimeSheetStatus.forApprove("Auto Approved"));
+						ProjectTimeSheetStatus.forApprove(null, "Auto Approved"));
 			} else {
 				weeklyTimeSheetStatus.projectTimeSheetStatuses.put(project, ProjectTimeSheetStatus.forSave());
 			}
@@ -151,7 +152,7 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 		projects.forEach((project) -> {
 			if (project.isLeaveType()) {
 				weeklyTimeSheetStatus.projectTimeSheetStatuses.put(project,
-						ProjectTimeSheetStatus.forApprove("Auto Approved"));
+						ProjectTimeSheetStatus.forApprove(null, "Auto Approved"));
 			} else {
 				weeklyTimeSheetStatus.projectTimeSheetStatuses.put(project, ProjectTimeSheetStatus.forSubmit());
 			}
@@ -177,14 +178,14 @@ public class WeeklyTimeSheetStatus extends BaseIdentifiableVersionableEntity<Lon
 	// return weeklyTimeSheetStatus;
 	// }
 
-	public void approve(final Project project, final String comments) {
-		this.nonLeaveProjectTimeSheetStatuses.get(project).approve(comments);
+	public void approve(final Resource approver, final Project project, final String comments) {
+		this.nonLeaveProjectTimeSheetStatuses.get(project).approve(approver, comments);
 		this.updatedOn = ZonedDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
 		updateConsolidatedStatus();
 	}
 
-	public void reject(final Project project, final String comments) {
-		this.nonLeaveProjectTimeSheetStatuses.get(project).reject(comments);
+	public void reject(final Resource approver, final Project project, final String comments) {
+		this.nonLeaveProjectTimeSheetStatuses.get(project).reject(approver, comments);
 		this.updatedOn = ZonedDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
 		updateConsolidatedStatus();
 	}

@@ -930,6 +930,11 @@
 			<column name="comments" type="varchar(255)">
 				<constraints nullable="true" />
 			</column>
+			<column name="approver_code" type="varchar(20)">
+				<constraints foreignKeyName="fk_project_time_sheet_status_approver_code"
+					referencedColumnNames="code" referencedTableName="resources"
+					nullable="true" />
+			</column>
 		</createTable>
 		<addPrimaryKey constraintName="pk_composite_project_time_sheet_statuses"
 			columnNames="weekly_time_sheet_status_id, project_code" tableName="project_time_sheet_statuses" />

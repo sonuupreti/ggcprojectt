@@ -7,6 +7,7 @@ import java.time.YearMonth;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -114,13 +115,14 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	@Override
-	public Optional<TimeSheetResource> getTimeSheetVMByResource(String resourceCode) {
+	public Optional<TimeSheetResource> getTimeSheetVMByResource(final String resourceCode,
+			final TimeSheetActorType actor) {
 		return getTimeSheetVMByResourceAndWeek(resourceCode,
-				Week.current(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY()));
+				Week.current(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY()), actor);
 	}
 
 	public ProjectWiseTimeSheetVM toProjectWiseTimeSheetVM(final ResourceAllocationSummary resourceAllocationSummary,
-			final WeeklyTimeSheet weeklyTimeSheet) {
+			final WeeklyTimeSheet weeklyTimeSheet, final TimeSheetActorType actor) {
 
 		Set<DailyTotalEntry> totalEntries = weeklyTimeSheet.dailyTimeSheets().stream()
 				.map(dailyEntry -> DailyTotalEntry.of(dailyEntry.date(), dailyEntry.totalHours(),
@@ -138,7 +140,8 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			ProjectWiseTimeSheetWeekVM projectWiseTimeSheetWeekVM = ProjectWiseTimeSheetWeekVM.of(
 					resourceAllocationSummary.getProjectSummaryByProjectCode(mapEntry.getKey().code()),
 					TimeSheetStatusTypeVM
-							.from(weeklyTimeSheet.weeklyStatus(mapEntry.getKey()).get().projectWiseStatus()));
+							.from(weeklyTimeSheet.weeklyStatus(mapEntry.getKey()).get().projectWiseStatus()),
+					actor);
 			Set<ProjectWiseDailyEntryVM> projectWiseDailyEntries = new TreeSet<>(
 					(x, y) -> x.getDate().compareTo(y.getDate()));
 			for (var timeSheetEntry : mapEntry.getValue()) {
@@ -154,48 +157,9 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 		return projectWiseTimeSheetVM;
 	}
 
-	// public ProjectWiseTimeSheetVM toProjectWiseTimeSheetVM(final WeeklyTimeSheet
-	// weeklyTimeSheet) {
-	//
-	// Set<DailyTotalEntry> totalEntries =
-	// weeklyTimeSheet.dailyTimeSheets().stream()
-	// .map(dailyEntry -> DailyTotalEntry.of(dailyEntry.date(),
-	// dailyEntry.totalHours(),
-	// dailyEntry.dailyComments()))
-	// .collect(Collectors.toCollection(() -> new TreeSet<>((x, y) ->
-	// x.getDate().compareTo(y.getDate()))));
-	//
-	// Map<Project, Set<TimeSheetEntry>> projectWiseTimeEntriesMap =
-	// weeklyTimeSheet.projectWiseTimeEntriesMap();
-	//
-	// ProjectWiseTimeSheetVM projectWiseTimeSheetVM =
-	// ProjectWiseTimeSheetVM.of(weeklyTimeSheet.id(), totalEntries);
-	//
-	// Set<ProjectWiseTimeSheetWeekVM> projectWiseWeeklyTimeSheets = new TreeSet<>(
-	// (x, y) -> x.projectName().compareTo(y.projectName()));
-	//
-	// for (var mapEntry : projectWiseTimeEntriesMap.entrySet()) {
-	// ProjectWiseTimeSheetWeekVM projectWiseTimeSheetWeekVM =
-	// ProjectWiseTimeSheetWeekVM.of(TimeSheetStatusTypeVM
-	// .from(weeklyTimeSheet.weeklyStatus(mapEntry.getKey()).get().projectWiseStatus()));
-	// Set<ProjectWiseDailyEntryVM> projectWiseDailyEntries = new TreeSet<>(
-	// (x, y) -> x.getDate().compareTo(y.getDate()));
-	// for (var timeSheetEntry : mapEntry.getValue()) {
-	// projectWiseDailyEntries.add(ProjectWiseDailyEntryVM.of(timeSheetEntry.dailyTimeSheet().date(),
-	// timeSheetEntry.dailyTimeSheet().day(),
-	// timeSheetEntry.dailyTimeSheet().dayType(),
-	// timeSheetEntry.hours(), timeSheetEntry.comments()));
-	// }
-	// projectWiseTimeSheetWeekVM.addDailyEntries(projectWiseDailyEntries);
-	// projectWiseWeeklyTimeSheets.add(projectWiseTimeSheetWeekVM);
-	// }
-	// projectWiseTimeSheetVM.addProjectWiseWeeklyTimeSheets(projectWiseWeeklyTimeSheets);
-	//
-	// return projectWiseTimeSheetVM;
-	// }
-
 	@Override
-	public Optional<TimeSheetResource> getTimeSheetVMByResourceAndWeek(String resourceCode, Week week) {
+	public Optional<TimeSheetResource> getTimeSheetVMByResourceAndWeek(final String resourceCode, final Week week,
+			final TimeSheetActorType actor) {
 		Optional<ResourceAllocationSummary> resourceAllocationDetails = getResourceAllocationSummary(resourceCode,
 				week);
 		if (resourceAllocationDetails.isPresent()) {
@@ -205,7 +169,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 					week);
 			if (existingTimesheet.isPresent()) {
 				WeeklyTimeSheet weeklyTimeSheet = existingTimesheet.get();
-				return getTimeSheetVMForExistingTimeSheet(week, weeklyTimeSheet, resourceAllocationSummary);
+				return getTimeSheetVMForExistingTimeSheet(week, weeklyTimeSheet, resourceAllocationSummary, actor);
 			} else {
 				// Create meta data for the week requested and return;
 				return getTimeSheetVMForNewTimeSheet(week, resourceAllocationSummary);
@@ -217,17 +181,18 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	private Optional<TimeSheetResource> getTimeSheetVMForExistingTimeSheet(final Week week,
-			final WeeklyTimeSheet weeklyTimeSheet, final ResourceAllocationSummary resourceAllocationSummary) {
+			final WeeklyTimeSheet weeklyTimeSheet, final ResourceAllocationSummary resourceAllocationSummary,
+			final TimeSheetActorType actor) {
 		if (weeklyTimeSheet.weeklyStatus().status() == TimesheetStatus.SAVED) {
 			return Optional.of(TimeSheetResource.ofSaved(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(),
 					resourceAllocationSummary.getResource(), resourceAllocationSummary.getProjects(),
 					getTimeSheetWeekMetaDataVM(week, resourceAllocationSummary.getDeputedLocation()),
-					toProjectWiseTimeSheetVM(resourceAllocationSummary, weeklyTimeSheet),
+					toProjectWiseTimeSheetVM(resourceAllocationSummary, weeklyTimeSheet, actor),
 					weeklyTimeSheet.weeklyStatus().updatedOn()));
 		} else if (weeklyTimeSheet.weeklyStatus().status() == TimesheetStatus.SUBMITTED) {
 			return Optional.of(TimeSheetResource.ofSubmitted(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(),
 					resourceAllocationSummary.getResource(), TimeSheetWeekMetaDataVM.ofWeek(week),
-					toProjectWiseTimeSheetVM(resourceAllocationSummary, weeklyTimeSheet), TimeSheetActorType.RESOURCE,
+					toProjectWiseTimeSheetVM(resourceAllocationSummary, weeklyTimeSheet, actor), actor,
 					weeklyTimeSheet.weeklyStatus().updatedOn()));
 			// TODO: Get the role from logged in user details and pass the
 			// TimeSheetActorType accordingly
@@ -245,7 +210,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 
 	@Override
 	public Optional<TimeSheetResource> getTimeSheetVMByIdAndResourceCode(final long timesheetId,
-			final String resourceCode) {
+			final String resourceCode, final TimeSheetActorType actor) {
 		// Optional<WeeklyTimeSheet> existingTimesheet = getTimeSheetById(timesheetId);
 		Optional<WeeklyTimeSheet> existingTimesheet = getTimeSheetByIdAndResourceCode(timesheetId, resourceCode);
 		if (existingTimesheet.isPresent()) {
@@ -253,7 +218,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			Optional<ResourceAllocationSummary> resourceAllocationDetails = getResourceAllocationSummary(
 					weeklyTimeSheet.resource().code(), weeklyTimeSheet.week());
 			return getTimeSheetVMForExistingTimeSheet(weeklyTimeSheet.week().updateWeekName(), weeklyTimeSheet,
-					resourceAllocationDetails.get());
+					resourceAllocationDetails.get(), actor);
 		} else {
 			// TODO: Throw exception that no timesheet with such ID exists
 			return Optional.empty();
@@ -261,39 +226,26 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	@Override
-	public TimeSheetResourceList listRecentTimeSheetVMsByResource(String resourceCode, int pageSize) {
-		// TODO Auto-generated method stub
-		// Set<TimeSheetWeekStatusVM> timesheets =
-		// getWeeklyStatusesByWeeks(resourceCode,
-		// Week.lastWeeks(TIMESHEET_PROPERTIES.WEEK_START_DAY(),
-		// TIMESHEET_PROPERTIES.WEEK_END_DAY(), pageSize));
-		List<WeeklyTimeSheet> existingTimeSheets = listRecentTimeSheetsByResource(resourceCode, pageSize);
-		Map<Week, WeeklyTimeSheet> existingTimeSheetsMap = existingTimeSheets.stream()
-				.collect(Collectors.toMap(WeeklyTimeSheet::week, timesheet -> timesheet));
-		List<Week> forWeeks = Week.lastWeeks(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
-				pageSize);
+	public TimeSheetResourceList listTimeSheetVMsByResourceAndMonth(String resourceCode, YearMonth month,
+			TimeSheetActorType actor) {
+		List<WeeklyTimeSheet> weeklyTimesheets = listTimeSheetsByResourceAndMonth(resourceCode, month);
 		TimeSheetResourceList timeSheetResourceList = TimeSheetResourceList.of(TIMESHEET_PROPERTIES.SYSTEM_START_DATE(),
-				resourceRepository.findCodeAndName(resourceCode));
-		for (var week : forWeeks) {
-			if (existingTimeSheetsMap.containsKey(week)) {
-				WeeklyTimeSheet weeklyTimesheet = existingTimeSheetsMap.get(week);
-				Optional<ResourceAllocationSummary> resourceAllocationDetails = getResourceAllocationSummary(
-						resourceCode, week);
-				if (resourceAllocationDetails.isPresent()) {
-					timeSheetResourceList.add(TimeSheetResource.ofExistingTimeSheet(
-							TimeSheetWeekMetaDataVM.ofWeek(weeklyTimesheet.week().updateWeekName()),
-							toProjectWiseTimeSheetVM(resourceAllocationDetails.get(), weeklyTimesheet),
-							TimeSheetStatusTypeVM.from(weeklyTimesheet.weeklyStatus().status()),
-							weeklyTimesheet.weeklyStatus().updatedOn()));
-				} else {
-					// TODO: Throw exception
-				}
+				month, resourceRepository.findCodeAndName(resourceCode));
 
+		weeklyTimesheets.forEach((weeklyTimesheet) -> {
+			Optional<ResourceAllocationSummary> resourceAllocationDetails = getResourceAllocationSummary(resourceCode,
+					weeklyTimesheet.week());
+			if (resourceAllocationDetails.isPresent()) {
+				timeSheetResourceList.add(TimeSheetResource.ofExistingTimeSheet(
+						TimeSheetWeekMetaDataVM.ofWeek(weeklyTimesheet.week().updateWeekName()),
+						toProjectWiseTimeSheetVM(resourceAllocationDetails.get(), weeklyTimesheet, actor),
+						TimeSheetStatusTypeVM.from(weeklyTimesheet.weeklyStatus().status()),
+						weeklyTimesheet.weeklyStatus().updatedOn()));
 			} else {
-				timeSheetResourceList
-						.add(TimeSheetResource.ofPendingForSubmission(TimeSheetWeekMetaDataVM.ofWeek(week)));
+				// TODO: Throw exception
 			}
-		}
+		});
+
 		return timeSheetResourceList;
 	}
 
@@ -408,7 +360,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 				}
 				timesheetEntries.add(timeEntry);
 			}
-			dailyTimeSheet = DailyTimeSheet.withDefaultStandardHours().forDate(weekDate).withDaytype(dayType)
+			dailyTimeSheet = DailyTimeSheet.withStandardHours(TIMESHEET_PROPERTIES.STANDARD_DAILY_HOURS()).forDate(weekDate).withDaytype(dayType)
 					.withEntries(timesheetEntries).withDailyComments(dayDTO.getComments()).build();
 			dailyTimeSheets.add(dailyTimeSheet);
 
@@ -420,6 +372,8 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			// Update existing timesheet
 			weeklyTimeSheet = existingTimeSheet.get();
 			weeklyTimeSheet.clearAllDailyTimeSheets();
+			// TODO: Executing a lot of queries, so need to optimize,
+			// instead of deleting existing entries, update existing entires with new values
 			resourceRepository.flush();
 			// weeklyTimeSheet.replaceAllDailyTimeSheets(dailyTimeSheets);
 			weeklyTimeSheet.addAllDailyTimeSheets(dailyTimeSheets);
@@ -429,7 +383,7 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 			// resourceRepository.findById(timesheet.getResourceCode()).get();
 			Resource resource = resourceRepository.getOne(resourceCode);
 			weeklyTimeSheet = WeeklyTimeSheet.of(resource).forWeekOf(Week.of(timesheet.getWeek().getWeekStartDate()))
-					.withDefaultStandardHours().withDailyTimeSheets(dailyTimeSheets).build();
+					.withStandardHours(TIMESHEET_PROPERTIES.STANDARD_WEEKLY_HOURS()).withDailyTimeSheets(dailyTimeSheets).build();
 		}
 		if (TimeSheetActionTypeVM.valueOf(timesheet.getAction()) == TimeSheetActionTypeVM.SAVE) {
 			weeklyTimeSheet.save();
@@ -572,7 +526,83 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	@Override
+	public Set<TimeSheetWeekStatusVM> getWeeklyStatusesSinceMonths(String resourceCode, int months) {
+		// TODO Auto-generated method stub
+		List<Week> weeks = Week.weeksSince(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+				LocalDate.now().minusDays(30 * months), Week.DESCENDING_ORDER);
+		return getWeeklyStatusesByWeeks(resourceCode, weeks);
+	}
+
+	@Override
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForResourceSinceMonths(final String resourceCode,
+			final int months) {
+		LocalDate sinceDate = LocalDate.now().minusDays(30 * months);
+		List<Week> weeks = Week.weeksSince(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+				sinceDate.isBefore(TIMESHEET_PROPERTIES.SYSTEM_START_DATE()) ? TIMESHEET_PROPERTIES.SYSTEM_START_DATE()
+						: sinceDate,
+				Week.DESCENDING_ORDER);
+		return getPendingWeeklyActionsForResourceByWeeks(resourceCode,
+				weeks.stream().sorted(Comparator.reverseOrder()).collect(Collectors.toList()));
+	}
+
+	@Override
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForResourceByMonth(String resourceCode, YearMonth month) {
+		LocalDate fromDate = month.atDay(1);
+		LocalDate endDate = month.atEndOfMonth();
+		List<Week> weeks = null;
+		Week current = Week.current(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY());
+		if (endDate.isBefore(TIMESHEET_PROPERTIES.SYSTEM_START_DATE()) || fromDate.isAfter(current.endingOn())) {
+			return Collections.emptySet();
+		} else if (!fromDate.isAfter(TIMESHEET_PROPERTIES.SYSTEM_START_DATE())
+				&& !endDate.isAfter(current.endingOn())) {
+			weeks = Week.weeksForDateRange(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+					DateRange.dateRange().startingOn(TIMESHEET_PROPERTIES.SYSTEM_START_DATE()).endingOn(endDate), Week.DESCENDING_ORDER);
+		} else if (!fromDate.isBefore(TIMESHEET_PROPERTIES.SYSTEM_START_DATE())
+				&& !endDate.isAfter(current.endingOn())) {
+			weeks = Week.weeksForDateRange(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+							DateRange.dateRange().startingOn(fromDate).endingOn(endDate), Week.DESCENDING_ORDER);
+		} else if (!fromDate.isBefore(TIMESHEET_PROPERTIES.SYSTEM_START_DATE()) && endDate.isAfter(current.endingOn())) {
+			weeks = Week.weeksForDateRange(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+					DateRange.dateRange().startingOn(fromDate).endingOn(current.endingOn()), Week.DESCENDING_ORDER);
+		} else if (fromDate.isBefore(TIMESHEET_PROPERTIES.SYSTEM_START_DATE()) && endDate.isAfter(current.endingOn())) {
+			weeks = Week.weeksForDateRange(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+					DateRange.dateRange().startingOn(TIMESHEET_PROPERTIES.SYSTEM_START_DATE()).endingOn(current.endingOn()),
+					Week.DESCENDING_ORDER);
+		} 
+		
+		return getPendingWeeklyActionsForResourceByWeeks(resourceCode, weeks);
+	}
+
+	private Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForResourceByWeeks(final String resourceCode,
+			final List<Week> weeks) {
+		Set<TimeSheetWeekStatusVM> results = new LinkedHashSet<>(weeks.size());
+		Map<Week, TimeSheetWeekStatusVM> weeklyStatusMap = timeSheetRepository
+				.findPendingActionWeeksForResourceByWeeks(resourceCode, weeks);
+		for (var week : weeks) {
+			if (weeklyStatusMap.containsKey(week)) {
+				results.add(weeklyStatusMap.get(week));
+			} else {
+				results.add(TimeSheetWeekStatusVM.ofWeekPendingForSubmission(week));
+			}
+		}
+
+		return results;
+	}
+
+	@Override
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverSinceMonths(final String approverCode,
+			final int months) {
+		return null;
+	}
+
+	@Override
 	public Optional<WeeklyTimeSheet> getTimeSheetByIdAndResourceCode(long timesheetId, String resourceCode) {
 		return timeSheetRepository.findByIdAndResourceCode(timesheetId, resourceCode);
+	}
+
+	@Override
+	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverByMonth(String approverCode, YearMonth month) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

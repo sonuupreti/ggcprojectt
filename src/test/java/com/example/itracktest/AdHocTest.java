@@ -60,7 +60,9 @@ public class AdHocTest {
 	    
 //	    LocalDate firstWeekStartDate = sinceDate
 //				.with(TemporalAdjusters.nextOrSame(weekStartDay));
-	    Week.lastWeeks(weekStartDay, weekEndDay, 3).forEach(System.out::println);;
+//	    Week.lastWeeks(weekStartDay, weekEndDay, 3, Week.DESCENDING_ORDER).forEach(System.out::println);
+	    
+	    System.out.println(DAYS.between(now, now));
 	}
 
 }

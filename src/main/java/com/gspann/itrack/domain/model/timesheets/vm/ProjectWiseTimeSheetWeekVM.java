@@ -55,22 +55,32 @@ public class ProjectWiseTimeSheetWeekVM {
 //	}
 
 	public static ProjectWiseTimeSheetWeekVM of(final ResourceProjectSummary projectDetails,
-			final TimeSheetStatusTypeVM projectTimesheetStatus) {
+			final TimeSheetStatusTypeVM projectTimesheetStatus, final TimeSheetActorType actor) {
 		ProjectWiseTimeSheetWeekVM projectWiseTimeSheetVM = new ProjectWiseTimeSheetWeekVM();
 		projectWiseTimeSheetVM.projectDetails = projectDetails;
 		projectWiseTimeSheetVM.projectTimesheetStatus = projectTimesheetStatus;
-		if (projectTimesheetStatus == TimeSheetStatusTypeVM.SAVED) {
-//			projectWiseTimeSheetVM.actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.SAVE,
-//					TimeSheetActionTypeVM.SUBMIT };
-		} else if (projectTimesheetStatus == TimeSheetStatusTypeVM.SUBMITTED) {
-			projectWiseTimeSheetVM.actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.APPROVE,
-					TimeSheetActionTypeVM.REJECT };
-		}
-		// TODO: Update later, applicable action will depend or user role, 
-		// for owner there would not be any action at project level, but for approver there will be actions at project level
-		// for other statuses such as approved/rejected etc.
+		projectWiseTimeSheetVM.setActions(actor);
 		projectWiseTimeSheetVM.projectTotalHours = Duration.ZERO;
 		return projectWiseTimeSheetVM;
+	}
+	
+	public void setActions(final TimeSheetActorType actor) {
+		if (actor == TimeSheetActorType.RESOURCE) {
+			if (this.projectTimesheetStatus == TimeSheetStatusTypeVM.SAVED || this.projectTimesheetStatus == TimeSheetStatusTypeVM.PENDING_SUBMISSION) {
+				actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.SAVE, TimeSheetActionTypeVM.SUBMIT };
+			} else if (projectTimesheetStatus == TimeSheetStatusTypeVM.SUBMITTED || projectTimesheetStatus == TimeSheetStatusTypeVM.APPROVED) {
+				actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.NONE };
+			}
+		} else {
+			if (this.projectTimesheetStatus == TimeSheetStatusTypeVM.SAVED || projectTimesheetStatus == TimeSheetStatusTypeVM.APPROVED
+					|| projectTimesheetStatus == TimeSheetStatusTypeVM.REJECTED
+					|| this.projectTimesheetStatus == TimeSheetStatusTypeVM.PENDING_SUBMISSION) {
+				actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.NONE };
+			} else if (projectTimesheetStatus == TimeSheetStatusTypeVM.SUBMITTED) {
+				actions = new TimeSheetActionTypeVM[] { TimeSheetActionTypeVM.APPROVE, TimeSheetActionTypeVM.REJECT };
+			}
+		}
+
 	}
 
 	public void addDailyEntries(Set<ProjectWiseDailyEntryVM> dailyEntries) {

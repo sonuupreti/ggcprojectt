@@ -83,7 +83,7 @@ public class ResourceManagementServiceImpl implements ResourceManagementService 
         Resource resources = null;
         if (EmploymentType.isFTE(resourceDTO.getEmploymentTypeCode())) {
             resources = Resource.expectedToJoinOn(resourceDTO.getExpectedJoiningDate()).at(baseLocation)
-                    .asFullTimeEmployee(EmploymentType.getEmploymentType(resourceDTO.getEmploymentTypeCode()))
+                    .asFullTimeEmployee()
                     .withAnnualSalary(resourceDTO.getAnnualSalary()).plusCommission(resourceDTO.getComission())
                     .plusBonus(resourceDTO.getBonus())
                     .andOtherCost(resourceDTO.getOtherCost(), resourceDTO.getPaystartDate(),

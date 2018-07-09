@@ -56,8 +56,13 @@ public class EmploymentType extends AbstractAssignable<String> {
 	public static EmploymentType w2Consultant() {
 		return of(CODE.W2_CONSULTANT.code, CODE.W2_CONSULTANT.description);
 	}
+	
 	public static boolean isFTE(String code) {
 	    return (CODE.FULLTIME_EMPLOYEE.code().equalsIgnoreCase(code) || CODE.W2_CONSULTANT.code().equalsIgnoreCase(code));
+	}
+
+	public boolean isFTE() {
+	    return (CODE.FULLTIME_EMPLOYEE.code().equalsIgnoreCase(this.code) || CODE.W2_CONSULTANT.code().equalsIgnoreCase(this.code));
 	}
 
 	public enum CODE implements StringValuedEnum {

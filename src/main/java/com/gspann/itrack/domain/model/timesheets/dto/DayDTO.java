@@ -23,6 +23,8 @@ public class DayDTO {
 	
 	@NotNull
 	private LocalDate date;
+	
+//	private DayType dayType;
 
 	private String comments;
 	

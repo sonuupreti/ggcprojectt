@@ -5,10 +5,12 @@ import static java.time.temporal.ChronoUnit.*;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.TemporalAdjusters;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.persistence.Column;
@@ -26,11 +28,14 @@ import lombok.ToString;
 @Embeddable
 @EqualsAndHashCode(of = "dateRange")
 @ToString(includeFieldNames = true)
-public class Week {
+public class Week implements Comparable<Week> {
 
-	public static final String DATE_PATTERN_DATE_DAY = "d";
-	public static final String DATE_PATTERN_DATE_DAY_AND_MONTH = "d MMM";
-	public static final String DATE_PATTERN_DATE_DAY_MONTH_AND_YEAR = "d MMM, YY";
+	private static final String DATE_PATTERN_DATE_DAY = "d";
+	private static final String DATE_PATTERN_DATE_DAY_AND_MONTH = "d MMM";
+	private static final String DATE_PATTERN_DATE_DAY_MONTH_AND_YEAR = "d MMM, YY";
+
+	public static final Comparator<Week> DESCENDING_ORDER = (x, y) -> y.startingFrom().compareTo(x.startingFrom());
+	public static final Comparator<Week> ASCENDING_ORDER = (x, y) -> x.startingFrom().compareTo(y.startingFrom());
 
 	@NotNull
 	private DateRange dateRange;
@@ -130,7 +135,7 @@ public class Week {
 							.format(DateTimeFormatter.ofPattern(DATE_PATTERN_DATE_DAY_MONTH_AND_YEAR));
 		}
 	}
-	
+
 	public Week updateWeekName() {
 		setWeekName(this.dateRange);
 		return this;
@@ -157,17 +162,19 @@ public class Week {
 	}
 
 	public static List<Week> weeksSince(final DayOfWeek weekStartDay, final DayOfWeek weekEndDay,
-			final LocalDate sinceDate) {
+			final LocalDate sinceDate,
+			final Comparator<Week> comparator) {
 		if (weekStartDay == weekEndDay) {
 			throw new IllegalArgumentException(
 					"weekStartDay : " + weekStartDay + " and weekEndDay : " + weekEndDay + " must be different");
 		}
 		LocalDate now = LocalDate.now();
-		if (DAYS.between(sinceDate, now.with(TemporalAdjusters.previousOrSame(weekStartDay))) < 0) {
+//		if (DAYS.between(sinceDate, now.with(TemporalAdjusters.previousOrSame(weekStartDay))) < 0) {
+		if (DAYS.between(sinceDate, now) < 0) {
 			return Collections.<Week>emptyList();
 		}
 
-		LocalDate firstWeekStartDate = sinceDate.with(TemporalAdjusters.nextOrSame(weekStartDay));
+		LocalDate firstWeekStartDate = sinceDate.with(TemporalAdjusters.previousOrSame(weekStartDay));
 		LocalDate lastWeekEndDate = now.with(TemporalAdjusters.nextOrSame(weekEndDay));
 		LocalDate current = firstWeekStartDate;
 		List<Week> weeks = new ArrayList<>();
@@ -175,10 +182,12 @@ public class Week {
 			weeks.add(Week.of(current));
 			current = current.plusDays(7);
 		}
-		return weeks;
+		Collections.sort(weeks, comparator);
+		return Collections.unmodifiableList(weeks);
 	}
 
-	public static List<Week> lastWeeks(final DayOfWeek weekStartDay, final DayOfWeek weekEndDay, final int count) {
+	public static List<Week> lastWeeks(final DayOfWeek weekStartDay, final DayOfWeek weekEndDay, final int count,
+			final Comparator<Week> comparator) {
 		if (weekStartDay == weekEndDay) {
 			throw new IllegalArgumentException(
 					"weekStartDay : " + weekStartDay + " and weekEndDay : " + weekEndDay + " must be different");
@@ -194,7 +203,41 @@ public class Week {
 			currentWeek = currentWeek.previous();
 			weeks.add(currentWeek);
 		}
-		Collections.sort(weeks, (x, y) -> y.startingFrom().compareTo(x.startingFrom()));
-		return weeks;
+		Collections.sort(weeks, comparator);
+		return Collections.unmodifiableList(weeks);
+	}
+
+	public static List<Week> weeksForDateRange(final DayOfWeek weekStartDay, final DayOfWeek weekEndDay,
+			final DateRange dateRange, final Comparator<Week> comparator) {
+		if (weekStartDay == weekEndDay) {
+			throw new IllegalArgumentException(
+					"weekStartDay : " + weekStartDay + " and weekEndDay : " + weekEndDay + " must be different");
+		}
+		if (DAYS.between(dateRange.fromDate(), dateRange.tillDate()) <= 0) {
+			throw new IllegalArgumentException("Number of days between date range: " + dateRange
+					+ " start and end date must be more that zero : ");
+		}
+
+		Week week = containingDate(dateRange.fromDate(), weekStartDay, weekEndDay);
+		List<Week> weeks = new ArrayList<>();
+		weeks.add(week);
+		while (!week.next().startingFrom().isAfter(dateRange.tillDate())) {
+			week = week.next();
+			weeks.add(week);
+		}
+
+		Collections.sort(weeks, comparator);
+		return Collections.unmodifiableList(weeks);
+	}
+
+	public static List<Week> weeksForMonth(final DayOfWeek weekStartDay, final DayOfWeek weekEndDay,
+			final YearMonth month, final Comparator<Week> comparator) {
+		return weeksForDateRange(weekStartDay, weekEndDay,
+				DateRange.dateRange().startingOn(month.atDay(1)).endingOn(month.atEndOfMonth()), comparator);
+	}
+
+	@Override
+	public int compareTo(Week other) {
+		return startingFrom().compareTo(other.startingFrom());
 	}
 }

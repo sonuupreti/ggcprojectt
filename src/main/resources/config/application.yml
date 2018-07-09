@@ -153,7 +153,8 @@ jhipster:
 application:
     timesheet:
         # The date onwards which system should allow the time sheet submission, such as 1st April. Required format dd-MM-yyyy
-        system-start-date: 14-05-2018
+        #system-start-date: 14-05-2018
+        system-start-date: 18-06-2018
         # Suffix 'h' signifies hours and is a must
         standard-daily-hours: 8h
         standard-weekly-hours: 40h

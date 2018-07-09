@@ -32,7 +32,6 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 
-import org.hibernate.annotations.NaturalId;
 import org.javamoney.moneta.Money;
 
 import com.gspann.itrack.domain.model.allocations.Allocation;
@@ -85,7 +84,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	// private String loginId;
 
 	@Email(message = MESSAGE_EMAIL_INVALID)
-	//@NaturalId(mutable = false)
+	// @NaturalId(mutable = false)
 	@Column(name = "EMAIL_ID", nullable = true, length = 255)
 	private String emailId;
 
@@ -113,7 +112,8 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	private EmploymentType employmentType;
 
 	public boolean isFTE() {
-		return (this.employmentType.equals(EmploymentType.fullTimeEmployee()) || this.employmentType.equals(EmploymentType.w2Consultant()));
+		return (this.employmentType.equals(EmploymentType.fullTimeEmployee())
+				|| this.employmentType.equals(EmploymentType.w2Consultant()));
 	}
 
 	@NotNull
@@ -127,27 +127,31 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		// TODO: Need to verify if need to put on bench, if no other project allocation
 		// is required or not?
 		// TODO: Allocate to supplied project
-//		implicitlyAllocateToTimeOffProjects(joiningDate);
+		// implicitlyAllocateToTimeOffProjects(joiningDate);
 	}
-	
+
 	public boolean isOnboarded() {
 		return this.employmentStatus.isOnboarded();
 	}
 
-	// Instead do that in service class, bcz need to access repository to get time-off projects, which can not be done here
-//	public void onBoardToBench(final LocalDate joiningDate) {
-//		this.actualJoiningDate = joiningDate;
-//		this.employmentStatus = EmploymentStatus.active();
-//		// TODO: Allocate to bench project
-////		implicitlyAllocateToTimeOffProjects(joiningDate);
-//	}
+	// Instead do that in service class, bcz need to access repository to get
+	// time-off projects, which can not be done here
+	// public void onBoardToBench(final LocalDate joiningDate) {
+	// this.actualJoiningDate = joiningDate;
+	// this.employmentStatus = EmploymentStatus.active();
+	// // TODO: Allocate to bench project
+	//// implicitlyAllocateToTimeOffProjects(joiningDate);
+	// }
 
-	// Instead do that in service class, bcz need to access repository to get time-off projects, which can not be done here
-//	private void implicitlyAllocateToTimeOffProjects(final LocalDate joiningDate) {
-//		// TODO: Allocate to paid leave and unpaid leave, projects, with 0% proportion,
-//		// These two projects are of Time-Off type and needs to be handled slight
-//		// differently while calculating profit and loss
-//	}
+	// Instead do that in service class, bcz need to access repository to get
+	// time-off projects, which can not be done here
+	// private void implicitlyAllocateToTimeOffProjects(final LocalDate joiningDate)
+	// {
+	// // TODO: Allocate to paid leave and unpaid leave, projects, with 0%
+	// proportion,
+	// // These two projects are of Time-Off type and needs to be handled slight
+	// // differently while calculating profit and loss
+	// }
 	public void markActive() {
 		this.employmentStatus = EmploymentStatus.active();
 	}
@@ -289,7 +293,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	// @formatter:off
  	@OneToMany(mappedBy = "resource", cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
  	// @formatter:on
-//	private List<Costing> costings = new ArrayList<>();
+	// private List<Costing> costings = new ArrayList<>();
 	private List<NonFTECost> costings = new ArrayList<>();
 
 	public void changeCost() {
@@ -431,8 +435,8 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
 					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
 					clientTimeTracking == Toggle.YES ? true : false, billings);
-			this.billings.add(
-					Bill.billing().forAllocation(allocation).ofBuffer().startingFrom(this.allocationStartDate).tillDate(this.allocationEndDate));
+			this.billings.add(Bill.billing().forAllocation(allocation).ofBuffer().startingFrom(this.allocationStartDate)
+					.tillDate(this.allocationEndDate));
 			Resource.this.allocations.add(allocation);
 		}
 
@@ -442,8 +446,8 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
 					clientTimeTracking == Toggle.YES ? true : false, billings);
 			Resource.this.allocations.add(allocation);
-			this.billings.add(Bill.billing().forAllocation(allocation).ofNonBillable().startingFrom(this.allocationStartDate)
-					.tillDate(this.allocationEndDate));
+			this.billings.add(Bill.billing().forAllocation(allocation).ofNonBillable()
+					.startingFrom(this.allocationStartDate).tillDate(this.allocationEndDate));
 		}
 
 		@Override
@@ -451,8 +455,8 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			Allocation allocation = Allocation.of(Resource.this, this.project, this.proportion,
 					DateRange.dateRange().startingOn(allocationStartDate).endingOn(allocationEndDate),
 					clientTimeTracking == Toggle.YES ? true : false, billings);
-			this.billings.add(Bill.billing().forAllocation(allocation).atHourlyRateOf(hourlyRate).startingFrom(this.allocationStartDate)
-					.tillDate(this.allocationEndDate));
+			this.billings.add(Bill.billing().forAllocation(allocation).atHourlyRateOf(hourlyRate)
+					.startingFrom(this.allocationStartDate).tillDate(this.allocationEndDate));
 			// If allocating fully, then end previous allocation
 			Resource.this.allocations.add(allocation);
 		}
@@ -483,14 +487,14 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 
 	public interface EmployementTypeBuilder {
 
-		public AnnualSalaryBuilder asFullTimeEmployee(EmploymentType employmentType);
+		public AnnualSalaryBuilder asFullTimeEmployee();
 
 		public NonFTECostBuilder asDirectContractor();
 
 		public NonFTECostBuilder asSubContractor();
 
 		public NonFTECostBuilder asW2Consultant();
-		
+
 		public NonFTECostBuilder asNonFullTimeEmployee(EmploymentType employmentType);
 	}
 
@@ -513,13 +517,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface OtherCostBuilder {
-		public NameBuilder andOtherCost(final Money otherCost,LocalDate startdate,LocalDate endDate);
+		public NameBuilder andOtherCost(final Money otherCost, LocalDate startdate, LocalDate endDate);
 
 		public NameBuilder noOtherCost();
 	}
 
 	public interface NonFTECostBuilder {
-		public NameBuilder atHourlyCost(final Money hourlyCost,LocalDate startdate,LocalDate endDate);
+		public NameBuilder atHourlyCost(final Money hourlyCost, LocalDate startdate, LocalDate endDate);
 	}
 
 	public interface NameBuilder {
@@ -527,9 +531,9 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 	}
 
 	public interface GenderBuilder {
-		
+
 		public DesignationBuilder withGender(final Gender gender);
-		
+
 		public DesignationBuilder male();
 
 		public DesignationBuilder female();
@@ -539,9 +543,10 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		public ResourcePrimarySkillsBuilder onDesignation(final Designation designation);
 	}
 
-	/*public interface EmailBuilder {
-		public ResourcePrimarySkillsBuilder withEmail(final String emailId);
-	}*/
+	/*
+	 * public interface EmailBuilder { public ResourcePrimarySkillsBuilder
+	 * withEmail(final String emailId); }
+	 */
 
 	public interface ResourcePrimarySkillsBuilder {
 		public ResourcePracticeBuilder withPrimarySkills(final String primarySkills);
@@ -562,14 +567,14 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		public Buildable<Resource> withGreytHRID(final String greytHRID);
 
 		public Buildable<Resource> withSecondarySkills(final String secondarySkills);
-		
+
 		public Buildable<Resource> withEmail(final String emailId);
 	}
 
 	public static class ResourceBuilder implements BaseLocationBuilder, EmployementTypeBuilder, AnnualSalaryBuilder,
 			CommissionBuilder, BonusBuilder, OtherCostBuilder, NonFTECostBuilder, NameBuilder, GenderBuilder,
-			DesignationBuilder, ResourcePrimarySkillsBuilder, ResourcePracticeBuilder,
-			DeputedLocationBuilder, OptionalPropertiesBuilder, Buildable<Resource> {
+			DesignationBuilder, ResourcePrimarySkillsBuilder, ResourcePracticeBuilder, DeputedLocationBuilder,
+			OptionalPropertiesBuilder, Buildable<Resource> {
 		private Resource resource;
 		private Money annualSalary;
 		private Money commission;
@@ -589,8 +594,8 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public AnnualSalaryBuilder asFullTimeEmployee(EmploymentType employmentType) {
-			this.resource.employmentType = employmentType;
+		public AnnualSalaryBuilder asFullTimeEmployee() {
+			this.resource.employmentType = EmploymentType.fullTimeEmployee();
 			return this;
 		}
 
@@ -630,7 +635,7 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		}
 
 		@Override
-		public NameBuilder andOtherCost(Money otherCost,LocalDate startdate,LocalDate endDate) {
+		public NameBuilder andOtherCost(Money otherCost, LocalDate startdate, LocalDate endDate) {
 			this.resource.costings.add(FTECost.fteCostOf(this.resource).startingFrom(startdate).till(endDate)
 					.withAnnualSalary(annualSalary).withCommission(commission).withBonus(bonus).withOtherCost(otherCost)
 					.build());
@@ -662,14 +667,19 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			return this;
 		}
 
-        @Override
-        public NonFTECostBuilder asNonFullTimeEmployee(EmploymentType employmentType) {
-            this.resource.employmentType = employmentType;
-            return this;
-        }
+		@Override
+		public NonFTECostBuilder asNonFullTimeEmployee(EmploymentType employmentType) {
+			if (employmentType.isFTE()) {
+				throw new IllegalArgumentException(
+						EmploymentType.fullTimeEmployee() + " is invalid argument to build a Non-FTE resource object, "
+						+ "Expected arguments: contractor or sub-contractor");
+			}
+			this.resource.employmentType = employmentType;
+			return this;
+		}
 
 		@Override
-		public NameBuilder atHourlyCost(Money hourlyCost,LocalDate startdate,LocalDate endDate) {
+		public NameBuilder atHourlyCost(Money hourlyCost, LocalDate startdate, LocalDate endDate) {
 			this.resource.costings.add(NonFTECost.nonFTECostOf(this.resource).atHourlyRate(hourlyCost)
 					.startingFrom(startdate).till(endDate));
 			return this;
@@ -681,13 +691,12 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			return this;
 		}
 
-
 		@Override
 		public DesignationBuilder withGender(Gender gender) {
 			this.resource.gender = gender;
 			return this;
 		}
-		
+
 		@Override
 		public DesignationBuilder male() {
 			this.resource.gender = Gender.MALE;
@@ -754,47 +763,48 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 			return this.resource;
 		}
 	}
-	
-	//update methods
-	
-    public void updateEmploymentType(EmploymentType employmentType) {
-        this.employmentType = employmentType;
-    }
 
-    public void updateExpectedJoiningDate(LocalDate expectedJoiningDate) {
+	// update methods
 
-        this.expectedJoiningDate = expectedJoiningDate;
-    }
+	public void updateEmploymentType(EmploymentType employmentType) {
+		this.employmentType = employmentType;
+	}
 
-    public void updateActualJoiningDate(LocalDate actualJoiningDate) {
-        this.actualJoiningDate = actualJoiningDate;
-    }
+	public void updateExpectedJoiningDate(LocalDate expectedJoiningDate) {
 
-    public void updateBaseLocation(City baseLocation) {
-        this.baseLocation = baseLocation;
-    }
+		this.expectedJoiningDate = expectedJoiningDate;
+	}
 
-    public void updateDeputedLocation(City deputedLocation) {
-        this.deputedLocation = deputedLocation;
-    }
+	public void updateActualJoiningDate(LocalDate actualJoiningDate) {
+		this.actualJoiningDate = actualJoiningDate;
+	}
 
-    public void updateResourceName(String name) {
-        this.name = name;
-    }
+	public void updateBaseLocation(City baseLocation) {
+		this.baseLocation = baseLocation;
+	}
 
-    public void updateCosting(List<NonFTECost> costings) {
-        this.costings = costings;
-    }
+	public void updateDeputedLocation(City deputedLocation) {
+		this.deputedLocation = deputedLocation;
+	}
 
-    public void updateDesignation(Designation designation) {
-        this.designation = designation;
-    }
-    
-    public void updateEmailId(String emailId) {
-        this.emailId = emailId;
-    }
-    public void updateGreytHRID(String greytHRID) {
-        this.greytHRID= greytHRID;
-    }
+	public void updateResourceName(String name) {
+		this.name = name;
+	}
+
+	public void updateCosting(List<NonFTECost> costings) {
+		this.costings = costings;
+	}
+
+	public void updateDesignation(Designation designation) {
+		this.designation = designation;
+	}
+
+	public void updateEmailId(String emailId) {
+		this.emailId = emailId;
+	}
+
+	public void updateGreytHRID(String greytHRID) {
+		this.greytHRID = greytHRID;
+	}
 
 }

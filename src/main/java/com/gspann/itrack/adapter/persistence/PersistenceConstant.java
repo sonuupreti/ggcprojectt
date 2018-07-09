@@ -73,7 +73,8 @@ public class PersistenceConstant {
 		public static final String IDX_PROJECT_TIME_SHEET_STATUSES_PROJECT_CODE = "idx_project_time_sheet_statuses_project_code";
 		public static final String FK_PROJECT_TIME_SHEET_STATUSES_PROJECT_CODE = "fk_project_time_sheet_statuses_project_code";
 		public static final String FK_PROJECT_TIME_SHEET_STATUSES_WEEKLY_TIME_SHEET_STATUS_ID = "fk_project_time_sheet_statuses_weekly_time_sheet_status_id";
-
+		public static final String FK_PROJECT_TIME_SHEET_STATUS_APPROVER_CODE = "fk_project_time_sheet_status_approver_code";
+		
 		public static final String PK_PROJECT_CODE = "pk_project_code";
 		public static final String UNQ_PROJECTS_NAME = "unq_projects_name";
 		public static final String UNQ_PROJECTS_CUSTOMER_PROJECT_ID = "unq_projects_customer_project_id";

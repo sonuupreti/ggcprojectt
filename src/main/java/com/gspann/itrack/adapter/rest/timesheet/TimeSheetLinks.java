@@ -13,7 +13,9 @@ import org.springframework.hateoas.Link;
 import org.springframework.stereotype.Component;
 
 import com.gspann.itrack.ItrackApplication;
+import com.gspann.itrack.domain.model.timesheets.vm.MonthVM;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceList;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
 
 import lombok.NonNull;
@@ -29,7 +31,11 @@ public class TimeSheetLinks {
 
 	static final String TIMESHEET_NEXT_WEEK_REL = "next_week";
 
-	static final String TIMESHEET_PREVIOUS_REL = "previous_week";
+	static final String TIMESHEET_PREVIOUS_WEEK_REL = "previous_week";
+
+	static final String TIMESHEET_NEXT_MONTH_REL = "next_month";
+
+	static final String TIMESHEET_PREVIOUS_MONTH_REL = "previous_month";
 
 	static final String TIMESHEET_SAVE_REL = "save";
 
@@ -41,8 +47,19 @@ public class TimeSheetLinks {
 
 	static final String TIMESHEET_WEEKLY = SLASH + "weekly";
 
-	static final String TIMESHEET_RECENT = SLASH + "recent";
-	
+	static final String TIMESHEET_MONTHLY = SLASH + "monthly";
+
+	static final String TIMESHEET_PENDING_SELF_BY_MONTH = SLASH + "pendingByMonth";
+
+	static final String TIMESHEET_PENDING_SELF_SINCE_NO_OF_MONTHS = SLASH + "pendingSince";
+
+	static final String TIMESHEET_APPROVER = "approver";
+
+	static final String TIMESHEET_PENDING_FOR_APPROVER_SINCE_NO_OF_MONTHS = SLASH + TIMESHEET_APPROVER + SLASH
+			+ "pendingSince";
+
+	// static final String TIMESHEET_FOR_SELF_BY_MONTH = "forSelfByMonth";
+
 	static final String ENTITY_NAME = "timesheet";
 
 	@NonNull
@@ -55,10 +72,15 @@ public class TimeSheetLinks {
 			links.add(getNavigationLink(timesheet.getNextWeek(), TIMESHEET_NEXT_WEEK_REL));
 		}
 		if (timesheet.getPreviousWeek() != null) {
-			links.add(getNavigationLink(timesheet.getPreviousWeek(), TIMESHEET_PREVIOUS_REL));
+			links.add(getNavigationLink(timesheet.getPreviousWeek(), TIMESHEET_PREVIOUS_WEEK_REL));
 		}
 		links.addAll(getActionLinks(timesheet));
 		return links;
+	}
+
+	Link getSelfLink(final TimeSheetWeekStatusVM timeSheetWeekStatusVM) {
+		return linkTo(methodOn(TimeSheetResourceController.class).weekly(Optional.empty(), null))
+				.slash(timeSheetWeekStatusVM.getWeek().getWeekStartDate()).withSelfRel();
 	}
 
 	Link getSelfLink(final TimeSheetResource timesheet) {
@@ -67,7 +89,7 @@ public class TimeSheetLinks {
 					.slash(timesheet.getWeekDetails().getWeekStartDate()).withSelfRel();
 
 		} else {
-			return linkTo(methodOn(TimeSheetResourceController.class).getTimesheetById(timesheet.getTimesheetId(), null))
+			return linkTo(methodOn(TimeSheetResourceController.class).weekly(timesheet.getTimesheetId(), null))
 					.withSelfRel();
 		}
 	}
@@ -77,8 +99,9 @@ public class TimeSheetLinks {
 			return linkTo(methodOn(TimeSheetResourceController.class).weekly(Optional.empty(), null))
 					.slash(timeSheetWeekStatusVM.getWeek().getWeekStartDate()).withRel(rel);
 		} else {
-			return linkTo(methodOn(TimeSheetResourceController.class).weekly(timeSheetWeekStatusVM.getTimesheetId(), null))
-					.withRel(rel);
+			return linkTo(
+					methodOn(TimeSheetResourceController.class).weekly(timeSheetWeekStatusVM.getTimesheetId(), null))
+							.withRel(rel);
 		}
 	}
 
@@ -95,6 +118,29 @@ public class TimeSheetLinks {
 
 		}
 		return actionLinks;
+	}
+
+	List<Link> getLinks(final TimeSheetResourceList timesheetList) throws URISyntaxException {
+		List<Link> links = new ArrayList<Link>();
+		links.add(getSelfLink(timesheetList));
+		if (timesheetList.getNextMonth() != null) {
+			links.add(getNavigationLink(timesheetList.getNextMonth(), TIMESHEET_NEXT_MONTH_REL));
+		}
+		if (timesheetList.getPreviousMonth() != null) {
+			links.add(getNavigationLink(timesheetList.getPreviousMonth(), TIMESHEET_PREVIOUS_MONTH_REL));
+		}
+		timesheetList.getTimesheets().forEach((timesheet) -> timesheet.add(getSelfLink(timesheet)));
+		return links;
+	}
+
+	Link getSelfLink(final TimeSheetResourceList timesheetList) {
+		return linkTo(methodOn(TimeSheetResourceController.class).listSelfTimeSheetsByMonth(null, null))
+				.slash(timesheetList.getMonthDetails().getMonth().toString()).withSelfRel();
+	}
+
+	Link getNavigationLink(final MonthVM monthVM, final String rel) {
+		return linkTo(methodOn(TimeSheetResourceController.class).listSelfTimeSheetsByMonth(null, null))
+				.slash(monthVM.getMonth().toString()).withRel(rel);
 	}
 
 }

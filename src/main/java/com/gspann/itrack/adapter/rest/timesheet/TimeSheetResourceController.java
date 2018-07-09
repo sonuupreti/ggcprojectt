@@ -7,8 +7,11 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.security.Principal;
 import java.time.LocalDate;
+import java.time.YearMonth;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
@@ -27,15 +30,18 @@ import com.gspann.itrack.adapter.rest.util.HeaderUtil;
 import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.WeeklyTimeSheet;
 import com.gspann.itrack.domain.model.timesheets.dto.TimeSheetDTO;
+import com.gspann.itrack.domain.model.timesheets.vm.MonthVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetActorType;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceList;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceWeekStatusVMList;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVMList;
 import com.gspann.itrack.domain.service.api.TimesheetManagementService;
 import com.gspann.itrack.infra.config.ApplicationProperties;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.NonNull;
-import lombok.experimental.var;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -111,13 +117,14 @@ public class TimeSheetResourceController {
 				)
 	// @formatter:on
 	public ResponseEntity<TimeSheetResource> weekly(
-			@RequestParam(value = "date", required = false) final Optional<LocalDate> date, final Principal principal) {
+			@RequestParam(value = "date", required = false) final Optional<LocalDate> weekDate,
+			final Principal principal) {
 		System.out.println("????? " + principal.getName());
 		log.debug("REST request to getTimeSheetSubmissionPageVM() ------>>>");
 		String resourceCode = principal.getName();
-		Week forWeek = getInputWeek(date);
+		Week forWeek = getInputWeek(weekDate);
 		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService
-				.getTimeSheetVMByResourceAndWeek(resourceCode, forWeek);
+				.getTimeSheetVMByResourceAndWeek(resourceCode, forWeek, TimeSheetActorType.RESOURCE);
 
 		if (timeSheetResource.isPresent()) {
 			TimeSheetResource timesheet = timeSheetResource.get();
@@ -152,7 +159,7 @@ public class TimeSheetResourceController {
 		String resourceCode = principal.getName();
 
 		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id,
-				resourceCode);
+				resourceCode, TimeSheetActorType.RESOURCE);
 		if (timeSheetResource.isPresent()) {
 			// TODO: Think about making the call parallel
 			TimeSheetResource timesheet = timeSheetResource.get();
@@ -166,6 +173,64 @@ public class TimeSheetResourceController {
 		} else {
 			return ResponseEntity.notFound().build();
 		}
+	}
+
+	@GetMapping(TIMESHEET_PENDING_SELF_BY_MONTH)
+	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "timesheet pending actions", 
+			value = "Gets the List of weeks with corresponding timesheet status, pending for any actions, by input month", response = TimeSheetResource.class, 
+				notes = "<p>The <b>input month is optional</b>, if not supplied returns the data for current month otherwise for the supplied month.</p><br>"
+				)
+	// @formatter:on
+	public ResponseEntity<TimeSheetWeekStatusVMList> pendingSelfTimesheetActionsByMonth(
+			@RequestParam(value = "month", required = false) final Optional<YearMonth> month,
+			final Principal principal) {
+		System.out.println("month ---->>>>>" + month);
+		String resourceCode = principal.getName();
+		Set<TimeSheetWeekStatusVM> statuses = timesheetManagementService.getPendingWeeklyActionsForResourceByMonth(
+				resourceCode, month.isPresent() ? month.get() : YearMonth.now());
+		TimeSheetWeekStatusVMList timeSheetWeekStatusVMList = TimeSheetWeekStatusVMList
+				.of(statuses.stream().collect(Collectors.toList()));
+		timeSheetWeekStatusVMList.getWeekStatuses().forEach((x) -> x.add(timesheetLinks.getSelfLink(x)));
+		return new ResponseEntity<TimeSheetWeekStatusVMList>(timeSheetWeekStatusVMList, HttpStatus.OK);
+	}
+
+	@GetMapping(TIMESHEET_PENDING_SELF_SINCE_NO_OF_MONTHS)
+	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "timesheet pending actions", 
+			value = "Gets the List of weeks with corresponding timesheet status, pending for any actions, by input month", response = TimeSheetResource.class, 
+				notes = "<p>The <b>input month is optional</b>, if not supplied returns the data for current month otherwise for the supplied month.</p><br>"
+				)
+	// @formatter:on
+	public ResponseEntity<TimeSheetWeekStatusVMList> pendingSelfTimesheetActionsSinceNoOfMonths(
+			@RequestParam(value = "monthsCount", required = false) final Optional<Integer> monthsCount,
+			final Principal principal) {
+		String resourceCode = principal.getName();
+		System.out.println("monthsCount ---->>>>>" + monthsCount);
+		Set<TimeSheetWeekStatusVM> statuses = timesheetManagementService.getPendingWeeklyActionsForResourceSinceMonths(
+				resourceCode, monthsCount.isPresent() ? monthsCount.get() : 1);
+		TimeSheetWeekStatusVMList timeSheetWeekStatusVMList = TimeSheetWeekStatusVMList
+				.of(statuses.stream().collect(Collectors.toList()));
+		timeSheetWeekStatusVMList.getWeekStatuses().forEach((x) -> x.add(timesheetLinks.getSelfLink(x)));
+		return new ResponseEntity<TimeSheetWeekStatusVMList>(timeSheetWeekStatusVMList, HttpStatus.OK);
+	}
+
+	@GetMapping(TIMESHEET_PENDING_FOR_APPROVER_SINCE_NO_OF_MONTHS)
+	@Timed
+	// @formatter:off
+	@ApiOperation(nickname = "timesheet pending actions", 
+			value = "Gets the List of weeks with corresponding timesheet status, pending for any actions, by input month", response = TimeSheetResource.class, 
+			notes = "<p>The <b>input month is optional</b>, if not supplied returns the data for current month otherwise for the supplied month.</p><br>"
+	)
+	// @formatter:on
+	public ResponseEntity<TimeSheetResourceWeekStatusVMList> pendingTimesheetActionsForApproverSinceNoOfMonths(
+			@RequestParam(value = "monthsCount", required = false) final Optional<Integer> monthsCount,
+			final Principal principal) {
+
+		System.out.println("monthCount ---->>>>>" + monthsCount);
+		return null;
 	}
 
 	@GetMapping(SLASH + PATH_VARIABLE_ID)
@@ -189,7 +254,7 @@ public class TimeSheetResourceController {
 		// TODO: Apply role here, only the timesheet owner resource or approver should
 		// be able to view
 		Optional<TimeSheetResource> timeSheetResource = timesheetManagementService.getTimeSheetVMByIdAndResourceCode(id,
-				resourceCode);
+				resourceCode, TimeSheetActorType.RESOURCE);
 		if (timeSheetResource.isPresent()) {
 			return new ResponseEntity<TimeSheetResource>(timeSheetResource.get(), HttpStatus.OK);
 		} else {
@@ -225,23 +290,40 @@ public class TimeSheetResourceController {
 		}
 	}
 
-	@GetMapping(SLASH + TIMESHEET_RECENT)
+	private void updateNextAndPreviousMonths(final TimeSheetResourceList timeSheetResourceList) {
+
+		YearMonth month = timeSheetResourceList.getMonthDetails().getMonth();
+		if (!month.atEndOfMonth().isAfter(LocalDate.now())
+				&& !applicationProperties.timeSheet().SYSTEM_START_DATE().isAfter(month.atDay(1))) {
+			timeSheetResourceList.setNextMonth(MonthVM.of(month.plusMonths(1)));
+			timeSheetResourceList.setPreviousMonth(MonthVM.of(month.minusMonths(1)));
+		} else if (!month.atEndOfMonth().isAfter(LocalDate.now())) {
+			timeSheetResourceList.setNextMonth(MonthVM.of(month.plusMonths(1)));
+		} else if (!applicationProperties.timeSheet().SYSTEM_START_DATE().isAfter(month.atDay(1))) {
+			timeSheetResourceList.setPreviousMonth(MonthVM.of(month.minusMonths(1)));
+		}
+	}
+
+	@GetMapping(TIMESHEET_MONTHLY)
 	@Timed
 	// @formatter:off
-	@ApiOperation(nickname = "recent timesheets", response = TimeSheetResourceList.class, value = "Gets list of timesheets")
+	@ApiOperation(nickname = "list-self-timesheets-by-month", response = TimeSheetResourceList.class, value = "Gets list of timesheets for input month")
 	// @formatter:on
-	public ResponseEntity<TimeSheetResourceList> recentTimeSheets(final Principal principal) {
-		log.debug("REST request to recentTimeSheets ");
+	public ResponseEntity<TimeSheetResourceList> listSelfTimeSheetsByMonth(
+			@RequestParam(value = "month", required = false) final Optional<YearMonth> month,
+			final Principal principal) {
+		log.debug("REST request to listSelfTimeSheetsByMonth ");
 		String resourceCode = principal.getName();
 		// TODO: Apply role here, only the timesheet owner resource or approver should
 		// be able to view
-		TimeSheetResourceList timeSheetResourceList = timesheetManagementService.listRecentTimeSheetVMsByResource(
-				resourceCode, applicationProperties.timeSheet().RECENT_TIMESHEETS_PAGE_SIZE());
-
-		for (var timesheet : timeSheetResourceList.getTimesheets()) {
-			timesheet.add(timesheetLinks.getSelfLink(timesheet));
+		TimeSheetResourceList timeSheetResourceList = timesheetManagementService.listTimeSheetVMsByResourceAndMonth(
+				resourceCode, month.isPresent() ? month.get() : YearMonth.now(), TimeSheetActorType.RESOURCE);
+		updateNextAndPreviousMonths(timeSheetResourceList);
+		try {
+			timeSheetResourceList.add(timesheetLinks.getLinks(timeSheetResourceList));
+		} catch (URISyntaxException e) {
+			e.printStackTrace();
 		}
-
 		return ResponseEntity.ok(timeSheetResourceList);
 	}
 
