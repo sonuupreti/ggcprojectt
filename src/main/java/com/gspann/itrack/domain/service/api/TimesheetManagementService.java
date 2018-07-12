@@ -16,6 +16,7 @@ import com.gspann.itrack.domain.model.timesheets.dto.TimeSheetDTO;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetActorType;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceList;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceWeekStatusVM;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
 
 public interface TimesheetManagementService {
@@ -62,9 +63,9 @@ public interface TimesheetManagementService {
 
 	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForResourceByMonth(final String resourceCode, final YearMonth month);
 
-	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverSinceMonths(final String approverCode, final int months);
+	public Set<TimeSheetResourceWeekStatusVM> getPendingWeeklyActionsForApproverSinceMonths(final String approverCode, final int months);
 
-	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverByMonth(final String approverCode, final YearMonth month);
+	public Set<TimeSheetResourceWeekStatusVM> getPendingWeeklyActionsForApproverByMonth(final String approverCode, final YearMonth month);
 
 	public Map<Week, TimeSheetWeekStatusVM> getWeeklyStatusesForNextAndPreviousWeeks(final String resourceCode,
 			final Week week);
@@ -81,11 +82,11 @@ public interface TimesheetManagementService {
 
 	public List<WeeklyTimeSheet> listRecentTimeSheetsByResource(final String resourceCode, final int pageSize);
 
-	public void approveTimesheet(final long timesheetId);
+	public void approveTimesheet(final long timesheetId, final String approverCode);
 
-	public void approveTimesheet(final long timesheetId, final String projectCode);
+	public void approveTimesheet(final long timesheetId, final String projectCode, final String approverCode);
 
-	public void rejectTimesheet(final long timesheetId);
+	public void rejectTimesheet(final long timesheetId, final String approverCode);
 
-	public void rejectTimesheet(final long timesheetId, final String projectCode);
+	public void rejectTimesheet(final long timesheetId, final String projectCode, final String approverCode);
 }

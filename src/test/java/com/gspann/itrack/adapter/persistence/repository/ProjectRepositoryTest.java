@@ -67,14 +67,18 @@ public class ProjectRepositoryTest {
 		systemUnderTest.saveProjectStatus(ProjectStatus.closed());
 	}
 
-
 	@Test
+	public void testFindAllProjectCodeAndNameByOffshoreManagerCode() {
+		System.out.println(systemUnderTest.findAllProjectCodeAndNameByOffshoreManagerCode("10001"));
+	}
+
+//	@Test
 	public void testSave() {
 
 		Set<Practice> practices = new HashSet<>();
 		practices.add(Practice.adms());
 
-		Resource admin = resourceRepository.getOne("20000");
+//		Resource admin = resourceRepository.getOne("10000");
 		Account internal = accountRepository.getOne("IN1000");
 
 		City gurgaon = locationRepository.findCityByName("Gurgaon").get();
@@ -97,7 +101,7 @@ public class ProjectRepositoryTest {
 //				.atCustomerEndManagedBy("None").build();
 //		systemUnderTest.saveAndFlush(bench);
 
-		Resource manager = resourceRepository.getOne("20001");
+		Resource manager = resourceRepository.getOne("10001");
 		Project iTrack = Project.project().investment().asInProgress().namedAs("iTrack").locatedAt(gurgaon)
 				.inAccount(internal).startingIndefinatelyFrom(LocalDate.of(2018, Month.MAY, 1)).withPractices(practices)
 				.withTechnologies(Technology.setOf(new String[]{"Java", "J2E", "Spring Boot", "Restfil Web services", "Spring Data", "Hibernate JPA", "Angular 5"})).atOffshoreManagedBy(manager).atOnshoreManagedBy(manager)

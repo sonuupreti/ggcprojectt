@@ -44,9 +44,9 @@ public class ResourceManagementServiceTest {
 	@Test
 	public void testAllocateResourcesToProject() {
 
-		String manojResCode = "20001";
-		String rajveerResCode = "20002";
-		String ankitResCode = "20003";
+		String manojResCode = "10001";
+		String rajveerResCode = "10002";
+		String ankitResCode = "10003";
 
 		String iTrackPrjCode = "INV0000004";
 		String finalSelectPrjCode = "INV0000005";

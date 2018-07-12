@@ -16,15 +16,22 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
+import javax.persistence.criteria.MapJoin;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 import com.gspann.itrack.domain.model.common.DateRange;
 import com.gspann.itrack.domain.model.common.DateRange_;
+import com.gspann.itrack.domain.model.common.dto.Pair;
+import com.gspann.itrack.domain.model.docs.Document_;
+import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.staff.Resource;
 import com.gspann.itrack.domain.model.staff.Resource_;
+import com.gspann.itrack.domain.model.timesheets.ProjectTimeSheetStatus;
+import com.gspann.itrack.domain.model.timesheets.ProjectTimeSheetStatus_;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.Week;
 import com.gspann.itrack.domain.model.timesheets.Week_;
@@ -42,6 +49,9 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 
 	@PersistenceContext
 	private EntityManager entityManager;
+
+	@Autowired
+	private ProjectRepository projectRepository;
 
 	private ApplicationProperties.TimeSheet TIMESHEET_PROPERTIES;
 
@@ -204,26 +214,61 @@ public class TimeSheetRepositoryImpl implements TimeSheetRepositoryJPA {
 		}
 	}
 
-//	@Override
-//	public Map<Week, TimeSheetWeekStatusVM> findPendingActionWeeksForResourceSinceDate(String resourceCode,
-//			LocalDate sinceDate) {
-//		List<Week> weeks = Week.weeksSince(TIMESHEET_PROPERTIES.WEEK_START_DAY(), TIMESHEET_PROPERTIES.WEEK_END_DAY(),
-//				sinceDate);
-//		return findPendingActionWeeksForResourceByWeeks(resourceCode, weeks);
-//	}
+	// @Override
+	// public Map<Week, TimeSheetWeekStatusVM>
+	// findPendingActionWeeksForResourceSinceDate(String resourceCode,
+	// LocalDate sinceDate) {
+	// List<Week> weeks = Week.weeksSince(TIMESHEET_PROPERTIES.WEEK_START_DAY(),
+	// TIMESHEET_PROPERTIES.WEEK_END_DAY(),
+	// sinceDate);
+	// return findPendingActionWeeksForResourceByWeeks(resourceCode, weeks);
+	// }
 
 	@Override
-	public Set<TimeSheetResourceWeekStatusVM> findPendingActionWeeksForApproverByWeeks(String resourceCode,
-			List<Week> weeks) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+	public List<TimeSheetResourceWeekStatusVM> findPendingActionsForApproverByWeek(final String approverCode,
+			final Week week) {
 
-	@Override
-	public Set<TimeSheetResourceWeekStatusVM> findPendingActionWeeksForApproverSinceDate(String resourceCode,
-			LocalDate sinceDate) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+		// List<ProjectSummary> approverProjects =
+		// projectRepository.findProjectSummariesByApproverInAWeek(week, approverCode);
 
+		List<Pair<String, String>> projectDetails = projectRepository
+				.findAllProjectCodeAndNameByOffshoreManagerCode(approverCode);
+
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<TimeSheetResourceWeekStatusVM> query = criteriaBuilder
+				.createQuery(TimeSheetResourceWeekStatusVM.class);
+		Root<WeeklyTimeSheet> weeklyTimeSheet = query.from(WeeklyTimeSheet.class);
+		Join<WeeklyTimeSheet, Resource> resource = weeklyTimeSheet.join(WeeklyTimeSheet_.resource);
+		Join<WeeklyTimeSheet, WeeklyTimeSheetStatus> weeklyStatus = weeklyTimeSheet.join(WeeklyTimeSheet_.weeklyStatus);
+		MapJoin<WeeklyTimeSheetStatus, Project, ProjectTimeSheetStatus> projectTimeSheetStatuses = weeklyStatus
+				.join(WeeklyTimeSheetStatus_.projectTimeSheetStatuses);
+
+		query.select(criteriaBuilder.construct(TimeSheetResourceWeekStatusVM.class,
+				resource.get(Resource_.code.getName()), resource.get(Resource_.name.getName()),
+				resource.get(Resource_.image.getName()).get(Document_.data.getName()),
+				weeklyTimeSheet.get(WeeklyTimeSheet_.week.getName()),
+				weeklyStatus.get(WeeklyTimeSheetStatus_.status.getName()),
+				weeklyTimeSheet.get(WeeklyTimeSheet_.id.getName())));
+
+		List<Project> projects = projectDetails.stream().map((p) -> projectRepository.getOne(p.getKey()))
+				.collect(Collectors.toList());
+
+		Predicate weekEqualsPredicate = criteriaBuilder.equal(weeklyTimeSheet.get(WeeklyTimeSheet_.week), week);
+		Predicate approverProjectsInPredicate = projectTimeSheetStatuses.key().in(projects);
+		// TODO: Add further statuses for which action is pending on Approver such as
+		// ADJUSTMENT_REQUESTED
+		Predicate projectTimeSheetStatusnPredicate = projectTimeSheetStatuses.value()
+				.get(ProjectTimeSheetStatus_.projectWiseStatus).in(Arrays.asList(TimesheetStatus.SUBMITTED));
+
+		query.where(criteriaBuilder.and(weekEqualsPredicate, approverProjectsInPredicate,
+				projectTimeSheetStatusnPredicate));
+		query.orderBy(criteriaBuilder.asc(resource.get(Resource_.name.getName())));
+
+		List<TimeSheetResourceWeekStatusVM> pendingActions = entityManager.createQuery(query).getResultList();
+		if (pendingActions != null && !pendingActions.isEmpty()) {
+			return Collections.unmodifiableList(pendingActions);
+		} else {
+			return Collections.emptyList();
+		}
+	}
 }

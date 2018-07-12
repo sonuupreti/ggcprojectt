@@ -40,7 +40,7 @@ public class ApplicationProperties {
 	@ToString
 //	@Component
 	public static class TimeSheet {
-
+		
 		private LocalDate systemStartDate;
 		
 		@DurationUnit(ChronoUnit.HOURS)

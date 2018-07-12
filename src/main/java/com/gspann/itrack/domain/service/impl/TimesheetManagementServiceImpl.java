@@ -52,6 +52,7 @@ import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetActorType;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetDayMetaDataVM;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResource;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceList;
+import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetResourceWeekStatusVM;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetStatusTypeVM;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekMetaDataVM;
 import com.gspann.itrack.domain.model.timesheets.vm.TimeSheetWeekStatusVM;
@@ -415,25 +416,25 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	@Override
-	public void approveTimesheet(final long timesheetId) {
+	public void approveTimesheet(final long timesheetId, final String approverCode) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void approveTimesheet(long timesheetId, String projectCode) {
+	public void approveTimesheet(final long timesheetId, final String projectCode, final String approverCode) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void rejectTimesheet(final long timesheetId) {
+	public void rejectTimesheet(final long timesheetId, final String approverCode) {
 		// TODO Auto-generated method stub
 
 	}
 
 	@Override
-	public void rejectTimesheet(long timesheetId, String projectCode) {
+	public void rejectTimesheet(final long timesheetId, final String projectCode, final String approverCode) {
 		// TODO Auto-generated method stub
 
 	}
@@ -590,19 +591,19 @@ public class TimesheetManagementServiceImpl implements TimesheetManagementServic
 	}
 
 	@Override
-	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverSinceMonths(final String approverCode,
+	public Set<TimeSheetResourceWeekStatusVM> getPendingWeeklyActionsForApproverSinceMonths(final String approverCode,
 			final int months) {
+		return null;
+	}
+
+	@Override
+	public Set<TimeSheetResourceWeekStatusVM> getPendingWeeklyActionsForApproverByMonth(String approverCode, YearMonth month) {
+		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
 	public Optional<WeeklyTimeSheet> getTimeSheetByIdAndResourceCode(long timesheetId, String resourceCode) {
 		return timeSheetRepository.findByIdAndResourceCode(timesheetId, resourceCode);
-	}
-
-	@Override
-	public Set<TimeSheetWeekStatusVM> getPendingWeeklyActionsForApproverByMonth(String approverCode, YearMonth month) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

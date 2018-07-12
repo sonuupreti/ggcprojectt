@@ -2,8 +2,10 @@ package com.gspann.itrack.domain.model.timesheets.vm;
 
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.*;
 
+import org.springframework.hateoas.ResourceSupport;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.gspann.itrack.domain.model.common.dto.Pair;
+import com.gspann.itrack.domain.model.staff.ResourceIdentity;
 import com.gspann.itrack.domain.model.timesheets.TimesheetStatus;
 import com.gspann.itrack.domain.model.timesheets.Week;
 
@@ -17,12 +19,12 @@ import lombok.ToString;
 @Setter
 @NoArgsConstructor
 // @AllArgsConstructor(staticName = "of")
-@EqualsAndHashCode(of = { "week", "resource" })
+@EqualsAndHashCode(of = { "week", "resource" }, callSuper = false)
 @ToString
-public class TimeSheetResourceWeekStatusVM {
+public class TimeSheetResourceWeekStatusVM extends ResourceSupport {
 
 	@JsonInclude(NON_NULL)
-	private Pair<String, String> resource;
+	private ResourceIdentity resource;
 
 	private WeekVM week;
 
@@ -33,8 +35,9 @@ public class TimeSheetResourceWeekStatusVM {
 	@JsonInclude(NON_DEFAULT)
 	private long timesheetId;
 
-	public TimeSheetResourceWeekStatusVM(final String resourceCode, final String resourceName, final Week week,
-			final TimesheetStatus status, final long timesheetId) {
+	public TimeSheetResourceWeekStatusVM(final String resourceCode, final String resourceName,
+			final byte[] resourceImage, final Week week, final TimesheetStatus status, final long timesheetId) {
+		this.resource = new ResourceIdentity(resourceCode, resourceName, resourceImage);
 		week.updateWeekName();
 		this.week = WeekVM.of(week.name(), week.startingFrom(), week.endingOn());
 		this.status = TimeSheetStatusTypeVM.valueOf(status.name());
@@ -52,16 +55,16 @@ public class TimeSheetResourceWeekStatusVM {
 		}
 	}
 
-	/*public static TimeSheetResourceWeekStatusVM ofSubmittedTimeSheet(final LocalDate weekStartDate,
-			final long timesheetId) {
-		TimeSheetResourceWeekStatusVM weekMetaData = new TimeSheetResourceWeekStatusVM();
-		weekMetaData.timesheetId = timesheetId;
-		Week inputWeek = Week.of(weekStartDate);
-		weekMetaData.week = WeekVM.of(inputWeek.name(), inputWeek.startingFrom(), inputWeek.endingOn());
-		weekMetaData.status = TimeSheetStatusTypeVM.SUBMITTED;
-		weekMetaData.setActions();
-		return weekMetaData;
-	}*/
+	/*
+	 * public static TimeSheetResourceWeekStatusVM ofSubmittedTimeSheet(final
+	 * LocalDate weekStartDate, final long timesheetId) {
+	 * TimeSheetResourceWeekStatusVM weekMetaData = new
+	 * TimeSheetResourceWeekStatusVM(); weekMetaData.timesheetId = timesheetId; Week
+	 * inputWeek = Week.of(weekStartDate); weekMetaData.week =
+	 * WeekVM.of(inputWeek.name(), inputWeek.startingFrom(), inputWeek.endingOn());
+	 * weekMetaData.status = TimeSheetStatusTypeVM.SUBMITTED;
+	 * weekMetaData.setActions(); return weekMetaData; }
+	 */
 
 	public Week toWeek() {
 		return Week.of(this.week.getWeekStartDate());

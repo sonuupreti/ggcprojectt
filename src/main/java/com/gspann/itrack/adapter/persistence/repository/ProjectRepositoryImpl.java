@@ -7,6 +7,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
@@ -15,8 +16,13 @@ import org.springframework.stereotype.Repository;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
+import com.gspann.itrack.domain.model.projects.ProjectSummary;
 import com.gspann.itrack.domain.model.projects.ProjectType;
+import com.gspann.itrack.domain.model.projects.ProjectType_;
 import com.gspann.itrack.domain.model.projects.Project_;
+import com.gspann.itrack.domain.model.staff.Resource;
+import com.gspann.itrack.domain.model.staff.Resource_;
+import com.gspann.itrack.domain.model.timesheets.Week;
 
 @Repository
 public class ProjectRepositoryImpl implements ProjectRepositoryJPA {
@@ -44,9 +50,6 @@ public class ProjectRepositoryImpl implements ProjectRepositoryJPA {
 	public Optional<Practice> findPracticeByCode(final String practiceCode) {
 		return Optional.ofNullable(entityManager.find(Practice.class, practiceCode));
 	}
-	
-	
-	
 
 	@Override
 	public List<ProjectType> findAllProjectTypes() {
@@ -97,6 +100,32 @@ public class ProjectRepositoryImpl implements ProjectRepositoryJPA {
 				project.get(Project_.type.getName()).get(Project_.code.getName()),
 				ProjectType.CODE.UNPAID_LEAVE.value());
 		query.where(criteriaBuilder.or(paidLeaveTypePredicate, unpaidLeaveTypePredicate));
+		return entityManager.createQuery(query).getResultList();
+	}
+
+	@Override
+	public List<ProjectSummary> findProjectSummariesByApproverInAWeek(final Week week, final String approverCode) {
+		CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+		CriteriaQuery<ProjectSummary> query = criteriaBuilder.createQuery(ProjectSummary.class);
+		
+		Root<Project> project = query.from(Project.class);
+		Join<Project, ProjectType> projectType = project.join(Project_.type);
+		Join<Project, Resource> offshoreManager = project.join(Project_.offshoreManager);
+		
+		query.select(criteriaBuilder.construct(ProjectSummary.class,
+				project.get(Project_.code.getName()), project.get(Project_.name.getName()),
+				projectType.get(ProjectType_.code.getName()), projectType.get(ProjectType_.description.getName())));
+		
+		Predicate paidLeaveTypePredicate = criteriaBuilder.notEqual(
+				projectType.get(Project_.code.getName()), ProjectType.CODE.PAID_LEAVE.value());
+		Predicate unpaidLeaveTypePredicate = criteriaBuilder.notEqual(
+				projectType.get(Project_.code.getName()),
+				ProjectType.CODE.UNPAID_LEAVE.value());
+		
+		Predicate managerEqualsPredicate = criteriaBuilder.equal(
+				offshoreManager.get(Resource_.code.getName()), approverCode);
+		query.where(criteriaBuilder.and(paidLeaveTypePredicate, unpaidLeaveTypePredicate, managerEqualsPredicate));
+		
 		return entityManager.createQuery(query).getResultList();
 	}
 

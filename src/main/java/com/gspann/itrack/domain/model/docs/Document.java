@@ -1,6 +1,6 @@
 package com.gspann.itrack.domain.model.docs;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 import java.util.EnumSet;
 
 import javax.persistence.Column;
@@ -11,6 +11,7 @@ import javax.persistence.Lob;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
+import com.gspann.itrack.common.constants.ApplicationConstant;
 import com.gspann.itrack.common.enums.StringValuedEnum;
 import com.gspann.itrack.domain.model.common.type.BaseIdentifiableVersionableEntity;
 
@@ -41,15 +42,26 @@ public class Document extends BaseIdentifiableVersionableEntity<Long, Long> {
 	private TYPE type;
 
 	@NotNull
-	@Column(name = "UPLOAD_DATE", insertable = false, updatable = false)
-	@org.hibernate.annotations.Generated(org.hibernate.annotations.GenerationTime.INSERT)
-	private LocalDate uploadDate;
+	@Column(name = "UPLOADED_ON")
+//	@Column(name = "UPLOADED_ON", insertable = false, updatable = false)
+//	@org.hibernate.annotations.Generated(org.hibernate.annotations.GenerationTime.INSERT)
+	private ZonedDateTime uploadedOn;
 
-	public static Document of(final String filename, final byte[] data, final TYPE type) {
+	public static Document of(final String filename, final byte[] data, final TYPE type, final ZonedDateTime uploadedOn) {
 		Document doc = new Document();
 		doc.filename = filename;
 		doc.data = data;
 		doc.type = type;
+		doc.uploadedOn = uploadedOn;
+		return doc;
+	}
+
+	public static Document ofProfileImage(final String filename, final byte[] data) {
+		Document doc = new Document();
+		doc.filename = filename;
+		doc.data = data;
+		doc.type = TYPE.PROFILE_IMAGE;
+		doc.uploadedOn = ZonedDateTime.now(ApplicationConstant.DEFAULT_TIME_ZONE);
 		return doc;
 	}
 

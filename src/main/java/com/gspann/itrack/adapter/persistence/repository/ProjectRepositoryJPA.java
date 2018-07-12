@@ -6,7 +6,9 @@ import java.util.Optional;
 import com.gspann.itrack.domain.model.org.structure.Practice;
 import com.gspann.itrack.domain.model.projects.Project;
 import com.gspann.itrack.domain.model.projects.ProjectStatus;
+import com.gspann.itrack.domain.model.projects.ProjectSummary;
 import com.gspann.itrack.domain.model.projects.ProjectType;
+import com.gspann.itrack.domain.model.timesheets.Week;
 
 public interface ProjectRepositoryJPA {
 	
@@ -30,4 +32,6 @@ public interface ProjectRepositoryJPA {
 	List<Project> findAllLeaveProjects();
 
 	Optional<Practice> findPracticeByCode(String practiceCode);
+
+	List<ProjectSummary> findProjectSummariesByApproverInAWeek(final Week week, final String approverCode);
 }

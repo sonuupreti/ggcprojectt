@@ -281,12 +281,13 @@ public class Resource extends BaseAutoAssignableVersionableEntity<String, Long> 
 		// TODO: Implement later
 	}
 
-	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.PERSIST)
+	@OneToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.ALL)
 	@JoinColumn(name = "IMAGE_ID", unique = false, nullable = false, foreignKey = @ForeignKey(name = FK_RESOURCES_IMAGE_ID))
 	private Document image;
 
-	public void uploadImage() {
-		// TODO: Implement later
+	public void uploadImage(final String filename, final byte[] image) {
+		Document document = Document.ofProfileImage(filename, image);
+		this.image = document;
 	}
 
 	@NotEmpty(message = MESSAGE_COSTING_MANDATORY)

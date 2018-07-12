@@ -18,6 +18,12 @@ import lombok.ToString;
 public class TimeSheetResourceWeekStatusVMList  extends ResourceSupport {
 
 	private List<TimeSheetResourceWeekStatusVM> resourceWeekStatuses = new ArrayList<>();
+	
+	public TimeSheetResourceWeekStatusVMList of(final List<TimeSheetResourceWeekStatusVM> resourceWeekStatuses) {
+		TimeSheetResourceWeekStatusVMList timeSheetResourceWeekStatusVMList = new TimeSheetResourceWeekStatusVMList();
+		timeSheetResourceWeekStatusVMList.resourceWeekStatuses = resourceWeekStatuses;
+		return timeSheetResourceWeekStatusVMList;
+	}
 
 	public void add(final TimeSheetResourceWeekStatusVM resourceWeekStatus) {
 		resourceWeekStatuses.add(resourceWeekStatus);

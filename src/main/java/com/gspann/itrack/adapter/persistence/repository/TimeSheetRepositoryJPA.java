@@ -24,9 +24,9 @@ public interface TimeSheetRepositoryJPA {
 
 //	Map<Week, TimeSheetWeekStatusVM> findPendingActionWeeksForResourceSinceDate(final String resourceCode, final LocalDate sinceDate);
 
-	Set<TimeSheetResourceWeekStatusVM> findPendingActionWeeksForApproverByWeeks(final String resourceCode, final List<Week> weeks);
+	List<TimeSheetResourceWeekStatusVM> findPendingActionsForApproverByWeek(final String approverCode, final Week week);
 
-	Set<TimeSheetResourceWeekStatusVM> findPendingActionWeeksForApproverSinceDate(final String resourceCode, final LocalDate sinceDate);
+//	Set<TimeSheetResourceWeekStatusVM> findPendingActionWeeksForApproverSinceDate(final String resourceCode, final LocalDate sinceDate);
 	
 	Set<TimeSheetWeekStatusVM> findWeeklyStatusesByWeeks(final String resourceCode, final List<Week> weeks);
 	

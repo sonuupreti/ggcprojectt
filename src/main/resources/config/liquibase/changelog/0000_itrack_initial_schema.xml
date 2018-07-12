@@ -225,7 +225,7 @@
 			<column name="data" type="blob">
 				<constraints nullable="false" />
 			</column>
-			<column name="upload_date" type="date">
+			<column name="uploaded_on" type="timestamp with time zone" valueDate="${now}">
 				<constraints nullable="false" />
 			</column>
 		</createTable>
