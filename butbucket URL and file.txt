@@ -1,0 +1,3 @@
+https://bitbucket.org/gspanntech/itrack/src/master/
+https://console.cloud.google.com/iam-admin/iam?project=itrack-1652018
+https://www.jhipster.tech/docker-compose/
